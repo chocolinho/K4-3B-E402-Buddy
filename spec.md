@@ -6,7 +6,7 @@
 
 **Người dùng chính:** TA/Mod rà soát hỗ trợ vào cuối ngày
 
-Tài liệu liên quan: [Khung ý tưởng CP1](canvas.md) · [Bằng chứng khảo sát](evidence/survey-summary.md) · [Bảng so sánh tác động](evidence/impact-table.md) · [Bản mẫu CP2](codebase/README.md) · [Quyết định thiết kế](docs/decisions.md)
+Tài liệu liên quan: [Khung ý tưởng CP1](canvas.md) · [Bằng chứng khảo sát](evidence/survey-summary.md) · [Bảng so sánh tác động](evidence/impact-table.md) · [Kiểm tra flow với pain survey](evidence/flow-validation.md) · [Bản mẫu CP2](codebase/README.md) · [Quyết định thiết kế](docs/decisions.md)
 
 ## 1. Khung ý tưởng CP1 — 7 dòng
 
@@ -116,6 +116,7 @@ Bản mẫu áp dụng G1 (nói rõ hệ thống làm được gì), G2 (hiển 
 
 - CP1: chọn phát hiện câu hỏi chưa được xử lý làm lát cắt chính dựa trên khảo sát ban đầu.
 - CP2: thêm bảng rà soát tĩnh với tình huống giả lập, xem ngữ cảnh, lọc danh sách và nút để TA sửa trạng thái.
+- CP2: đối chiếu flow prototype với các pain đã ghi nhận trong khảo sát; xác nhận đây mới là bằng chứng từ mock, chưa phải kết quả user test hoặc đo lường AI thật.
 - Thay đổi sau kiểm chứng với người dùng: _chỉ bổ sung sau các buổi quan sát sử dụng; không tự tạo phản hồi._
 
 ## Việc cần làm ở các mốc tiếp theo
