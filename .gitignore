@@ -7,3 +7,7 @@ __pycache__/
 data/
 *.log
 
+02-guide.md
+03-ai-spec-template.md
+hax-guidelines.md
+pair-guidebook-digest.md
