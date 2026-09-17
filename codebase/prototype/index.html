@@ -3,58 +3,77 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Clickable CP2 mock for TA Discord support review using synthetic data only.">
-  <title>Discord Support Review</title>
+  <meta name="description" content="Bản mẫu CP2 giúp TA rà soát vấn đề hỗ trợ trên Discord bằng dữ liệu giả lập.">
+  <title>Buddy — Rà soát hỗ trợ Discord</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="topbar">
-    <div class="brand-mark" aria-hidden="true">B</div>
-    <div class="brand-copy">
-      <span class="eyebrow">Buddy · TA workspace</span>
-      <strong>Discord Support Review</strong>
-    </div>
-    <div class="mock-badge">Mock data</div>
+    <a class="brand" href="#main-content" aria-label="Buddy — về nội dung chính">
+      <span class="brand-mark" aria-hidden="true">B</span>
+      <span class="brand-copy">
+        <small>Buddy · Không gian dành cho TA</small>
+        <strong>Rà soát hỗ trợ Discord</strong>
+      </span>
+    </a>
+    <span class="mock-badge"><i aria-hidden="true"></i>Dữ liệu mô phỏng</span>
   </header>
 
-  <main class="page-shell">
+  <main class="page-shell" id="main-content">
     <section class="hero" aria-labelledby="page-title">
       <div>
-        <p class="eyebrow">Daily review · 17 Sep</p>
-        <h1 id="page-title">Những vấn đề nào vẫn cần hỗ trợ?</h1>
-        <p class="helper">AI đề xuất trạng thái từ ngữ cảnh liên quan. Hãy kiểm tra căn cứ và sửa khi cần — hệ thống không tự nhắn cho học viên.</p>
+        <p class="eyebrow">Rà soát cuối ngày</p>
+        <h1 id="page-title">Vấn đề nào vẫn cần TA hỗ trợ?</h1>
+        <p class="helper">AI đề xuất trạng thái từ ngữ cảnh liên quan. TA kiểm tra căn cứ, sửa khi cần và luôn là người đưa ra quyết định cuối cùng.</p>
+        <div class="hero-meta" aria-label="Thông tin bản demo">
+          <span>6 tình huống giả lập</span>
+          <span>Không gửi tin tự động</span>
+          <span>Không dùng dữ liệu thật</span>
+        </div>
       </div>
-      <button class="secondary-button" id="reset-button" type="button">Đặt lại bản demo</button>
+      <button class="button button-secondary" id="reset-button" type="button" data-action="reset">Đặt lại bản demo</button>
     </section>
 
-    <section class="summary-grid" aria-label="Status summary">
-      <button class="summary-card unresolved active" type="button" data-filter="unresolved" aria-pressed="true">
-        <span class="summary-icon" aria-hidden="true">!</span>
-        <span><strong id="unresolved-count">0</strong><small>Unresolved</small></span>
-      </button>
-      <button class="summary-card uncertain" type="button" data-filter="uncertain" aria-pressed="false">
-        <span class="summary-icon" aria-hidden="true">?</span>
-        <span><strong id="uncertain-count">0</strong><small>Uncertain</small></span>
-      </button>
-      <button class="summary-card resolved" type="button" data-filter="resolved" aria-pressed="false">
-        <span class="summary-icon" aria-hidden="true">✓</span>
-        <span><strong id="resolved-count">0</strong><small>Resolved</small></span>
-      </button>
+    <section class="flow-card" aria-labelledby="flow-title">
+      <div class="flow-heading">
+        <p class="eyebrow">Luồng CP2</p>
+        <h2 id="flow-title">Từ tin nhắn đến quyết định của TA</h2>
+      </div>
+      <ol class="flow-steps">
+        <li><span>1</span><div><strong>Tin nhắn Discord</strong><small>Phát hiện câu hỏi ứng viên</small></div></li>
+        <li><span>2</span><div><strong>AI phân loại</strong><small>Dựa trên ngữ cảnh liên quan</small></div></li>
+        <li><span>3</span><div><strong>TA rà soát</strong><small>Xem lý do và độ tin cậy</small></div></li>
+        <li><span>4</span><div><strong>TA quyết định</strong><small>Giữ hoặc sửa trạng thái</small></div></li>
+      </ol>
+    </section>
+
+    <section class="summary-section" aria-labelledby="summary-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Tổng quan</p>
+          <h2 id="summary-title">Trạng thái hỗ trợ hôm nay</h2>
+        </div>
+        <p>Chọn một trạng thái để lọc danh sách.</p>
+      </div>
+      <div class="summary-grid" id="summary-grid"></div>
     </section>
 
     <section class="review-panel" aria-labelledby="review-title">
       <div class="panel-heading">
         <div>
-          <p class="eyebrow">Priority queue</p>
+          <p class="eyebrow">Hàng đợi ưu tiên</p>
           <h2 id="review-title">Cần TA xem hôm nay</h2>
+          <p id="filter-description">Đang hiển thị các vấn đề chưa được xử lý.</p>
         </div>
-        <button class="text-button" id="show-all-button" type="button">Hiện tất cả</button>
+        <button class="button button-quiet" id="show-all-button" type="button" data-action="show-all">Hiện tất cả</button>
       </div>
+
       <div id="question-list" class="question-list" aria-live="polite"></div>
+
       <div id="empty-state" class="empty-state" hidden>
         <span aria-hidden="true">✓</span>
         <h3>Không có mục nào ở trạng thái này</h3>
-        <p>Chọn “Hiện tất cả” để xem toàn bộ bản demo.</p>
+        <p>Chọn “Hiện tất cả” để xem toàn bộ tình huống.</p>
       </div>
     </section>
   </main>
@@ -64,19 +83,18 @@
   <dialog id="context-dialog" aria-labelledby="dialog-title">
     <div class="dialog-header">
       <div>
-        <p class="eyebrow">Related context · synthetic</p>
-        <h2 id="dialog-title">Ngữ cảnh liên quan</h2>
+        <p class="eyebrow">Ngữ cảnh liên quan · dữ liệu giả lập</p>
+        <h2 id="dialog-title">Chi tiết tình huống</h2>
       </div>
-      <button class="icon-button" id="close-dialog" type="button" aria-label="Đóng">×</button>
+      <button class="icon-button" id="close-dialog" type="button" aria-label="Đóng hộp thoại">×</button>
     </div>
     <div id="dialog-content"></div>
     <div class="dialog-footer">
-      <p>Chỉ mở luồng gốc để TA phản hồi thủ công.</p>
-      <button class="primary-button" id="open-source-button" type="button">Mở luồng gốc (demo)</button>
+      <p>Hệ thống chỉ điều hướng; TA tự phản hồi trong luồng gốc.</p>
+      <button class="button button-primary" id="open-source-button" type="button">Mở luồng gốc (mô phỏng)</button>
     </div>
   </dialog>
 
   <script src="script.js"></script>
 </body>
 </html>
-
