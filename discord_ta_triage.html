@@ -3,21 +3,32 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TA/Mod End-of-Day Triage Dashboard — Discord K4</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>TA/Mod End-of-Day Triage Dashboard — Discord K4 (Buddy)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
+      --bg-base: #111214;
       --bg-dark: #1e1f22;
       --bg-card: #2b2d31;
       --bg-hover: #35373c;
+      --bg-active: #3c3f45;
       --bg-thread: #111214;
       --text-main: #dbdee1;
       --text-muted: #949ba4;
+      --text-white: #f2f3f5;
       --blurple: #5865f2;
+      --blurple-hover: #4752c4;
       --green: #23a55a;
+      --green-soft: rgba(35, 165, 90, 0.15);
       --red: #f23f43;
+      --red-soft: rgba(242, 63, 67, 0.15);
       --yellow: #f0b232;
+      --yellow-soft: rgba(240, 178, 50, 0.15);
       --border: #3f4147;
+      --border-subtle: #2b2d31;
+      --tag-hax: #00bcd4;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,16 +40,18 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Top Bar */
+    /* Top Navigation */
     header {
-      background: #111214;
+      background: var(--bg-base);
       border-bottom: 1px solid var(--border);
-      padding: 0.85rem 1.5rem;
+      padding: 0.65rem 1.25rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-shrink: 0;
     }
 
     .brand {
@@ -47,91 +60,246 @@
       gap: 0.75rem;
     }
 
-    .brand h1 {
-      font-size: 1.1rem;
-      font-weight: 700;
+    .brand-icon {
+      width: 32px;
+      height: 32px;
+      background: var(--blurple);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       color: #fff;
+      font-weight: 800;
+      font-size: 1.1rem;
     }
 
-    .team-badge {
+    .brand-text h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .brand-text p {
       font-size: 0.75rem;
       color: var(--text-muted);
-      background: var(--bg-card);
-      padding: 4px 8px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .hax-badge {
+      font-size: 0.7rem;
+      padding: 3px 8px;
       border-radius: 4px;
-      border: 1px solid var(--border);
-    }
-
-    /* Summary KPI Bar */
-    .kpi-bar {
-      background: #232428;
-      padding: 0.75rem 1.5rem;
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .kpi-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.85rem;
+      background: rgba(0, 188, 212, 0.15);
+      color: var(--tag-hax);
+      border: 1px solid rgba(0, 188, 212, 0.3);
       font-weight: 600;
-    }
-
-    .kpi-count {
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    .filter-tabs {
-      margin-left: auto;
       display: flex;
-      gap: 0.5rem;
+      align-items: center;
+      gap: 4px;
     }
 
-    .filter-btn {
-      background: transparent;
+    .btn-hax-matrix {
+      background: #2b2d31;
       border: 1px solid var(--border);
-      color: var(--text-muted);
+      color: #fff;
+      font-size: 0.78rem;
+      font-weight: 600;
       padding: 5px 12px;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+    .btn-hax-matrix:hover {
+      background: #35373c;
+      border-color: var(--blurple);
+      color: #fff;
+    }
+
+    /* 4 UX Paths Switcher Ribbon */
+    .paths-ribbon {
+      background: #18191c;
+      border-bottom: 1px solid var(--border);
+      padding: 0.45rem 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      overflow-x: auto;
+      flex-shrink: 0;
+    }
+
+    .paths-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .path-pill {
+      background: #232428;
+      border: 1px solid #313338;
+      color: var(--text-main);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.78rem;
       font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.15s ease;
     }
 
-    .filter-btn.active, .filter-btn:hover {
+    .path-pill:hover {
+      background: #2b2d31;
+      border-color: var(--border);
+      color: #fff;
+    }
+
+    .path-pill.active {
+      background: var(--blurple);
+      border-color: var(--blurple);
+      color: #fff;
+      box-shadow: 0 0 8px rgba(88, 101, 242, 0.4);
+    }
+
+    .path-pill .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+
+    /* KPI Summary Row */
+    .kpi-row {
+      background: #232428;
+      border-bottom: 1px solid var(--border);
+      padding: 0.6rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-shrink: 0;
+    }
+
+    .kpi-group {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+    }
+
+    .kpi-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 3px 8px;
+      border-radius: 6px;
+      transition: background 0.15s;
+    }
+    .kpi-stat:hover { background: var(--bg-hover); }
+
+    .kpi-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 10px;
+      color: #fff;
+    }
+
+    .search-filter-group {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .search-input {
+      background: #111214;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 5px 10px;
+      color: #fff;
+      font-size: 0.8rem;
+      width: 190px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .search-input:focus {
+      border-color: var(--blurple);
+    }
+
+    .filter-btn {
+      background: #2b2d31;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.78rem;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .filter-btn:hover, .filter-btn.active {
       background: var(--blurple);
       color: #fff;
       border-color: var(--blurple);
     }
 
-    /* Layout */
-    .container {
+    /* Main Workspace Layout */
+    .workspace {
       display: grid;
       grid-template-columns: 420px 1fr;
       flex: 1;
       overflow: hidden;
     }
 
-    /* Left Sidebar: Issue Feed */
-    .issue-feed {
+    /* Left: Priority Queue */
+    .queue-sidebar {
       background: #2b2d31;
       border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .queue-header {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .queue-list {
       overflow-y: auto;
-      padding: 0.75rem;
+      padding: 0.6rem;
       display: flex;
       flex-direction: column;
       gap: 0.5rem;
+      flex: 1;
     }
 
-    .issue-card {
+    .case-card {
       background: #1e1f22;
       border: 1px solid var(--border);
       border-radius: 8px;
@@ -141,77 +309,120 @@
       position: relative;
     }
 
-    .issue-card:hover {
-      background: var(--bg-hover);
+    .case-card:hover {
+      background: #232428;
       border-color: #5865f2;
+      transform: translateY(-1px);
     }
 
-    .issue-card.active {
-      background: #313338;
-      border-color: #5865f2;
-      box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.4);
+    .case-card.active {
+      background: #2b2d31;
+      border-color: var(--blurple);
+      box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.35);
     }
 
-    .issue-header {
+    .case-top {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 0.4rem;
     }
 
-    .author-meta {
-      font-size: 0.8rem;
+    .author-info {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .avatar {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
       font-weight: 700;
       color: #fff;
     }
 
-    .time-meta {
-      font-size: 0.75rem;
-      color: var(--text-muted);
+    .author-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--text-white);
     }
 
-    .issue-snippet {
-      font-size: 0.85rem;
+    .channel-tag {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .case-question {
+      font-size: 0.84rem;
       line-height: 1.4;
       color: var(--text-main);
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      margin-bottom: 0.6rem;
     }
 
-    /* Status Badges */
+    .case-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .path-indicator {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* Badges */
     .badge {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 700;
       padding: 3px 8px;
       border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
-    .badge-resolved { background: rgba(35, 165, 90, 0.2); color: var(--green); border: 1px solid var(--green); }
-    .badge-unresolved { background: rgba(242, 63, 67, 0.2); color: var(--red); border: 1px solid var(--red); }
-    .badge-uncertain { background: rgba(240, 178, 50, 0.2); color: var(--yellow); border: 1px solid var(--yellow); }
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+    .badge-resolved { background: var(--green-soft); color: var(--green); border: 1px solid var(--green); }
+    .badge-unresolved { background: var(--red-soft); color: var(--red); border: 1px solid var(--red); }
+    .badge-uncertain { background: var(--yellow-soft); color: var(--yellow); border: 1px solid var(--yellow); }
 
-    /* Right Main Panel: Detail & Decision */
-    .detail-panel {
-      display: flex;
-      flex-direction: column;
+    /* Right: Investigation View */
+    .detail-view {
       background: #1e1f22;
       overflow-y: auto;
-      padding: 1.5rem;
-      gap: 1.25rem;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
-    .box {
+    /* Cards */
+    .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 8px;
-      padding: 1.25rem;
+      padding: 1.15rem;
     }
 
-    .box-title {
-      font-size: 0.85rem;
+    .card-title {
+      font-size: 0.8rem;
       font-weight: 700;
       color: var(--text-muted);
       text-transform: uppercase;
@@ -222,355 +433,1013 @@
       align-items: center;
     }
 
-    /* Thread preview */
-    .thread-box {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      background: var(--bg-thread);
-      border-radius: 6px;
-      padding: 1rem;
-      border: 1px solid #282b30;
+    .hax-hint {
+      font-size: 0.7rem;
+      color: var(--tag-hax);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      background: rgba(0, 188, 212, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
     }
 
-    .thread-msg {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid #1f2124;
-    }
-    .thread-msg:last-child { border-bottom: none; padding-bottom: 0; }
-
-    .msg-user {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: #5865f2;
-    }
-    .msg-content {
-      font-size: 0.9rem;
-      line-height: 1.4;
-      color: var(--text-main);
+    /* Student Question Header Card */
+    .question-headline {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.45;
+      margin: 0.5rem 0;
     }
 
-    /* AI Decision Card */
-    .ai-decision-card {
-      border-left: 4px solid var(--blurple);
-      background: rgba(88, 101, 242, 0.08);
-    }
-
-    .ai-status-row {
+    .meta-bar {
       display: flex;
       align-items: center;
       gap: 1rem;
-      margin-bottom: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
 
-    .reason-text {
-      font-size: 0.9rem;
-      line-height: 1.5;
+    /* Simulated Discord Thread */
+    .thread-container {
+      background: var(--bg-thread);
+      border: 1px solid #232428;
+      border-radius: 6px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .discord-msg {
+      display: flex;
+      gap: 0.75rem;
+      padding: 0.5rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+    .discord-msg:hover { background: rgba(255,255,255,0.02); }
+    .discord-msg.highlight-quote {
+      background: rgba(88, 101, 242, 0.15);
+      border-left: 3px solid var(--blurple);
+    }
+
+    .msg-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
       color: #fff;
+    }
+
+    .msg-body {
+      flex: 1;
+    }
+
+    .msg-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .msg-author {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .role-badge {
+      font-size: 0.65rem;
+      padding: 1px 5px;
+      border-radius: 3px;
+      font-weight: 700;
+    }
+    .role-ta { background: var(--green); color: #fff; }
+    .role-bot { background: var(--blurple); color: #fff; }
+    .role-student { background: #4e5058; color: #dbdee1; }
+
+    .msg-time {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    .msg-content {
+      font-size: 0.9rem;
+      line-height: 1.45;
+      color: var(--text-main);
+    }
+
+    /* AI Diagnosis & Grounding Panel */
+    .ai-panel {
+      border-left: 4px solid var(--blurple);
+      background: rgba(88, 101, 242, 0.06);
+    }
+
+    .ai-diag-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .confidence-meter-box {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem;
+    }
+
+    .meter-label-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .meter-track {
+      height: 8px;
+      background: #1e1f22;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .meter-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+
+    .grounding-box {
+      background: rgba(0,0,0,0.25);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem;
+    }
+
+    .reasoning-card {
+      background: #1e1f22;
+      border: 1px solid #313338;
+      border-radius: 6px;
+      padding: 0.85rem;
       margin-bottom: 0.75rem;
     }
 
+    .reasoning-text {
+      font-size: 0.88rem;
+      line-height: 1.5;
+      color: #f2f3f5;
+    }
+
+    .quote-callout {
+      background: rgba(88, 101, 242, 0.1);
+      border-left: 3px solid var(--blurple);
+      border-radius: 4px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.82rem;
+      font-style: italic;
+      color: #dbdee1;
+      margin-top: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .jump-btn {
+      font-style: normal;
+      background: #2b2d31;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.15s;
+    }
+    .jump-btn:hover {
+      background: var(--blurple);
+      color: #fff;
+    }
+
+    /* Duplicate Clustered info */
+    .duplicate-info-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.78rem;
+      color: #f0b232;
+      background: var(--yellow-soft);
+      border: 1px solid rgba(240, 178, 50, 0.3);
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Canonical Answer Box */
     .canonical-box {
-      background: rgba(0,0,0,0.3);
+      background: #18191c;
       border: 1px dashed var(--blurple);
       border-radius: 6px;
       padding: 0.85rem;
-      margin-top: 0.5rem;
+      margin-bottom: 1rem;
     }
 
-    /* Action bar */
-    .action-bar {
+    .canonical-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--blurple);
+      margin-bottom: 0.35rem;
       display: flex;
-      gap: 0.75rem;
-      margin-top: 0.5rem;
+      justify-content: space-between;
+    }
+
+    .canonical-content {
+      font-size: 0.85rem;
+      line-height: 1.45;
+      color: #fff;
+    }
+
+    /* Human in the loop Action Bar */
+    .action-bar-container {
+      background: #232428;
+      border-top: 1px solid var(--border);
+      padding: 0.85rem 1rem;
+      border-radius: 8px;
+      margin-top: auto;
+    }
+
+    .action-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.65rem;
     }
 
     .btn {
-      padding: 0.65rem 1.25rem;
+      padding: 0.6rem 1rem;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
       border: none;
-      transition: opacity 0.15s ease;
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      transition: all 0.15s ease;
     }
-    .btn:hover { opacity: 0.9; }
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    .btn:active {
+      transform: translateY(0);
+    }
 
-    .btn-approve { background: var(--green); color: #fff; }
-    .btn-send-canonical { background: var(--blurple); color: #fff; }
-    .btn-escalate { background: #e67e22; color: #fff; }
+    .btn-resolve { background: var(--green); color: #fff; }
+    .btn-canonical { background: var(--blurple); color: #fff; }
+    .btn-escalate { background: var(--red); color: #fff; }
+    .btn-reopen { background: #e67e22; color: #fff; }
     .btn-manual { background: #4e5058; color: #fff; }
+
+    /* Audit Log Banner */
+    .audit-trail-banner {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: #111214;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #232428;
+      margin-top: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #111214;
+      border: 1px solid var(--blurple);
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 999;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Modal for HAX Matrix */
+    .modal-backdrop {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-card {
+      background: #1e1f22;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      width: 800px;
+      max-width: 92vw;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6);
+    }
+    .modal-header {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #18191c;
+    }
+    .modal-body {
+      padding: 1.25rem;
+      overflow-y: auto;
+      font-size: 0.85rem;
+      color: var(--text-main);
+    }
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.75rem;
+    }
+    .matrix-table th, .matrix-table td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: left;
+    }
+    .matrix-table th {
+      background: #2b2d31;
+      color: #fff;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Top Bar -->
+  <!-- Top Navigation Bar -->
   <header>
     <div class="brand">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="#5865f2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-      <h1>Discord TA/Mod End-of-Day Triage Dashboard</h1>
+      <div class="brand-icon">B</div>
+      <div class="brand-text">
+        <h1>Buddy · TA/Mod Triage Hub <span style="font-size:0.75rem; font-weight:400; color:var(--text-muted);">v2.0 (High-Fidelity)</span></h1>
+        <p>Hệ thống rà soát cuối ngày & phân loại hỗ trợ Discord — Nhóm B2 (Thái - Linh - Long)</p>
+      </div>
     </div>
-    <div class="team-badge">
-      Track B · Nhóm: Thái - Linh - Long (CP2 Prototype)
+    <div class="header-actions">
+      <div class="hax-badge" title="HAX G1: Nói rõ hệ thống làm được gì">
+        <span>🛡 HAX G1: Conditional Automation</span>
+      </div>
+      <button class="btn-hax-matrix" onclick="toggleModal(true)">
+        📘 Ma trận HAX & PAIR (§4b)
+      </button>
     </div>
   </header>
 
-  <!-- KPI & Filter Bar -->
-  <div class="kpi-bar">
-    <div class="kpi-item">
-      <span>Cần rà soát hôm nay:</span>
-      <span class="kpi-count" style="background: var(--blurple);" id="totalCount">6</span>
+  <!-- 4 UX Paths Interactive Switcher Ribbon -->
+  <div class="paths-ribbon">
+    <div class="paths-label">
+      <span>Trình duyệt 4 đường đi (§6):</span>
     </div>
-    <div class="kpi-item">
-      <span>Chưa giải quyết (Unresolved):</span>
-      <span class="kpi-count" style="background: var(--red);" id="unresolvedCount">2</span>
-    </div>
-    <div class="kpi-item">
-      <span>Cần duyệt (Uncertain):</span>
-      <span class="kpi-count" style="background: var(--yellow);" id="uncertainCount">2</span>
-    </div>
-    <div class="kpi-item">
-      <span>Đã xong (Resolved):</span>
-      <span class="kpi-count" style="background: var(--green);" id="resolvedCount">2</span>
+    <button class="path-pill active" id="btnPathAll" onclick="selectPathMode('ALL')">
+      <span class="dot" style="background: #949ba4;"></span> Tất cả (6 case)
+    </button>
+    <button class="path-pill" id="btnPath1" onclick="selectPathMode('HAPPY_PATH')">
+      <span class="dot" style="background: var(--green);"></span> 🟢 Path 1: Happy Path (Resolved 96%)
+    </button>
+    <button class="path-pill" id="btnPath2" onclick="selectPathMode('LOW_CONFIDENCE')">
+      <span class="dot" style="background: var(--yellow);"></span> 🟡 Path 2: Low Confidence (HAX G10)
+    </button>
+    <button class="path-pill" id="btnPath3" onclick="selectPathMode('NO_GROUNDING')">
+      <span class="dot" style="background: var(--red);"></span> 🔴 Path 3: No Grounding / Failure
+    </button>
+    <button class="path-pill" id="btnPath4" onclick="selectPathMode('CORRECTION')">
+      <span class="dot" style="background: var(--blurple);"></span> 🔄 Path 4: Correction (TA Override)
+    </button>
+  </div>
+
+  <!-- KPI Summary & Filter Row -->
+  <div class="kpi-row">
+    <div class="kpi-group">
+      <div class="kpi-stat" onclick="setFilter('ALL')">
+        <span>Tổng ca rà soát:</span>
+        <span class="kpi-badge" style="background: var(--blurple);" id="kpiTotal">6</span>
+      </div>
+      <div class="kpi-stat" onclick="setFilter('UNRESOLVED')">
+        <span style="color:var(--red);">⚠ Chưa giải quyết (Unresolved):</span>
+        <span class="kpi-badge" style="background: var(--red);" id="kpiUnresolved">2</span>
+      </div>
+      <div class="kpi-stat" onclick="setFilter('UNCERTAIN')">
+        <span style="color:var(--yellow);">? Cần duyệt (Uncertain):</span>
+        <span class="kpi-badge" style="background: var(--yellow);" id="kpiUncertain">2</span>
+      </div>
+      <div class="kpi-stat" onclick="setFilter('RESOLVED')">
+        <span style="color:var(--green);">✓ Đã xong (Resolved):</span>
+        <span class="kpi-badge" style="background: var(--green);" id="kpiResolved">2</span>
+      </div>
     </div>
 
-    <!-- Filter Buttons -->
-    <div class="filter-tabs">
-      <button class="filter-btn active" onclick="setFilter('ALL')">Tất cả</button>
-      <button class="filter-btn" onclick="setFilter('UNRESOLVED')">⚠ Cần xử lý gấp</button>
-      <button class="filter-btn" onclick="setFilter('UNCERTAIN')">? Cần duyệt</button>
-      <button class="filter-btn" onclick="setFilter('RESOLVED')">✓ Đã xong</button>
+    <div class="search-filter-group">
+      <input type="text" class="search-input" id="searchInput" placeholder="🔍 Tìm kiếm câu hỏi/tác giả..." oninput="handleSearch(this.value)">
+      <button class="filter-btn active" id="fAll" onclick="setFilter('ALL')">Tất cả</button>
+      <button class="filter-btn" id="fUnres" onclick="setFilter('UNRESOLVED')">Chưa giải quyết</button>
+      <button class="filter-btn" id="fUncert" onclick="setFilter('UNCERTAIN')">Cần duyệt</button>
+      <button class="filter-btn" id="fRes" onclick="setFilter('RESOLVED')">Đã xong</button>
     </div>
   </div>
 
-  <!-- Main Container -->
-  <div class="container">
-    <!-- Left Feed -->
-    <aside class="issue-feed" id="issueFeed">
-      <!-- Injected via JS -->
+  <!-- Workspace 2-Column Grid -->
+  <div class="workspace">
+    
+    <!-- Left Column: Queue Sidebar -->
+    <aside class="queue-sidebar">
+      <div class="queue-header">
+        <span id="queueHeaderLabel">HÀNG ĐỢI ƯU TIÊN (PRIORITY QUEUE)</span>
+        <span style="font-size:0.7rem; color:var(--text-muted);" id="queueMatchCount">6 mục</span>
+      </div>
+      <div class="queue-list" id="queueList">
+        <!-- Rendered via JS -->
+      </div>
     </aside>
 
-    <!-- Right Detail Panel -->
-    <main class="detail-panel" id="detailPanel">
-      <!-- Selected Case Header -->
-      <div class="box">
-        <div class="box-title">
-          <span>Chi tiết vấn đề học viên</span>
-          <span id="detailStatusBadge"></span>
+    <!-- Right Column: Case Deep Dive -->
+    <main class="detail-view" id="detailView">
+
+      <!-- Student Issue Header -->
+      <div class="card">
+        <div class="card-title">
+          <span>Chi tiết câu hỏi của học viên</span>
+          <span id="detailBadge"></span>
         </div>
-        <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
-          <h2 style="font-size:1.1rem; color:#fff;" id="detailAuthor">Author: D2313</h2>
-          <span style="font-size:0.85rem; color:var(--text-muted);" id="detailMeta">channel_02 · 14:15</span>
+        <div class="meta-bar">
+          <div class="author-info">
+            <div class="avatar" id="detailAvatar">D</div>
+            <strong style="color:#fff; font-size:0.95rem;" id="detailAuthor">Author</strong>
+          </div>
+          <span class="channel-tag" id="detailChannel">#hoi-dap-lab</span>
+          <span id="detailTime">10:12</span>
+          <span class="hax-hint" id="detailPathTag">Path 1: Happy Path</span>
         </div>
-        <p style="font-size:1rem; line-height:1.5; color:#fff;" id="detailQuestion">
-          "có điểm danh ws không ạ"
-        </p>
+        <div class="question-headline" id="detailQuestion">
+          "Câu hỏi của học viên..."
+        </div>
       </div>
 
-      <!-- Thread Context -->
-      <div class="box">
-        <div class="box-title">Hội thoại liên quan trên kênh (Thread Context)</div>
-        <div class="thread-box" id="threadBox">
-          <!-- Injected via JS -->
+      <!-- Simulated Discord Thread -->
+      <div class="card">
+        <div class="card-title">
+          <span>Hội thoại thực tế trên Discord (Thread Context)</span>
+          <button class="btn-hax-matrix" style="padding:2px 8px; font-size:0.72rem;" onclick="simulateOpenDiscord()">
+            ↗ Mở trên Discord
+          </button>
+        </div>
+        <div class="thread-container" id="threadContainer">
+          <!-- Rendered messages -->
         </div>
       </div>
 
-      <!-- AI Decision & Reasoning -->
-      <div class="box ai-decision-card">
-        <div class="box-title" style="color:var(--blurple);">
-          🤖 AI Triage Decision & Căn cứ xác định
-        </div>
-        <div class="ai-status-row">
-          <span style="font-size:0.9rem; font-weight:600;">Đề xuất trạng thái:</span>
-          <span id="aiProposedBadge"></span>
-        </div>
-        <div class="reason-text" id="aiReasonText">
-          Bot trả lời chung chung (hedging), chưa khẳng định quy chế. Nhưng câu hỏi trùng với FAQ điểm danh tự động qua Zoom.
+      <!-- AI Diagnosis & Grounding Card (HAX G2, G10, G11) -->
+      <div class="card ai-panel">
+        <div class="card-title" style="color:var(--blurple);">
+          <span>🤖 AI Triage Engine & Căn cứ xác định (Grounding)</span>
+          <span class="hax-hint">HAX G2 · G10 · G11</span>
         </div>
 
-        <div id="canonicalSection" style="display:none;">
-          <div class="canonical-box">
-            <div style="font-size:0.8rem; font-weight:700; color:var(--blurple); margin-bottom:0.3rem;">
-              📌 Gợi ý Câu trả lời chuẩn (Canonical Answer):
+        <div class="ai-diag-grid">
+          <!-- Confidence Gauge (HAX G2) -->
+          <div class="confidence-meter-box">
+            <div class="meter-label-row">
+              <span style="color:var(--text-muted);">Độ tin cậy (Confidence):</span>
+              <strong id="confidenceScoreText">96% (Cao)</strong>
             </div>
-            <div style="font-size:0.85rem; line-height:1.4; color:#fff;" id="canonicalAnswerText">
-              Hệ thống điểm danh tự động qua Zoom dựa trên đúng cú pháp tên (KX-HoVaTen-MSSV).
+            <div class="meter-track">
+              <div class="meter-fill" id="meterFill" style="width: 96%; background: var(--green);"></div>
+            </div>
+            <div style="font-size:0.7rem; color:var(--text-muted); margin-top:0.35rem;">
+              Chỉ báo theo <span style="color:var(--tag-hax);">HAX G2</span> giúp TA hiệu chuẩn niềm tin.
+            </div>
+          </div>
+
+          <!-- Grounding / Evidence status (HAX G11) -->
+          <div class="grounding-box">
+            <div class="meter-label-row">
+              <span style="color:var(--text-muted);">Tình trạng căn cứ (Grounding):</span>
+              <strong id="groundingStatusText" style="color:var(--green);">✓ Có căn cứ xác thực</strong>
+            </div>
+            <div style="font-size:0.78rem; color:var(--text-main); margin-top:0.25rem;" id="groundingSummary">
+              Trích xuất trực tiếp từ tin nhắn kết thúc của luồng hội thoại.
             </div>
           </div>
         </div>
 
-        <div style="margin-top: 1rem;">
-          <div style="font-size:0.85rem; font-weight:600; color:var(--text-muted); margin-bottom:0.5rem;">
-            Hành động của TA (Human-in-the-loop):
+        <!-- Clustered duplicate detection (Bằng chứng khảo sát 14/22) -->
+        <div class="duplicate-info-pill" id="duplicatePill">
+          <span>🔍</span>
+          <span id="duplicateText">Phát hiện trùng lặp: Chưa có câu hỏi tương tự trong 24h qua.</span>
+        </div>
+
+        <!-- Reasoning Text -->
+        <div class="reasoning-card">
+          <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.25rem;">
+            Lý do đề xuất phân loại (AI Rationale - HAX G11):
           </div>
-          <div class="action-bar" id="actionBar">
-            <!-- Injected via JS -->
+          <div class="reasoning-text" id="aiReasoning">
+            Học viên đã xác nhận khắc phục được vấn đề.
+          </div>
+          <div class="quote-callout" id="quoteCallout" style="display:none;">
+            <span id="quoteCalloutText">"Trích dẫn tin nhắn làm căn cứ..."</span>
+            <button class="jump-btn" onclick="scrollToQuote()">Cuộn tới tin nhắn</button>
           </div>
         </div>
+
+        <!-- Canonical Answer Recommendation (If available) -->
+        <div class="canonical-box" id="canonicalBox" style="display:none;">
+          <div class="canonical-title">
+            <span>📌 Gợi ý Câu trả lời chuẩn (Canonical Answer):</span>
+            <span style="font-size:0.7rem; color:var(--text-muted);">Nguồn: Giáo trình & FAQ chính thức</span>
+          </div>
+          <div class="canonical-content" id="canonicalContent">
+            Nội dung câu trả lời chuẩn...
+          </div>
+        </div>
+
+        <!-- Action Bar: Human-in-the-loop (HAX G9 & PAIR Ch.5) -->
+        <div class="action-bar-container">
+          <div class="action-label">
+            <span>Hành động của TA (Quyền kiểm soát tối cao - HAX G9):</span>
+            <span class="hax-hint">Hệ thống không tự ý gửi tin nhắn</span>
+          </div>
+          <div class="action-buttons" id="actionButtons">
+            <!-- Rendered buttons -->
+          </div>
+          <div class="audit-trail-banner" id="auditTrailBanner">
+            <span>🕒 Nhật ký:</span>
+            <span id="auditTrailText">AI khởi tạo lúc 10:19</span>
+          </div>
+        </div>
+
       </div>
+
     </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <span id="toastIcon">✓</span>
+    <span id="toastMsg">Thao tác thành công!</span>
+  </div>
+
+  <!-- Modal: HAX / PAIR Matrix (§4b) -->
+  <div class="modal-backdrop" id="haxModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 style="font-size:1.05rem; color:#fff; font-weight:700;">📘 Bảng đối chiếu nguyên tắc HAX & PAIR vào Giao diện (§4b)</h2>
+        <button class="filter-btn" onclick="toggleModal(false)">Đóng ✕</button>
+      </div>
+      <div class="modal-body">
+        <p style="margin-bottom: 0.75rem; color:var(--text-muted); font-size:0.82rem;">
+          Dự án áp dụng 5 nguyên tắc chuẩn mực thiết kế tương tác Người - AI (theo Microsoft HAX Toolkit & Google PAIR):
+        </p>
+        <table class="matrix-table">
+          <thead>
+            <tr>
+              <th>Nguyên tắc</th>
+              <th>Mục đích</th>
+              <th>Vị trí áp dụng trên UI</th>
+              <th>Hành vi tương tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color:var(--tag-hax);">HAX G1</strong><br><small>Làm rõ năng lực</small></td>
+              <td>Đặt đúng kỳ vọng, không nhân hóa thái quá</td>
+              <td>Header Banner & Subtitle</td>
+              <td>Thông báo rõ hệ thống chỉ đề xuất và hỗ trợ phân loại, TA là người ra quyết định cuối cùng.</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--tag-hax);">HAX G2</strong><br><small>Độ tin cậy</small></td>
+              <td>Hiệu chuẩn niềm tin (Calibrate trust)</td>
+              <td>Confidence Meter bar (0–100%)</td>
+              <td>Hiển thị thanh tiến trình độ tin cậy kèm màu phân cấp (Xanh >80%, Vàng 50-80%, Đỏ &lt;50%).</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--tag-hax);">HAX G10</strong><br><small>Thu hẹp phạm vi khi nghi ngờ</small></td>
+              <td>Tránh đoán bừa khi ngữ cảnh mơ hồ</td>
+              <td>Trạng thái UNCERTAIN (Huy hiệu vàng)</td>
+              <td>Khi dữ liệu không chắc chắn (như bot trả lời chung chung hoặc bạn học phỏng đoán), AI không liều lĩnh đóng case.</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--tag-hax);">HAX G11</strong><br><small>Giải thích lý do</small></td>
+              <td>Minh bạch nguồn sự thật (Grounding)</td>
+              <td>Reasoning Card & Callout trích dẫn</td>
+              <td>Trích nguyên văn câu nói làm căn cứ, có nút bấm cuộn highlight ngay tới tin nhắn trong luồng Discord.</td>
+            </tr>
+            <tr>
+              <td><strong style="color:var(--tag-hax);">HAX G9 / PAIR Ch.5</strong><br><small>Sửa đổi hiệu quả</small></td>
+              <td>Trao quyền kiểm soát tối cao cho TA</td>
+              <td>Action Bar 1-chạm & Audit Banner</td>
+              <td>Cho phép TA đổi trạng thái tức thì, số liệu KPI nhảy số ngay lập tức, lưu vết hành động minh bạch.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <script src="triage_engine.js"></script>
   <script>
     let currentFilter = 'ALL';
-    let selectedId = 'CASE-01';
+    let currentPathMode = 'ALL';
+    let searchQuery = '';
+    let selectedId = 'CASE-03'; // Mặc định mở Happy Path
 
     function updateKpiCounts() {
       const unresolved = TRIAGE_DATA.filter(x => x.ai_decision === 'UNRESOLVED').length;
       const uncertain = TRIAGE_DATA.filter(x => x.ai_decision === 'UNCERTAIN').length;
       const resolved = TRIAGE_DATA.filter(x => x.ai_decision === 'RESOLVED').length;
-      document.getElementById('totalCount').innerText = TRIAGE_DATA.length;
-      document.getElementById('unresolvedCount').innerText = unresolved;
-      document.getElementById('uncertainCount').innerText = uncertain;
-      document.getElementById('resolvedCount').innerText = resolved;
+      
+      document.getElementById('kpiTotal').innerText = TRIAGE_DATA.length;
+      document.getElementById('kpiUnresolved').innerText = unresolved;
+      document.getElementById('kpiUncertain').innerText = uncertain;
+      document.getElementById('kpiResolved').innerText = resolved;
     }
 
     function setFilter(filter) {
       currentFilter = filter;
       document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.toggle('active', btn.getAttribute('onclick').includes(filter));
+        btn.classList.toggle('active', 
+          (filter === 'ALL' && btn.id === 'fAll') ||
+          (filter === 'UNRESOLVED' && btn.id === 'fUnres') ||
+          (filter === 'UNCERTAIN' && btn.id === 'fUncert') ||
+          (filter === 'RESOLVED' && btn.id === 'fRes')
+        );
       });
       renderList();
     }
 
+    function selectPathMode(path) {
+      currentPathMode = path;
+      document.querySelectorAll('.path-pill').forEach(btn => btn.classList.remove('active'));
+      
+      if (path === 'ALL') {
+        document.getElementById('btnPathAll').classList.add('active');
+      } else if (path === 'HAPPY_PATH') {
+        document.getElementById('btnPath1').classList.add('active');
+        selectedId = 'CASE-03';
+      } else if (path === 'LOW_CONFIDENCE') {
+        document.getElementById('btnPath2').classList.add('active');
+        selectedId = 'CASE-01';
+      } else if (path === 'NO_GROUNDING') {
+        document.getElementById('btnPath3').classList.add('active');
+        selectedId = 'CASE-02';
+      } else if (path === 'CORRECTION') {
+        document.getElementById('btnPath4').classList.add('active');
+        selectedId = 'CASE-04';
+      }
+
+      renderList();
+      selectCase(selectedId);
+      showToast('Đã chọn chế độ demo: ' + path);
+    }
+
+    function handleSearch(q) {
+      searchQuery = q.toLowerCase().trim();
+      renderList();
+    }
+
     function renderList() {
-      const feed = document.getElementById('issueFeed');
-      feed.innerHTML = '';
+      const queueList = document.getElementById('queueList');
+      queueList.innerHTML = '';
 
       const filtered = TRIAGE_DATA.filter(item => {
-        if (currentFilter === 'ALL') return true;
-        return item.ai_decision === currentFilter;
+        // Filter by Status
+        if (currentFilter !== 'ALL' && item.ai_decision !== currentFilter) return false;
+        // Filter by Path Mode
+        if (currentPathMode !== 'ALL' && item.ux_path !== currentPathMode) return false;
+        // Search query
+        if (searchQuery) {
+          const matchAuthor = item.author.toLowerCase().includes(searchQuery);
+          const matchQuestion = item.question.toLowerCase().includes(searchQuery);
+          const matchChannel = item.channel.toLowerCase().includes(searchQuery);
+          if (!matchAuthor && !matchQuestion && !matchChannel) return false;
+        }
+        return true;
       });
 
-      filtered.forEach(item => {
-        const div = document.createElement('div');
-        div.className = `issue-card ${selectedId === item.id ? 'active' : ''}`;
-        div.onclick = () => selectCase(item.id);
-        div.innerHTML = `
-          <div class="issue-header">
-            <span class="author-meta">${item.author} (${item.channel})</span>
-            ${getStatusBadge(item.ai_decision)}
+      document.getElementById('queueMatchCount').innerText = filtered.length + ' mục';
+
+      if (filtered.length === 0) {
+        queueList.innerHTML = `
+          <div style="text-align:center; padding: 2rem 1rem; color:var(--text-muted);">
+            <p style="font-size:1.2rem; margin-bottom:0.5rem;">🔍</p>
+            <p style="font-size:0.85rem;">Không tìm thấy câu hỏi phù hợp bộ lọc.</p>
           </div>
-          <div class="issue-snippet">${item.question}</div>
-          <div style="margin-top:0.4rem; font-size:0.75rem; color:var(--text-muted);">🕒 Lúc ${item.time}</div>
         `;
-        feed.appendChild(div);
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = `case-card ${item.id === selectedId ? 'active' : ''}`;
+        card.onclick = () => selectCase(item.id);
+
+        card.innerHTML = `
+          <div class="case-top">
+            <div class="author-info">
+              <div class="avatar" style="background:${item.avatar_color};">${item.author[0]}</div>
+              <span class="author-name">${item.author}</span>
+            </div>
+            <span class="channel-tag">${item.channel}</span>
+          </div>
+          <div class="case-question">${escapeHtml(item.question)}</div>
+          <div class="case-footer">
+            ${getStatusBadge(item.ai_decision)}
+            <span class="path-indicator">${Math.round(item.confidence * 100)}% tin cậy</span>
+          </div>
+        `;
+        queueList.appendChild(card);
       });
     }
 
     function selectCase(id) {
       selectedId = id;
-      renderList();
       const item = TRIAGE_DATA.find(x => x.id === id);
       if (!item) return;
 
-      document.getElementById('detailAuthor').innerText = `Học viên: ${item.author}`;
-      document.getElementById('detailMeta').innerText = `${item.channel} · ${item.time}`;
-      document.getElementById('detailQuestion').innerText = `"${item.question}"`;
-      document.getElementById('detailStatusBadge').innerHTML = getStatusBadge(item.ai_decision);
-      document.getElementById('aiProposedBadge').innerHTML = getStatusBadge(item.ai_decision);
-      document.getElementById('aiReasonText').innerText = item.ai_reason;
+      // Update Active class in Queue
+      document.querySelectorAll('.case-card').forEach(el => el.classList.remove('active'));
+      const activeCard = Array.from(document.querySelectorAll('.case-card')).find(el => el.onclick.toString().includes(id));
+      if (activeCard) activeCard.classList.add('active');
 
-      // Render thread
-      const threadBox = document.getElementById('threadBox');
-      threadBox.innerHTML = '';
+      // Populate Header
+      document.getElementById('detailBadge').innerHTML = getStatusBadge(item.ai_decision);
+      document.getElementById('detailAuthor').innerText = item.author;
+      document.getElementById('detailAvatar').innerText = item.author[0];
+      document.getElementById('detailAvatar').style.background = item.avatar_color;
+      document.getElementById('detailChannel').innerText = item.channel;
+      document.getElementById('detailTime').innerText = item.time;
+      document.getElementById('detailPathTag').innerText = item.ux_path_label;
+      document.getElementById('detailQuestion').innerText = `"${item.question}"`;
+
+      // Populate Thread
+      const threadContainer = document.getElementById('threadContainer');
+      threadContainer.innerHTML = '';
       item.thread.forEach(msg => {
+        const isQuote = item.evidence_target_id && msg.id === item.evidence_target_id;
         const msgDiv = document.createElement('div');
-        msgDiv.className = 'thread-msg';
+        msgDiv.id = `msg-${msg.id}`;
+        msgDiv.className = `discord-msg ${isQuote ? 'highlight-quote' : ''}`;
+
+        let roleBadge = '';
+        let avatarBg = '#4e5058';
+        if (msg.role === 'TA') {
+          roleBadge = '<span class="role-badge role-ta">TA</span>';
+          avatarBg = '#23a55a';
+        } else if (msg.role === 'BOT') {
+          roleBadge = '<span class="role-badge role-bot">BOT</span>';
+          avatarBg = '#5865f2';
+        } else {
+          roleBadge = '<span class="role-badge role-student">Học viên</span>';
+        }
+
         msgDiv.innerHTML = `
-          <div class="msg-user">${msg.sender}:</div>
-          <div class="msg-content">${msg.text}</div>
+          <div class="msg-avatar" style="background:${avatarBg};">${msg.sender[0]}</div>
+          <div class="msg-body">
+            <div class="msg-header">
+              <span class="msg-author">${msg.sender}</span>
+              ${roleBadge}
+              <span class="msg-time">${msg.time}</span>
+              ${isQuote ? '<span style="font-size:0.65rem; color:var(--blurple); font-weight:700;">★ CĂN CỨ XÁC ĐỊNH</span>' : ''}
+            </div>
+            <div class="msg-content">${escapeHtml(msg.text)}</div>
+          </div>
         `;
-        threadBox.appendChild(msgDiv);
+        threadContainer.appendChild(msgDiv);
       });
 
-      // Canonical section
-      const canonicalSec = document.getElementById('canonicalSection');
-      if (item.canonical_answer) {
-        canonicalSec.style.display = 'block';
-        document.getElementById('canonicalAnswerText').innerText = item.canonical_answer;
+      // Populate Confidence & Grounding
+      const pct = Math.round(item.confidence * 100);
+      document.getElementById('confidenceScoreText').innerText = `${pct}% (${item.confidence_level === 'HIGH' ? 'Cao' : item.confidence_level === 'MEDIUM' ? 'Trung bình' : 'Thấp'})`;
+      
+      const meterFill = document.getElementById('meterFill');
+      meterFill.style.width = `${pct}%`;
+      if (pct >= 80) meterFill.style.background = 'var(--green)';
+      else if (pct >= 50) meterFill.style.background = 'var(--yellow)';
+      else meterFill.style.background = 'var(--red)';
+
+      const groundingText = document.getElementById('groundingStatusText');
+      const groundingSum = document.getElementById('groundingSummary');
+      if (item.grounding_status === 'GROUNDED') {
+        groundingText.innerText = '✓ Có căn cứ đầy đủ (Grounded)';
+        groundingText.style.color = 'var(--green)';
+        groundingSum.innerText = 'Tìm thấy phản hồi xác thực chốt kết quả trong hội thoại.';
+      } else if (item.grounding_status === 'PARTIAL') {
+        groundingText.innerText = '? Căn cứ một phần (Partial)';
+        groundingText.style.color = 'var(--yellow)';
+        groundingSum.innerText = 'Có gợi ý từ cộng đồng nhưng thiếu sự khẳng định chính thức.';
       } else {
-        canonicalSec.style.display = 'none';
+        groundingText.innerText = '⚠ Không có căn cứ (No Grounding)';
+        groundingText.style.color = 'var(--red)';
+        groundingSum.innerText = 'Không tìm thấy ngữ cảnh thảo luận. Yêu cầu TA can thiệp trực tiếp.';
       }
 
-      // Render Action Buttons
-      const actionBar = document.getElementById('actionBar');
-      actionBar.innerHTML = '';
+      // Duplicate pill
+      document.getElementById('duplicateText').innerText = item.duplicate_info;
+
+      // Reasoning & Quote
+      document.getElementById('aiReasoning').innerText = item.ai_reason;
+      const quoteBox = document.getElementById('quoteCallout');
+      if (item.evidence_quote) {
+        quoteBox.style.display = 'flex';
+        document.getElementById('quoteCalloutText').innerText = `"${item.evidence_quote}"`;
+      } else {
+        quoteBox.style.display = 'none';
+      }
+
+      // Canonical box
+      const canonicalBox = document.getElementById('canonicalBox');
+      if (item.canonical_answer) {
+        canonicalBox.style.display = 'block';
+        document.getElementById('canonicalContent').innerText = item.canonical_answer;
+      } else {
+        canonicalBox.style.display = 'none';
+      }
+
+      // Action Buttons
+      renderActionButtons(item);
+
+      // Audit Trail
+      const latestAudit = item.audit_trail[item.audit_trail.length - 1];
+      document.getElementById('auditTrailText').innerText = `${latestAudit.action} (${latestAudit.time}) — Tác nhân: ${latestAudit.actor}`;
+    }
+
+    function renderActionButtons(item) {
+      const bar = document.getElementById('actionButtons');
+      bar.innerHTML = '';
 
       if (item.ai_decision === 'RESOLVED') {
-        actionBar.innerHTML = `
-          <button class="btn btn-approve" disabled style="opacity:0.8; cursor:default;">✓ Đã hoàn tất giải quyết</button>
-          <button class="btn btn-manual" onclick="reopenCase('${item.id}')">Mở lại (Re-open)</button>
+        bar.innerHTML = `
+          <button class="btn btn-reopen" onclick="overrideStatus('${item.id}', 'UNCERTAIN', 'Mở lại rà soát')">
+            ↩ Mở lại rà soát (Đổi sang Uncertain)
+          </button>
+          <button class="btn btn-escalate" onclick="overrideStatus('${item.id}', 'UNRESOLVED', 'Báo chưa giải quyết')">
+            ⚠ Báo chưa xong (Đổi sang Unresolved)
+          </button>
+          <button class="btn btn-manual" onclick="simulateOpenDiscord()">
+            ✍ Nhắn tin trên Discord
+          </button>
         `;
-      } else if (item.ai_decision === 'UNCERTAIN') {
-        actionBar.innerHTML = `
-          ${item.canonical_answer ? `<button class="btn btn-send-canonical" onclick="sendCanonical('${item.id}')">⚡ Gửi câu trả lời chuẩn & Resolved</button>` : ''}
-          <button class="btn btn-approve" onclick="resolveCase('${item.id}')">✓ Xác nhận Resolved</button>
-          <button class="btn btn-escalate" onclick="escalateCase('${item.id}')">⚠ Chuyển sang Unresolved (Cần TA hỗ trợ)</button>
+      } else {
+        bar.innerHTML = `
+          ${item.canonical_answer ? `
+            <button class="btn btn-canonical" onclick="sendCanonicalAnswer('${item.id}')">
+              ⚡ Gửi câu trả lời chuẩn & Resolved
+            </button>
+          ` : ''}
+          <button class="btn btn-resolve" onclick="overrideStatus('${item.id}', 'RESOLVED', 'TA xác nhận hoàn tất')">
+            ✓ Đã xử lý xong (Đổi sang Resolved)
+          </button>
+          <button class="btn btn-escalate" onclick="overrideStatus('${item.id}', 'UNRESOLVED', 'Cần hỗ trợ gấp')">
+            ⚠ Cần xử lý gấp (Unresolved)
+          </button>
+          <button class="btn btn-manual" onclick="simulateOpenDiscord()">
+            ✍ Mở Discord gõ tay
+          </button>
         `;
-      } else { // UNRESOLVED
-        actionBar.innerHTML = `
-          ${item.canonical_answer ? `<button class="btn btn-send-canonical" onclick="sendCanonical('${item.id}')">⚡ Gửi câu trả lời chuẩn & Resolved</button>` : ''}
-          <button class="btn btn-escalate" onclick="resolveCase('${item.id}')">✓ Đã xử lý xong (Đổi sang Resolved)</button>
-          <button class="btn btn-manual" onclick="alert('Đã mở thread Discord để TA gõ phản hồi thủ công!')">✍ Gõ phản hồi trên Discord</button>
-        `;
       }
     }
 
-    function resolveCase(id) {
+    // TA Correction / Override action
+    function overrideStatus(id, newStatus, actionDescription) {
       const item = TRIAGE_DATA.find(x => x.id === id);
-      if (item) {
-        item.ai_decision = 'RESOLVED';
-        item.ai_reason = 'TA đã xác nhận hoàn tất xử lý vào lúc ' + new Date().toLocaleTimeString('vi-VN');
-        updateKpiCounts();
-        selectCase(id);
-      }
+      if (!item) return;
+
+      item.ai_decision = newStatus;
+      const timeStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+      item.audit_trail.push({
+        actor: 'TA Long (Human-in-the-loop)',
+        action: `Ghi đè thủ công sang ${newStatus}: "${actionDescription}"`,
+        time: timeStr
+      });
+
+      updateKpiCounts();
+      renderList();
+      selectCase(id);
+      showToast(`Đã cập nhật trạng thái thành ${newStatus}!`);
     }
 
-    function sendCanonical(id) {
+    // Approve & Send Canonical FAQ
+    function sendCanonicalAnswer(id) {
       const item = TRIAGE_DATA.find(x => x.id === id);
-      if (item) {
-        item.thread.push({
-          sender: "TA_Bot (Approved by TA)",
-          text: item.canonical_answer
-        });
-        item.ai_decision = 'RESOLVED';
-        item.ai_reason = 'Đã gửi câu trả lời chuẩn chính thức được TA phê duyệt.';
-        updateKpiCounts();
-        selectCase(id);
+      if (!item || !item.canonical_answer) return;
+
+      const timeStr = new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+      item.thread.push({
+        id: `m_bot_${Date.now()}`,
+        sender: "TA_Bot (Đã được TA Long phê duyệt)",
+        role: "BOT",
+        time: timeStr,
+        text: item.canonical_answer
+      });
+
+      item.ai_decision = 'RESOLVED';
+      item.confidence = 1.0;
+      item.confidence_level = 'HIGH';
+      item.grounding_status = 'GROUNDED';
+      item.ai_reason = 'Đã gửi câu trả lời chuẩn chính thức được TA phê duyệt trực tiếp.';
+      item.audit_trail.push({
+        actor: 'TA Long',
+        action: 'Phê duyệt gửi câu trả lời chuẩn và chốt Resolved',
+        time: timeStr
+      });
+
+      updateKpiCounts();
+      renderList();
+      selectCase(id);
+      showToast('⚡ Đã gửi câu trả lời chuẩn vào thread Discord & đóng case!');
+    }
+
+    function scrollToQuote() {
+      const item = TRIAGE_DATA.find(x => x.id === selectedId);
+      if (!item || !item.evidence_target_id) return;
+      const target = document.getElementById(`msg-${item.evidence_target_id}`);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.style.outline = '2px solid var(--blurple)';
+        setTimeout(() => { target.style.outline = 'none'; }, 2000);
       }
     }
 
-    function escalateCase(id) {
-      const item = TRIAGE_DATA.find(x => x.id === id);
-      if (item) {
-        item.ai_decision = 'UNRESOLVED';
-        item.ai_reason = 'TA đã đánh dấu cần xử lý gấp.';
-        updateKpiCounts();
-        selectCase(id);
-      }
+    function simulateOpenDiscord() {
+      alert("Đang kích hoạt Discord Deep Link tới kênh của câu hỏi này!\n\n(Hệ thống tự động đưa bạn đến đúng vị trí tin nhắn để tiếp tục hỗ trợ trực tiếp).");
     }
 
-    function reopenCase(id) {
-      const item = TRIAGE_DATA.find(x => x.id === id);
-      if (item) {
-        item.ai_decision = 'UNCERTAIN';
-        item.ai_reason = 'TA đã mở lại rà soát.';
-        updateKpiCounts();
-        selectCase(id);
-      }
+    function toggleModal(open) {
+      document.getElementById('haxModal').classList.toggle('open', open);
     }
 
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      document.getElementById('toastMsg').innerText = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // Initial setup
     updateKpiCounts();
     renderList();
-    selectCase('CASE-01');
+    selectCase('CASE-03'); // Default to Happy Path for inspection
   </script>
 </body>
 </html>
