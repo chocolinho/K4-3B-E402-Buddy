@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TA/Mod End-of-Day Triage Dashboard — Discord K4</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #1e1f22;
+      --bg-card: #2b2d31;
+      --bg-hover: #35373c;
+      --bg-thread: #111214;
+      --text-main: #dbdee1;
+      --text-muted: #949ba4;
+      --blurple: #5865f2;
+      --green: #23a55a;
+      --red: #f23f43;
+      --yellow: #f0b232;
+      --border: #3f4147;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      color: var(--text-main);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Bar */
+    header {
+      background: #111214;
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .team-badge {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* Summary KPI Bar */
+    .kpi-bar {
+      background: #232428;
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .kpi-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .kpi-count {
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .filter-tabs {
+      margin-left: auto;
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .filter-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 5px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      font-weight: 600;
+      transition: all 0.15s ease;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--blurple);
+      color: #fff;
+      border-color: var(--blurple);
+    }
+
+    /* Layout */
+    .container {
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left Sidebar: Issue Feed */
+    .issue-feed {
+      background: #2b2d31;
+      border-right: 1px solid var(--border);
+      overflow-y: auto;
+      padding: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .issue-card {
+      background: #1e1f22;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .issue-card:hover {
+      background: var(--bg-hover);
+      border-color: #5865f2;
+    }
+
+    .issue-card.active {
+      background: #313338;
+      border-color: #5865f2;
+      box-shadow: 0 0 0 2px rgba(88, 101, 242, 0.4);
+    }
+
+    .issue-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .author-meta {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .time-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .issue-snippet {
+      font-size: 0.85rem;
+      line-height: 1.4;
+      color: var(--text-main);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    /* Status Badges */
+    .badge {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .badge-resolved { background: rgba(35, 165, 90, 0.2); color: var(--green); border: 1px solid var(--green); }
+    .badge-unresolved { background: rgba(242, 63, 67, 0.2); color: var(--red); border: 1px solid var(--red); }
+    .badge-uncertain { background: rgba(240, 178, 50, 0.2); color: var(--yellow); border: 1px solid var(--yellow); }
+
+    /* Right Main Panel: Detail & Decision */
+    .detail-panel {
+      display: flex;
+      flex-direction: column;
+      background: #1e1f22;
+      overflow-y: auto;
+      padding: 1.5rem;
+      gap: 1.25rem;
+    }
+
+    .box {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+
+    .box-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Thread preview */
+    .thread-box {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      background: var(--bg-thread);
+      border-radius: 6px;
+      padding: 1rem;
+      border: 1px solid #282b30;
+    }
+
+    .thread-msg {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #1f2124;
+    }
+    .thread-msg:last-child { border-bottom: none; padding-bottom: 0; }
+
+    .msg-user {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #5865f2;
+    }
+    .msg-content {
+      font-size: 0.9rem;
+      line-height: 1.4;
+      color: var(--text-main);
+    }
+
+    /* AI Decision Card */
+    .ai-decision-card {
+      border-left: 4px solid var(--blurple);
+      background: rgba(88, 101, 242, 0.08);
+    }
+
+    .ai-status-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .reason-text {
+      font-size: 0.9rem;
+      line-height: 1.5;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .canonical-box {
+      background: rgba(0,0,0,0.3);
+      border: 1px dashed var(--blurple);
+      border-radius: 6px;
+      padding: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Action bar */
+    .action-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.65rem 1.25rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn:hover { opacity: 0.9; }
+
+    .btn-approve { background: var(--green); color: #fff; }
+    .btn-send-canonical { background: var(--blurple); color: #fff; }
+    .btn-escalate { background: #e67e22; color: #fff; }
+    .btn-manual { background: #4e5058; color: #fff; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <header>
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="#5865f2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+      <h1>Discord TA/Mod End-of-Day Triage Dashboard</h1>
+    </div>
+    <div class="team-badge">
+      Track B · Nhóm: Thái - Linh - Long (CP2 Prototype)
+    </div>
+  </header>
+
+  <!-- KPI & Filter Bar -->
+  <div class="kpi-bar">
+    <div class="kpi-item">
+      <span>Cần rà soát hôm nay:</span>
+      <span class="kpi-count" style="background: var(--blurple);" id="totalCount">6</span>
+    </div>
+    <div class="kpi-item">
+      <span>Chưa giải quyết (Unresolved):</span>
+      <span class="kpi-count" style="background: var(--red);" id="unresolvedCount">2</span>
+    </div>
+    <div class="kpi-item">
+      <span>Cần duyệt (Uncertain):</span>
+      <span class="kpi-count" style="background: var(--yellow);" id="uncertainCount">2</span>
+    </div>
+    <div class="kpi-item">
+      <span>Đã xong (Resolved):</span>
+      <span class="kpi-count" style="background: var(--green);" id="resolvedCount">2</span>
+    </div>
+
+    <!-- Filter Buttons -->
+    <div class="filter-tabs">
+      <button class="filter-btn active" onclick="setFilter('ALL')">Tất cả</button>
+      <button class="filter-btn" onclick="setFilter('UNRESOLVED')">⚠ Cần xử lý gấp</button>
+      <button class="filter-btn" onclick="setFilter('UNCERTAIN')">? Cần duyệt</button>
+      <button class="filter-btn" onclick="setFilter('RESOLVED')">✓ Đã xong</button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Left Feed -->
+    <aside class="issue-feed" id="issueFeed">
+      <!-- Injected via JS -->
+    </aside>
+
+    <!-- Right Detail Panel -->
+    <main class="detail-panel" id="detailPanel">
+      <!-- Selected Case Header -->
+      <div class="box">
+        <div class="box-title">
+          <span>Chi tiết vấn đề học viên</span>
+          <span id="detailStatusBadge"></span>
+        </div>
+        <div style="display:flex; justify-content:space-between; margin-bottom: 0.5rem;">
+          <h2 style="font-size:1.1rem; color:#fff;" id="detailAuthor">Author: D2313</h2>
+          <span style="font-size:0.85rem; color:var(--text-muted);" id="detailMeta">channel_02 · 14:15</span>
+        </div>
+        <p style="font-size:1rem; line-height:1.5; color:#fff;" id="detailQuestion">
+          "có điểm danh ws không ạ"
+        </p>
+      </div>
+
+      <!-- Thread Context -->
+      <div class="box">
+        <div class="box-title">Hội thoại liên quan trên kênh (Thread Context)</div>
+        <div class="thread-box" id="threadBox">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <!-- AI Decision & Reasoning -->
+      <div class="box ai-decision-card">
+        <div class="box-title" style="color:var(--blurple);">
+          🤖 AI Triage Decision & Căn cứ xác định
+        </div>
+        <div class="ai-status-row">
+          <span style="font-size:0.9rem; font-weight:600;">Đề xuất trạng thái:</span>
+          <span id="aiProposedBadge"></span>
+        </div>
+        <div class="reason-text" id="aiReasonText">
+          Bot trả lời chung chung (hedging), chưa khẳng định quy chế. Nhưng câu hỏi trùng với FAQ điểm danh tự động qua Zoom.
+        </div>
+
+        <div id="canonicalSection" style="display:none;">
+          <div class="canonical-box">
+            <div style="font-size:0.8rem; font-weight:700; color:var(--blurple); margin-bottom:0.3rem;">
+              📌 Gợi ý Câu trả lời chuẩn (Canonical Answer):
+            </div>
+            <div style="font-size:0.85rem; line-height:1.4; color:#fff;" id="canonicalAnswerText">
+              Hệ thống điểm danh tự động qua Zoom dựa trên đúng cú pháp tên (KX-HoVaTen-MSSV).
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 1rem;">
+          <div style="font-size:0.85rem; font-weight:600; color:var(--text-muted); margin-bottom:0.5rem;">
+            Hành động của TA (Human-in-the-loop):
+          </div>
+          <div class="action-bar" id="actionBar">
+            <!-- Injected via JS -->
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="triage_engine.js"></script>
+  <script>
+    let currentFilter = 'ALL';
+    let selectedId = 'CASE-01';
+
+    function updateKpiCounts() {
+      const unresolved = TRIAGE_DATA.filter(x => x.ai_decision === 'UNRESOLVED').length;
+      const uncertain = TRIAGE_DATA.filter(x => x.ai_decision === 'UNCERTAIN').length;
+      const resolved = TRIAGE_DATA.filter(x => x.ai_decision === 'RESOLVED').length;
+      document.getElementById('totalCount').innerText = TRIAGE_DATA.length;
+      document.getElementById('unresolvedCount').innerText = unresolved;
+      document.getElementById('uncertainCount').innerText = uncertain;
+      document.getElementById('resolvedCount').innerText = resolved;
+    }
+
+    function setFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(filter));
+      });
+      renderList();
+    }
+
+    function renderList() {
+      const feed = document.getElementById('issueFeed');
+      feed.innerHTML = '';
+
+      const filtered = TRIAGE_DATA.filter(item => {
+        if (currentFilter === 'ALL') return true;
+        return item.ai_decision === currentFilter;
+      });
+
+      filtered.forEach(item => {
+        const div = document.createElement('div');
+        div.className = `issue-card ${selectedId === item.id ? 'active' : ''}`;
+        div.onclick = () => selectCase(item.id);
+        div.innerHTML = `
+          <div class="issue-header">
+            <span class="author-meta">${item.author} (${item.channel})</span>
+            ${getStatusBadge(item.ai_decision)}
+          </div>
+          <div class="issue-snippet">${item.question}</div>
+          <div style="margin-top:0.4rem; font-size:0.75rem; color:var(--text-muted);">🕒 Lúc ${item.time}</div>
+        `;
+        feed.appendChild(div);
+      });
+    }
+
+    function selectCase(id) {
+      selectedId = id;
+      renderList();
+      const item = TRIAGE_DATA.find(x => x.id === id);
+      if (!item) return;
+
+      document.getElementById('detailAuthor').innerText = `Học viên: ${item.author}`;
+      document.getElementById('detailMeta').innerText = `${item.channel} · ${item.time}`;
+      document.getElementById('detailQuestion').innerText = `"${item.question}"`;
+      document.getElementById('detailStatusBadge').innerHTML = getStatusBadge(item.ai_decision);
+      document.getElementById('aiProposedBadge').innerHTML = getStatusBadge(item.ai_decision);
+      document.getElementById('aiReasonText').innerText = item.ai_reason;
+
+      // Render thread
+      const threadBox = document.getElementById('threadBox');
+      threadBox.innerHTML = '';
+      item.thread.forEach(msg => {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = 'thread-msg';
+        msgDiv.innerHTML = `
+          <div class="msg-user">${msg.sender}:</div>
+          <div class="msg-content">${msg.text}</div>
+        `;
+        threadBox.appendChild(msgDiv);
+      });
+
+      // Canonical section
+      const canonicalSec = document.getElementById('canonicalSection');
+      if (item.canonical_answer) {
+        canonicalSec.style.display = 'block';
+        document.getElementById('canonicalAnswerText').innerText = item.canonical_answer;
+      } else {
+        canonicalSec.style.display = 'none';
+      }
+
+      // Render Action Buttons
+      const actionBar = document.getElementById('actionBar');
+      actionBar.innerHTML = '';
+
+      if (item.ai_decision === 'RESOLVED') {
+        actionBar.innerHTML = `
+          <button class="btn btn-approve" disabled style="opacity:0.8; cursor:default;">✓ Đã hoàn tất giải quyết</button>
+          <button class="btn btn-manual" onclick="reopenCase('${item.id}')">Mở lại (Re-open)</button>
+        `;
+      } else if (item.ai_decision === 'UNCERTAIN') {
+        actionBar.innerHTML = `
+          ${item.canonical_answer ? `<button class="btn btn-send-canonical" onclick="sendCanonical('${item.id}')">⚡ Gửi câu trả lời chuẩn & Resolved</button>` : ''}
+          <button class="btn btn-approve" onclick="resolveCase('${item.id}')">✓ Xác nhận Resolved</button>
+          <button class="btn btn-escalate" onclick="escalateCase('${item.id}')">⚠ Chuyển sang Unresolved (Cần TA hỗ trợ)</button>
+        `;
+      } else { // UNRESOLVED
+        actionBar.innerHTML = `
+          ${item.canonical_answer ? `<button class="btn btn-send-canonical" onclick="sendCanonical('${item.id}')">⚡ Gửi câu trả lời chuẩn & Resolved</button>` : ''}
+          <button class="btn btn-escalate" onclick="resolveCase('${item.id}')">✓ Đã xử lý xong (Đổi sang Resolved)</button>
+          <button class="btn btn-manual" onclick="alert('Đã mở thread Discord để TA gõ phản hồi thủ công!')">✍ Gõ phản hồi trên Discord</button>
+        `;
+      }
+    }
+
+    function resolveCase(id) {
+      const item = TRIAGE_DATA.find(x => x.id === id);
+      if (item) {
+        item.ai_decision = 'RESOLVED';
+        item.ai_reason = 'TA đã xác nhận hoàn tất xử lý vào lúc ' + new Date().toLocaleTimeString('vi-VN');
+        updateKpiCounts();
+        selectCase(id);
+      }
+    }
+
+    function sendCanonical(id) {
+      const item = TRIAGE_DATA.find(x => x.id === id);
+      if (item) {
+        item.thread.push({
+          sender: "TA_Bot (Approved by TA)",
+          text: item.canonical_answer
+        });
+        item.ai_decision = 'RESOLVED';
+        item.ai_reason = 'Đã gửi câu trả lời chuẩn chính thức được TA phê duyệt.';
+        updateKpiCounts();
+        selectCase(id);
+      }
+    }
+
+    function escalateCase(id) {
+      const item = TRIAGE_DATA.find(x => x.id === id);
+      if (item) {
+        item.ai_decision = 'UNRESOLVED';
+        item.ai_reason = 'TA đã đánh dấu cần xử lý gấp.';
+        updateKpiCounts();
+        selectCase(id);
+      }
+    }
+
+    function reopenCase(id) {
+      const item = TRIAGE_DATA.find(x => x.id === id);
+      if (item) {
+        item.ai_decision = 'UNCERTAIN';
+        item.ai_reason = 'TA đã mở lại rà soát.';
+        updateKpiCounts();
+        selectCase(id);
+      }
+    }
+
+    updateKpiCounts();
+    renderList();
+    selectCase('CASE-01');
+  </script>
+</body>
+</html>
