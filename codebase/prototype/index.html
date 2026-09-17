@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Clickable CP2 mock for TA Discord support review using synthetic data only.">
+  <title>Discord Support Review</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-mark" aria-hidden="true">B</div>
+    <div class="brand-copy">
+      <span class="eyebrow">Buddy · TA workspace</span>
+      <strong>Discord Support Review</strong>
+    </div>
+    <div class="mock-badge">Mock data</div>
+  </header>
+
+  <main class="page-shell">
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Daily review · 17 Sep</p>
+        <h1 id="page-title">Những vấn đề nào vẫn cần hỗ trợ?</h1>
+        <p class="helper">AI đề xuất trạng thái từ ngữ cảnh liên quan. Hãy kiểm tra căn cứ và sửa khi cần — hệ thống không tự nhắn cho học viên.</p>
+      </div>
+      <button class="secondary-button" id="reset-button" type="button">Đặt lại bản demo</button>
+    </section>
+
+    <section class="summary-grid" aria-label="Status summary">
+      <button class="summary-card unresolved active" type="button" data-filter="unresolved" aria-pressed="true">
+        <span class="summary-icon" aria-hidden="true">!</span>
+        <span><strong id="unresolved-count">0</strong><small>Unresolved</small></span>
+      </button>
+      <button class="summary-card uncertain" type="button" data-filter="uncertain" aria-pressed="false">
+        <span class="summary-icon" aria-hidden="true">?</span>
+        <span><strong id="uncertain-count">0</strong><small>Uncertain</small></span>
+      </button>
+      <button class="summary-card resolved" type="button" data-filter="resolved" aria-pressed="false">
+        <span class="summary-icon" aria-hidden="true">✓</span>
+        <span><strong id="resolved-count">0</strong><small>Resolved</small></span>
+      </button>
+    </section>
+
+    <section class="review-panel" aria-labelledby="review-title">
+      <div class="panel-heading">
+        <div>
+          <p class="eyebrow">Priority queue</p>
+          <h2 id="review-title">Cần TA xem hôm nay</h2>
+        </div>
+        <button class="text-button" id="show-all-button" type="button">Hiện tất cả</button>
+      </div>
+      <div id="question-list" class="question-list" aria-live="polite"></div>
+      <div id="empty-state" class="empty-state" hidden>
+        <span aria-hidden="true">✓</span>
+        <h3>Không có mục nào ở trạng thái này</h3>
+        <p>Chọn “Hiện tất cả” để xem toàn bộ bản demo.</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <dialog id="context-dialog" aria-labelledby="dialog-title">
+    <div class="dialog-header">
+      <div>
+        <p class="eyebrow">Related context · synthetic</p>
+        <h2 id="dialog-title">Ngữ cảnh liên quan</h2>
+      </div>
+      <button class="icon-button" id="close-dialog" type="button" aria-label="Đóng">×</button>
+    </div>
+    <div id="dialog-content"></div>
+    <div class="dialog-footer">
+      <p>Chỉ mở luồng gốc để TA phản hồi thủ công.</p>
+      <button class="primary-button" id="open-source-button" type="button">Mở luồng gốc (demo)</button>
+    </div>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
