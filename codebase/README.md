@@ -4,6 +4,14 @@
 
 Mở trực tiếp [prototype/index.html](prototype/index.html) bằng trình duyệt. Không cần máy chủ, bước đóng gói, khung phát triển, giao diện lập trình ứng dụng bên ngoài hoặc kết nối mạng.
 
+## Bố cục màn hình
+
+1. Phần giới thiệu nói rõ khả năng và giới hạn của bản mẫu.
+2. Thanh luồng CP2 thể hiện `Tin nhắn Discord → AI phân loại → TA rà soát → TA quyết định`.
+3. Ba thẻ tổng quan vừa hiển thị số lượng vừa đóng vai trò bộ lọc.
+4. Hàng đợi ưu tiên hiển thị tình huống, đề xuất ban đầu, lý do, độ tin cậy và nguồn giả lập.
+5. Hộp thoại ngữ cảnh cho phép so sánh đề xuất của AI với quyết định hiện tại của TA.
+
 ## Tương tác hoạt động thật
 
 - Điều hướng và lọc danh sách câu hỏi.
