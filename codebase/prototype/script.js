@@ -68,6 +68,76 @@ const QUESTIONS = [
     source: "channel_10 · M42137", sourceTrust: "none",
     contextSummary: "author = BOT và is_bot = true; hệ thống không nên tạo ticket hỗ trợ từ message này.",
     messages: [["Buddy Bot", "Có thể tra XP bằng Discord ID hoặc xem lịch sử bằng lệnh /rank.", false], ["Bộ phân loại", "Bỏ qua ứng viên vì nguồn gửi là bot/hệ thống.", true]]
+  },
+  {
+    id: "q-211", scenario: "Nguồn cộng đồng về đăng nhập", question: "Em không vào được Zoom bằng email trường; dùng email cá nhân có được không?", status: "uncertain", confidence: 0.61,
+    reason: "Có người hướng dẫn dùng email cá nhân, nhưng chưa có xác nhận từ BTC hoặc tài liệu chính thức về cách xử lý tài khoản.",
+    source: "channel_11 · M27034, M66739", sourceTrust: "community",
+    contextSummary: "Câu trả lời cộng đồng có thể giúp tạm thời nhưng chưa đủ thẩm quyền để xác nhận quy định đăng nhập.",
+    messages: [["Học viên-L", "Em không vào được Zoom bằng email trường; tối nay dùng email cá nhân và đổi tên đúng cú pháp được không?", false], ["Người tham gia", "Bạn thử vào bằng email cá nhân, không dùng email trường.", true]]
+  },
+  {
+    id: "q-212", scenario: "Phản hồi chưa xử lý mất XP", question: "Em tham gia workshop đầy đủ nhưng chưa thấy được cộng XP, cần làm gì?", status: "unresolved", confidence: 0.91,
+    reason: "Phản hồi chỉ nhắc điều kiện đặt tên và tương tác, chưa kiểm tra hoặc hướng dẫn xử lý lượt XP đang thiếu.",
+    source: "channel_11 · M69343, M42138", sourceTrust: "community",
+    contextSummary: "Người hỏi cần khắc phục một lần ghi nhận bị thiếu; lời đáp mới nêu điều kiện chung.",
+    messages: [["Học viên-M", "Em tham gia workshop từ đầu đến cuối nhưng chưa thấy được cộng XP.", false], ["Người tham gia", "Cần đặt đúng tên Zoom và có tương tác trong workshop.", true]]
+  },
+  {
+    id: "q-213", scenario: "Điểm danh cần xác minh thêm", question: "Em quét QR điểm danh đầy đủ nhưng ứng dụng không có lịch sử, kiểm tra ở đâu?", status: "unresolved", confidence: 0.88,
+    reason: "Luồng yêu cầu người hỏi cung cấp thêm lớp và buổi học; chưa có xác nhận điểm danh đã được ghi nhận.",
+    source: "channel_11 · M37211, M57346, M51989", sourceTrust: "community",
+    contextSummary: "Có hướng dẫn liên hệ hỗ trợ và hỏi thêm thông tin, nhưng vấn đề điểm danh vẫn đang mở.",
+    messages: [["Học viên-N", "Em đã quét QR nhưng không thấy lịch sử điểm danh trên ứng dụng.", false], ["Người hỗ trợ", "Bạn cho biết lớp và buổi học để bên mình kiểm tra thêm nhé.", true], ["Người tham gia", "Nếu vẫn thiếu, bạn gửi thông tin cho bộ phận hỗ trợ.", true]]
+  },
+  {
+    id: "q-214", scenario: "Có hướng dẫn khắc phục kỹ thuật", question: "Đã thêm API key nhưng Phoenix vẫn báo chưa có AI Logs, em kiểm tra gì tiếp?", status: "resolved", confidence: 0.92,
+    reason: "Bot giải thích API key chỉ kích hoạt logging và đưa bước tạo request từ repo để phát sinh log.",
+    source: "channel_10 · M53517, M44218", sourceTrust: "official",
+    contextSummary: "Phản hồi đúng intent, có nguyên nhân và bước kiểm tra tiếp theo có thể thực hiện.",
+    messages: [["Học viên-O", "Em đã thiết lập API key nhưng mục AI Logs vẫn trống.", false], ["Buddy Bot", "API key mới chỉ kích hoạt logging; hãy chạy một request từ repo rồi kiểm tra lại kết nối và log.", true]]
+  },
+  {
+    id: "q-215", scenario: "Lệnh daily không hoạt động", question: "Em gõ lệnh daily nhưng không được; phải nộp ở đâu?", status: "resolved", confidence: 0.96,
+    reason: "Bot chỉ rõ phải nộp trong thread Thảo luận của team và dùng lệnh /daily tại đúng vị trí.",
+    source: "channel_10 · M65205, M91046", sourceTrust: "official",
+    contextSummary: "Câu trả lời cung cấp cả nơi nộp và thao tác, giải quyết đúng câu hỏi.",
+    messages: [["Học viên-P", "Em gõ lệnh daily nhưng không chạy; mình phải nộp ở đâu?", false], ["Buddy Bot", "Hãy vào thread Thảo luận trong kênh riêng của team rồi dùng lệnh /daily.", true]]
+  },
+  {
+    id: "q-216", scenario: "Ngoại lệ nộp bài chưa có policy", question: "Em làm đúng hạn nhưng commit lỗi nên push muộn; có được tính đúng hạn không?", status: "uncertain", confidence: 0.43,
+    reason: "Bot thừa nhận không có quy định châm chước chính thức và chỉ khuyên liên hệ người có thẩm quyền.",
+    source: "channel_10 · M40677, M00595", sourceTrust: "none",
+    contextSummary: "Đây là quyết định về deadline cần BTC/TA xác nhận; không thể suy ra từ hội thoại hiện có.",
+    messages: [["Học viên-Q", "Em hoàn thành trước deadline nhưng commit lỗi nên push lên sau giờ, có được tính đúng hạn không?", false], ["Buddy Bot", "Mình chưa có policy chính thức cho ngoại lệ này; bạn nên gửi bằng chứng và hỏi TA/BTC.", true]]
+  },
+  {
+    id: "q-217", scenario: "Quy trình đề tài ngoài danh sách", question: "Nhóm muốn làm đề tài ngoài Project Bank thì xin duyệt thế nào?", status: "resolved", confidence: 0.95,
+    reason: "Bot đưa quy trình cụ thể: tạo ticket loại đề xuất đề tài mới để người có thẩm quyền xem xét.",
+    source: "channel_10 · M16663, M31822", sourceTrust: "official",
+    contextSummary: "Câu trả lời đúng intent và nêu hành động tiếp theo có thể kiểm tra được.",
+    messages: [["Học viên-R", "Nhóm em muốn làm đề tài ngoài Project Bank thì cần xin duyệt ra sao?", false], ["Buddy Bot", "Hãy tạo ticket loại Đề xuất đề tài mới và gửi nội dung để BTC/giảng viên duyệt.", true]]
+  },
+  {
+    id: "q-218", scenario: "Câu trả lời phụ thuộc tình hình", question: "Team đã có 4 người thì có bị ghép thêm thành viên thứ năm không?", status: "uncertain", confidence: 0.57,
+    reason: "Phản hồi nói việc ghép tùy số người còn dư, nên chưa thể kết luận cho team cụ thể tại thời điểm hiện tại.",
+    source: "channel_02 · M88368, M97423", sourceTrust: "community",
+    contextSummary: "Có nguyên tắc chung nhưng kết quả cuối cùng phụ thuộc việc điều phối chưa xảy ra.",
+    messages: [["Học viên-S", "Team đã đủ 4 người thì BTC giữ nguyên hay ghép thêm người thứ năm?", false], ["Người tham gia", "Còn tùy số người dư; nếu cần thì có thể ghép vào team đang thiếu.", true]]
+  },
+  {
+    id: "q-219", scenario: "Tra cứu và chọn đề tài", question: "Làm sao biết đề tài nào còn trống và đăng ký cho nhóm?", status: "resolved", confidence: 0.97,
+    reason: "Bot cung cấp đúng hai lệnh: /topic available để xem đề tài còn lại và /topic pick để chọn.",
+    source: "channel_10 · M90646, M82926", sourceTrust: "official",
+    contextSummary: "Câu trả lời bao phủ cả bước tra cứu lẫn đăng ký đề tài.",
+    messages: [["Học viên-T", "Làm sao biết chủ đề nào đã được chọn và đăng ký chủ đề cho nhóm ở đâu?", false], ["Buddy Bot", "Dùng /topic available để xem đề tài còn lại và /topic pick để chọn cho nhóm.", true]]
+  },
+  {
+    id: "q-220", scenario: "Không có thông tin chính thức", question: "Chương trình có hỗ trợ đặt phòng riêng cho nhóm thảo luận không?", status: "uncertain", confidence: 0.39,
+    reason: "Bot nói không có thông tin chính thức và chỉ gợi ý không gian online, nên chưa trả lời được yêu cầu đặt phòng.",
+    source: "channel_10 · M45220, M49356", sourceTrust: "none",
+    contextSummary: "Không có nguồn xác nhận về quyền đặt phòng; TA/BTC cần kiểm tra trước khi trả lời.",
+    messages: [["Học viên-U", "Chương trình có hỗ trợ book phòng riêng để nhóm thảo luận không?", false], ["Buddy Bot", "Mình chưa có thông tin chính thức về việc đặt phòng; hiện chỉ biết các không gian thảo luận online.", true]]
   }
 ];
 

@@ -13,13 +13,13 @@ Sau đó mở `http://127.0.0.1:8000`. Xem [hướng dẫn CP3](ai/README.md) đ
 ## Bố cục màn hình
 
 1. Hàng đợi ưu tiên xuất hiện ngay đầu màn hình, kèm số liệu của phiên hiện tại.
-2. Tab trạng thái, tìm kiếm, bộ lọc nguồn/tình huống và sắp xếp giúp TA quét nhanh 10 case.
+2. Tab trạng thái, tìm kiếm, bộ lọc nguồn/tình huống và sắp xếp giúp TA quét nhanh 20 case.
 3. Mỗi case có một hành động chính, confidence dạng thanh kèm hướng dẫn và nhãn nguồn rõ ràng.
 4. Side panel hai cột hiển thị timeline hội thoại, bằng chứng, structured output, policy và lịch sử quyết định.
 5. TA có thể xác nhận, ghi đè hoặc hoàn tác; mọi thao tác được lưu trong audit trail của phiên.
 6. Chế độ **Demo nhanh**, dashboard phiên và phím tắt hỗ trợ video/pitch và hàng đợi lớn.
 
-Prototype có 10 tình huống được rút gọn từ các pattern trong `k4_messages.csv`: câu hỏi lặp, câu trả lời ở luồng khác, trả lời sai intent, thiếu grounding, thiếu attachment và message do bot gửi. Tên người gửi được thay bằng định danh giả; link gốc bị loại bỏ; message ID ẩn danh chỉ được giữ để nhóm đối chiếu nguồn.
+Prototype có 20 tình huống mô phỏng được tổng hợp từ các pattern trong `k4_messages.csv`: câu hỏi lặp, câu trả lời ở luồng khác, trả lời sai intent, thiếu grounding, thiếu attachment, message do bot gửi, lỗi điểm danh/XP, quy trình đề tài và câu hỏi cần nguồn có thẩm quyền. Nội dung đã được rút gọn hoặc viết lại; tên người gửi được thay bằng định danh giả; link gốc bị loại bỏ; message ID ẩn danh chỉ được giữ để nhóm đối chiếu nguồn. Repository không chứa tệp CSV hoặc hội thoại Discord gốc. Xem [bảng nguồn gốc case](../evidence/mock-case-provenance.md).
 
 ## Tương tác hoạt động thật
 

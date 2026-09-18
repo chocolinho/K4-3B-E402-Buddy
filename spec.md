@@ -10,7 +10,7 @@
 
 Sau thời điểm trên, nhóm không sửa quality bar trong §7. Kết quả mới chỉ được bổ sung vào bảng lượt chạy và §9 Changelog.
 
-Tài liệu liên quan: [Canvas CP1](canvas.md) · [Bằng chứng khảo sát](evidence/survey-summary.md) · [Bảng impact](evidence/impact-table.md) · [Prototype](codebase/README.md) · [Golden set](eval/golden-set.json) · [Kết quả CP3](eval/cp3-results.md)
+Tài liệu liên quan: [Canvas CP1](canvas.md) · [Bằng chứng khảo sát](evidence/survey-summary.md) · [Bảng impact](evidence/impact-table.md) · [Nguồn gốc mock](evidence/mock-case-provenance.md) · [Prototype](codebase/README.md) · [Golden set](eval/golden-set.json) · [Kết quả CP3](eval/cp3-results.md)
 
 ## §1. User & Job
 
@@ -100,7 +100,7 @@ Một TA cuối ngày cần xác định vấn đề Discord nào vẫn cần h�
 
 | Thành phần | Mock hay thật? |
 |---|---|
-| 10 hội thoại và nguồn hiển thị | Mock/đã ẩn danh |
+| 20 hội thoại và nguồn hiển thị | Mock được tổng hợp/ẩn danh từ failure pattern trong data pack; không chứa CSV gốc |
 | Nhận dữ liệu trực tiếp từ Discord | Chưa làm |
 | Nút **Phân tích bằng AI** | Thật — gọi backend cục bộ và Gemini API |
 | Structured output, policy confidence, fallback | Thật |

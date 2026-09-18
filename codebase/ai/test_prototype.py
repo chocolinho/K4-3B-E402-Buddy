@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -34,6 +35,13 @@ class PrototypeContractTests(unittest.TestCase):
         self.assertIn("@media (max-width: 380px)", self.css)
         self.assertIn("@media (max-width: 680px)", self.css)
         self.assertIn("prefers-reduced-motion: reduce", self.css)
+
+    def test_twenty_anonymized_mock_cases_are_declared(self):
+        case_ids = re.findall(r'id: "(q-\d+)"', self.script)
+        self.assertEqual(len(case_ids), 20)
+        self.assertEqual(len(set(case_ids)), 20)
+        self.assertIn("20 tình huống mô phỏng", self.html)
+        self.assertIn("đã ẩn danh", self.html)
 
 
 if __name__ == "__main__":
