@@ -2,7 +2,14 @@
 
 **Nhánh:** B – B2 · Tính năng mới cho TA/học viên trên Discord
 
-**Phạm vi hiện tại:** CP1 xác định vấn đề và CP2 bản mẫu bấm thử được
+**Phiên bản:** CP4 v1.0
+
+**Phạm vi hiện tại:** Chốt đặc tả sản phẩm, chuẩn đạt và các giới hạn đã biết.
+
+**Thời điểm khóa chuẩn đạt:** 18/09/2026 lúc 08:22 (Asia/Ho_Chi_Minh)
+
+Sau thời điểm trên, nhóm không sửa mục “Chuẩn đạt đã khóa”.
+Kết quả thử nghiệm mới chỉ được bổ sung vào nhật ký đánh giá.
 
 **Người dùng chính:** TA/Mod rà soát hỗ trợ vào cuối ngày
 
@@ -98,15 +105,15 @@ Sản phẩm sử dụng **tự động hóa có điều kiện**:
 
 Ranh giới này giúp giảm thời gian rà soát mà không giả định rằng bằng chứng hội thoại chưa đầy đủ là kết luận chắc chắn.
 
-## 6. Hoạt động và giới hạn của CP2
+## 6. Hoạt động và giới hạn của prototype hiện tại
 
-Sản phẩm CP2 là bản mô phỏng tĩnh có thể bấm thử. Việc điều hướng, lọc danh sách, xem ngữ cảnh, đếm trạng thái và sửa thủ công là các tương tác thật trên trình duyệt. Việc nhận dữ liệu Discord, truy xuất, phân loại, lý do, độ tin cậy và nguồn tham chiếu đều là dữ liệu giả lập cố định.
+Prototype cho phép điều hướng, lọc danh sách, xem ngữ cảnh, đếm trạng thái và sửa thủ công ngay trên trình duyệt. Mười tình huống hiển thị là dữ liệu giả lập/đã ẩn danh; hệ thống chưa tự nhận dữ liệu trực tiếp từ Discord và chưa tự truy xuất hội thoại trên toàn server.
 
-Bản mô phỏng không gọi mạng và không chạy mô hình AI thật. Xem [định nghĩa luồng hoạt động](codebase/flowchart/README.md).
+Từ CP3, nút **Phân tích bằng AI** gọi backend cục bộ và Gemini API thật. Kết quả trả về gồm trạng thái, lý do, độ tin cậy và nguồn tham chiếu; khi API lỗi, hệ thống trả fallback `uncertain` để TA kiểm tra. Các quyết định ban đầu trước khi bấm phân tích vẫn là mock để phục vụ demo. Xem [định nghĩa luồng hoạt động](codebase/flowchart/README.md) và [hướng dẫn AI](codebase/ai/README.md).
 
-## 7. Các trường hợp rủi ro sơ bộ
+## 7. Các trường hợp rủi ro và đánh giá
 
-Đợt đánh giá sau phải bao phủ: câu hỏi trùng ý nhưng khác cách diễn đạt, câu trả lời ở luồng khác, tin nhắn từ bot/hệ thống, vấn đề được cùng một người gửi lặp lại, ngữ cảnh mơ hồ, không có căn cứ, câu hỏi ngoài phạm vi và việc TA sửa phân loại. CP2 có ví dụ giả lập cho sáu trường hợp đầu; kế hoạch đầy đủ nằm trong [tài liệu đánh giá](eval/README.md).
+Challenge set CP3 bao phủ: câu hỏi trùng ý nhưng khác cách diễn đạt, câu trả lời ở luồng khác, tin nhắn từ bot/hệ thống, vấn đề được cùng một người gửi lặp lại, ngữ cảnh mơ hồ, không có căn cứ, câu hỏi ngoài phạm vi và nguồn không đủ thẩm quyền. Lượt chạy chính thức đạt 19/20 case, fallback 0; failure còn lại là trường hợp AI chấp nhận nguồn cộng đồng cho thông tin deadline trong khi policy yêu cầu nguồn chính thức. Chi tiết nằm trong [báo cáo CP3](eval/cp3-results.md) và [tài liệu đánh giá](eval/README.md).
 
 ## 8. Nguyên tắc tương tác giữa con người và AI
 
@@ -118,11 +125,76 @@ Bản mẫu áp dụng G1 (nói rõ hệ thống làm được gì), G2 (hiển 
 - CP2: thêm bảng rà soát tĩnh với tình huống giả lập, xem ngữ cảnh, lọc danh sách và nút để TA sửa trạng thái.
 - CP2: đối chiếu flow prototype với các pain đã ghi nhận trong khảo sát; xác nhận đây mới là bằng chứng từ mock, chưa phải kết quả user test hoặc đo lường AI thật.
 - CP3: hoàn thành backend AI với structured output, trace input/output, fallback `uncertain` và human-in-the-loop. Challenge set chính thức chạy bằng Gemini 3.5 Flash-Lite đạt 19/20 case (95%), API fallback 0; một failure thuộc ranh giới thẩm quyền nguồn đối với deadline và đã được phân tích trong `eval/cp3-results.md`.
+- CP4: khóa chuẩn đạt tại mục 10 và tự khai các giới hạn tại mục 11. Sau khi khóa, nâng cấp UI/UX của prototype với hàng đợi ưu tiên, side panel bằng chứng, nhãn độ tin cậy nguồn, audit trail, phím tắt và dashboard phiên; chưa ghi nhận đây là thay đổi đã được người dùng xác nhận.
 - Thay đổi sau kiểm chứng với người dùng: _chỉ bổ sung sau các buổi quan sát sử dụng; không tự tạo phản hồi._
+
+## 10. Chuẩn đạt đã khóa cho CP4
+
+Buddy được xem là đạt phiên bản thử nghiệm khi đồng thời thỏa mãn:
+
+1. AI nhận được `question`, `thread_context` và `related_messages`.
+
+2. Mọi kết quả hợp lệ phải có đủ:
+   - `status`
+   - `confidence`
+   - `reason`
+   - `source_reference`
+
+3. `status` chỉ được thuộc một trong ba giá trị:
+   - `resolved`
+   - `unresolved`
+   - `uncertain`
+
+4. Trên bộ challenge set cố định gồm 20 trường hợp:
+   - tối thiểu 17/20 trường hợp khớp nhãn kỳ vọng;
+   - pass rate tối thiểu 85%;
+   - không có API fallback trong lượt chạy được dùng làm kết quả chính thức.
+
+5. AI không được tự đánh dấu `resolved` nếu:
+   - không có nguồn hỗ trợ;
+   - nguồn không đủ thẩm quyền;
+   - câu hỏi thiếu dữ liệu hoặc thiếu tệp đính kèm quan trọng;
+   - độ tin cậy thấp.
+
+   Những trường hợp này phải được chuyển thành `uncertain` để TA kiểm tra.
+
+6. Mọi kết quả `resolved` phải có:
+   - `source_reference` không rỗng;
+   - lý do dựa trên dữ liệu đầu vào;
+   - thông tin đủ để TA kiểm tra lại.
+
+7. TA hoặc moderator luôn có quyền sửa kết quả của AI.
+   Hệ thống không tự động gửi câu trả lời hoặc đóng câu hỏi.
+
+8. Không được commit API key, dữ liệu Discord thô hoặc thông tin
+   nhận dạng cá nhân lên repository public.
+
+9. Trong vòng thử nghiệm người dùng tiếp theo, ít nhất 4/5 người dùng
+   phải hoàn thành luồng kiểm tra một câu hỏi mà không cần người hướng dẫn.
+
+## 11. Tự khai phần chưa hoàn thành và giới hạn hiện tại
+
+Tại thời điểm khóa CP4, nhóm tự khai:
+
+- Chưa tích hợp trực tiếp Discord API hoặc webhook; prototype chỉ dùng 10 tình huống giả lập/đã ẩn danh.
+- Chưa tự động tìm kiếm và gom nhóm câu hỏi trên toàn bộ server Discord.
+- Chưa có đăng nhập, phân quyền theo vai trò, cơ sở dữ liệu hoặc triển khai production.
+- Chưa đánh giá bảo mật và quyền riêng tư ở mức production.
+- Chưa hoàn thành buổi quan sát chính thức với 5 người ngoài nhóm; vì vậy tiêu chí 4/5 hoàn thành luồng vẫn đang chờ kiểm chứng.
+- `confidence` là mức tự đánh giá do mô hình trả về và được kiểm soát bằng policy, chưa phải xác suất đã được hiệu chỉnh thống kê.
+- Kết quả 19/20 (95%) chỉ phản ánh challenge set 20 case đã công bố, không đại diện cho độ chính xác trên toàn bộ dữ liệu Discord thực tế.
+- Hệ thống không tự động gửi tin, đóng câu hỏi hoặc thay TA ra quyết định. Đây là ranh giới sản phẩm có chủ đích, không phải tính năng bị lỗi.
+
+**Tự đánh giá tại thời điểm khóa:** prototype đã đáp ứng các tiêu chí kỹ thuật 1-8 của chuẩn đạt với lượt chạy CP3 chính thức 19/20 và fallback 0. Tiêu chí trải nghiệm người dùng số 9 chưa được xác nhận và được chuyển sang hoạt động validation trước CP5.
+
+## 12. Quy tắc sau khi khóa
+
+- Không sửa nội dung mục 10 sau thời điểm khóa đã ghi ở đầu tài liệu.
+- Kết quả validation mới chỉ được bổ sung vào mục 9 và thư mục `validation/`.
+- Nếu sản phẩm không đạt một tiêu chí, nhóm ghi nhận kết quả thật và phân tích nguyên nhân; không hạ chuẩn sau khi đã xem kết quả.
 
 ## Việc cần làm ở các mốc tiếp theo
 
-- Chọn và ghi nhận đội trưởng cùng mã học viên của tất cả thành viên.
-- Xác định và khóa tiêu chuẩn đạt của CP4 trước khi đánh giá.
 - Dùng kết quả CP3 95% làm baseline cho các thay đổi policy tiếp theo; mọi run mới phải giữ nguyên nguyên tắc không tính fallback là kết quả AI.
 - Kiểm chứng với năm người ngoài nhóm, trong đó có ít nhất hai người dùng đã khai ở CP1; ghi nguyên văn phản hồi trong lúc làm nhiệm vụ sau khi được đồng ý.
+- Hoàn thiện UI/UX theo kế hoạch trong `docs/ui-ux-upgrade-plan.md`, sau đó chạy validation mà không thay đổi chuẩn đạt ở mục 10.
