@@ -1,4 +1,4 @@
-# Đánh giá — Mốc tiếp theo
+# Đánh giá CP3
 
 CP2 sử dụng các ví dụ giả lập cố định và chưa dùng AI thật. Ở CP3, nhóm cần tạo một bộ dữ liệu chuẩn có phiên bản bằng dữ liệu giả lập, bao phủ các ca kiểm thử khó dưới đây; xác định trạng thái mong đợi trước khi chạy hệ thống và báo cáo kết quả thực tế mà không thay đổi tiêu chuẩn đạt sau đó.
 
@@ -12,3 +12,15 @@ CP2 sử dụng các ví dụ giả lập cố định và chưa dùng AI thật
 8. TA tự sửa phân loại của AI.
 
 Không đưa dữ liệu Discord thô hoặc thông tin nhận dạng cá nhân vào thư mục này.
+
+## Golden set
+
+[`golden-set.json`](golden-set.json) chứa 20 case giả lập, đã gắn nhãn mong đợi trước khi chạy AI. Nhóm cần rà soát từng nhãn và thay bằng bộ test đã chuẩn bị nếu bộ đó có bằng chứng tốt hơn. Không đổi nhãn sau khi xem kết quả chỉ để tăng pass rate.
+
+Chạy phép đo thật bằng:
+
+```powershell
+python codebase/ai/run_eval.py
+```
+
+Kết quả sẽ được ghi vào `runs/` và `cp3-results.md`. Xem hướng dẫn đầy đủ tại [`codebase/ai/README.md`](../codebase/ai/README.md).

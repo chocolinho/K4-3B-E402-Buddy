@@ -1,0 +1,239 @@
+{
+  "timestamp": "2026-09-18T04:05:17.052098+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "confidence_threshold": 0.65,
+  "cases_file": "C:\\Users\\Admin\\K4-3B-E402-Buddy\\eval\\golden-set.json",
+  "reconstructed_from_trace": true,
+  "provenance": "Reconstructed from the 20 original trace records captured between 11:03 and 11:05 local time.",
+  "summary": {
+    "total": 20,
+    "passed": 14,
+    "failed": 6,
+    "fallbacks": 0,
+    "pass_rate_percent": 70.0,
+    "valid_run": true
+  },
+  "results": [
+    {
+      "id": "cp3-001",
+      "failure_mode": "answered elsewhere",
+      "expected_status": "resolved",
+      "predicted_status": "resolved",
+      "confidence": 0.9,
+      "reason": "Bot đã trả lời cách xem XP bằng lệnh /rank như được ghi nhận trong tin nhắn liên quan.",
+      "source_reference": "M18056",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-002",
+      "failure_mode": "repeated question",
+      "expected_status": "resolved",
+      "predicted_status": "uncertain",
+      "confidence": 0.8,
+      "reason": "Câu hỏi mơ hồ và chỉ có sự tương tác với bot, không có câu trả lời đáng tin cậy từ TA hoặc giảng viên.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": false
+    },
+    {
+      "id": "cp3-003",
+      "failure_mode": "answered elsewhere",
+      "expected_status": "resolved",
+      "predicted_status": "resolved",
+      "confidence": 0.95,
+      "reason": "Câu hỏi có cùng intent với nội dung đã được các tin nhắn liên quan hướng dẫn cách xem XP.",
+      "source_reference": "M42137",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-004",
+      "failure_mode": "repeated sender",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.9,
+      "reason": "Ứng viên đặt câu hỏi về quy cách nộp daily standup nhưng chỉ có các tin nhắn hỏi lại từ học viên khác mà chưa có câu trả lời đáng tin cậy từ nguồn chính thức.",
+      "source_reference": "M57734,M79664",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-005",
+      "failure_mode": "repeated question",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.9,
+      "reason": "Nhiều học viên cùng hỏi cách nộp daily stand up nhưng chưa có câu trả lời từ nguồn đáng tin cậy.",
+      "source_reference": "M97705,M36622,M41736",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-006",
+      "failure_mode": "wrong answer for intent",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.9,
+      "reason": "Học viên hỏi cách nộp daily stand up nhưng bot chỉ trả lời về khung giờ nộp, chưa có hướng dẫn cách nộp từ nguồn đáng tin cậy.",
+      "source_reference": "M41736,M11802",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-007",
+      "failure_mode": "repeated question",
+      "expected_status": "resolved",
+      "predicted_status": "resolved",
+      "confidence": 0.85,
+      "reason": "Học viên hỏi hạn nộp daily stand up và BOT đã trả lời cung cấp khung giờ cụ thể.",
+      "source_reference": "M07653,M45837",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-008",
+      "failure_mode": "repeated sender",
+      "expected_status": "resolved",
+      "predicted_status": "uncertain",
+      "confidence": 0.5,
+      "reason": "Câu hỏi mơ hồ và nhận được hai phản hồi bot khác nhau, thiếu nguồn tin cậy từ TA hoặc giảng viên.",
+      "source_reference": "M37242,M55412",
+      "fallback": false,
+      "passed": false
+    },
+    {
+      "id": "cp3-009",
+      "failure_mode": "response inconsistency",
+      "expected_status": "resolved",
+      "predicted_status": "resolved",
+      "confidence": 0.9,
+      "reason": "M11596 đã trả đúng hướng dẫn tạo Discord ticket cho học viên.",
+      "source_reference": "M11596",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-010",
+      "failure_mode": "repeated sender",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.9,
+      "reason": "Học viên hỏi về hạn nộp Lab02 nhưng BOT cho biết chưa có grounding về deadline cụ thể và chưa có TA/giảng viên giải đáp.",
+      "source_reference": "M72484,M07416",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-011",
+      "failure_mode": "no-grounding",
+      "expected_status": "unresolved",
+      "predicted_status": "uncertain",
+      "confidence": 0.9,
+      "reason": "Bot và nguồn tin không cung cấp deadline cụ thể mà chỉ hướng dẫn kiểm tra nguồn chính thức, dẫn đến thiếu thông tin rõ ràng.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": false
+    },
+    {
+      "id": "cp3-012",
+      "failure_mode": "repeated sender",
+      "expected_status": "resolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.9,
+      "reason": "Ứng viên đặt câu hỏi về việc commit không hiển thị lịch sử trên activity, các tin nhắn liên quan chỉ là lặp lại câu hỏi và phản hồi từ bot mà chưa có câu trả lời từ TA hay giảng viên.",
+      "source_reference": "M03948,M79611",
+      "fallback": false,
+      "passed": false
+    },
+    {
+      "id": "cp3-013",
+      "failure_mode": "repeated question",
+      "expected_status": "resolved",
+      "predicted_status": "resolved",
+      "confidence": 0.9,
+      "reason": "Tin nhắn M63853 đã trả lời cụ thể về cách sử dụng lệnh /topic pick và /topic change cho vấn đề chọn đề tài.",
+      "source_reference": "M63853",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-014",
+      "failure_mode": "repeated question",
+      "expected_status": "unresolved",
+      "predicted_status": "uncertain",
+      "confidence": 0.9,
+      "reason": "Câu hỏi về sự khác nhau giữa mã đội và mã nhóm chưa có câu trả lời đáng tin cậy từ nguồn chính thức, BOT response không giải thích trực tiếp.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": false
+    },
+    {
+      "id": "cp3-015",
+      "failure_mode": "wrong answer for intent",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.9,
+      "reason": "Ứng viên hỏi cách xử lý khi đặt sai cú pháp Zoom workshop, các tin nhắn liên quan mới chỉ nhắc lại cách đặt tên đúng và hỏi cách tạo ticket, chưa có câu trả lời chính thức từ nguồn đáng tin cậy giải quyết vấn đề.",
+      "source_reference": "M45740,M51183",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-016",
+      "failure_mode": "ambiguous input",
+      "expected_status": "uncertain",
+      "predicted_status": "uncertain",
+      "confidence": 0.9,
+      "reason": "Câu hỏi mơ hồ, thiếu ngữ cảnh chi tiết do mất reply context và không được tự suy đoán.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-017",
+      "failure_mode": "no-grounding",
+      "expected_status": "uncertain",
+      "predicted_status": "uncertain",
+      "confidence": 0.5,
+      "reason": "Thiếu nội dung attachment và chi tiết lỗi trong dữ liệu để kết luận vấn đề đã được giải quyết hay chưa.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-018",
+      "failure_mode": "no-grounding",
+      "expected_status": "uncertain",
+      "predicted_status": "unresolved",
+      "confidence": 0.95,
+      "reason": "Người dùng hỏi cách khắc phục lỗi nhưng tin nhắn không có log cụ thể, chỉ có yêu cầu bổ sung thông tin từ TA/Mod (M94723) và chưa có câu trả lời xác thực.",
+      "source_reference": "M44947",
+      "fallback": false,
+      "passed": false
+    },
+    {
+      "id": "cp3-019",
+      "failure_mode": "ambiguous input",
+      "expected_status": "uncertain",
+      "predicted_status": "uncertain",
+      "confidence": 0.5,
+      "reason": "Câu hỏi phụ thuộc vào attachment nhưng không có dữ liệu hình ảnh hoặc ngữ cảnh cụ thể trong input để xác định rõ.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-020",
+      "failure_mode": "bot message",
+      "expected_status": "uncertain",
+      "predicted_status": "uncertain",
+      "confidence": 1.0,
+      "reason": "Tin nhắn do BOT hệ thống tự động tạo ra và gửi, không phải yêu cầu hỗ trợ thực tế từ học viên.",
+      "source_reference": "M42137",
+      "fallback": false,
+      "passed": true
+    }
+  ]
+}

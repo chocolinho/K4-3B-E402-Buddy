@@ -1,8 +1,14 @@
-# Bản mẫu CP2
+# Bản mẫu CP2 + CP3
 
-**Mức độ bản mẫu:** Mô phỏng / Có thể bấm thử
+**Mức độ bản mẫu:** Có thể bấm thử; CP3 có backend gọi AI thật
 
-Mở trực tiếp [prototype/index.html](prototype/index.html) bằng trình duyệt. Không cần máy chủ, bước đóng gói, khung phát triển, giao diện lập trình ứng dụng bên ngoài hoặc kết nối mạng.
+Ở CP2 có thể mở trực tiếp [prototype/index.html](prototype/index.html). Ở CP3 phải chạy local server để nút **Phân tích bằng AI** gọi backend mà không làm lộ API key:
+
+```powershell
+python ai/server.py
+```
+
+Sau đó mở `http://127.0.0.1:8000`. Xem [hướng dẫn CP3](ai/README.md) để cấu hình `.env`, chạy 20 test case và quay video.
 
 ## Bố cục màn hình
 
@@ -11,6 +17,8 @@ Mở trực tiếp [prototype/index.html](prototype/index.html) bằng trình du
 3. Ba thẻ tổng quan vừa hiển thị số lượng vừa đóng vai trò bộ lọc.
 4. Hàng đợi ưu tiên hiển thị tình huống, đề xuất ban đầu, lý do, độ tin cậy và nguồn giả lập.
 5. Hộp thoại ngữ cảnh cho phép so sánh đề xuất của AI với quyết định hiện tại của TA.
+
+Prototype có 10 tình huống được rút gọn từ các pattern trong `k4_messages.csv`: câu hỏi lặp, câu trả lời ở luồng khác, trả lời sai intent, thiếu grounding, thiếu attachment và message do bot gửi. Tên người gửi được thay bằng định danh giả; link gốc bị loại bỏ; message ID ẩn danh chỉ được giữ để nhóm đối chiếu nguồn.
 
 ## Tương tác hoạt động thật
 
@@ -33,6 +41,8 @@ Mở trực tiếp [prototype/index.html](prototype/index.html) bằng trình du
 - `unresolved`: chưa xử lý.
 - `uncertain`: chưa chắc chắn, cần TA kiểm tra.
 
-Tất cả hội thoại hiển thị đều là dữ liệu giả lập. Bản mô phỏng CP2 không gọi AI thật và không bao giờ gửi tin nhắn.
+Tất cả hội thoại hiển thị vẫn là dữ liệu giả lập. Các quyết định ban đầu là mock CP2; khi bấm **Phân tích bằng AI**, quyết định của case đó được thay bằng kết quả API thật và có nhãn provider thật. Hệ thống không bao giờ tự gửi tin nhắn.
+
+Nếu API lỗi, backend trả `uncertain` với nhãn `Fallback` để TA kiểm tra. Fallback không được tính là bằng chứng AI thật.
 
 Xem [luồng hoạt động](flowchart/README.md) và [đặc tả sản phẩm](../spec.md).

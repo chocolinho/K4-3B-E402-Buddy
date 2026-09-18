@@ -94,6 +94,8 @@ Hai phòng cùng ca dùng chung lịch mốc. Năm link form phát đủ từ đ
 
 ### CP3 · Video thao tác + số đo
 
+**Trạng thái đội: ✅ Hoàn thành** — Gemini 3.5 Flash-Lite, challenge set 20 case, 19 pass, 1 fail, pass rate **95%**, API fallback 0. Báo cáo chi tiết nằm tại `eval/cp3-results.md`; video thao tác được nộp qua form CP3.
+
 **Để làm gì:** biết sản phẩm của mình **đang đúng đến đâu**. Có con số thì mới biết nên sửa chỗ nào tiếp, và lúc pitch cũng có cái để nói thay vì nói suông.
 
 **Nộp hai thứ:**
