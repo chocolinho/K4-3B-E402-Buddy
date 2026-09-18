@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Buddy · Demo slides CP5</title>
+  <style>
+    @page { size: 13.333in 7.5in; margin: 0; }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; background: #dfe4f0; font-family: Arial, "Segoe UI", sans-serif; color: #101b36; }
+    .slide { position: relative; width: 13.333in; height: 7.5in; margin: 0 auto 24px; overflow: hidden; background: #f7f8fc; page-break-after: always; }
+    .slide:last-child { page-break-after: auto; }
+    .navy { background: #17233f; color: white; }
+    .pad { padding: 54px 72px; }
+    .eyebrow { margin: 0 0 12px; color: #5865f2; font-size: 17px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+    .navy .eyebrow { color: #aeb5ff; }
+    h1 { margin: 0; font-size: 54px; line-height: 1.05; letter-spacing: -.035em; }
+    h2 { margin: 0; font-size: 34px; line-height: 1.1; letter-spacing: -.02em; }
+    h3 { margin: 0; font-size: 22px; line-height: 1.2; }
+    p { margin: 0; font-size: 20px; line-height: 1.45; }
+    .muted { color: #63708b; }
+    .navy .muted { color: #c7cee2; }
+    .brand { position: absolute; left: 72px; top: 50px; display: flex; align-items: center; gap: 14px; font-size: 22px; font-weight: 800; }
+    .brand-mark { display: grid; width: 46px; height: 46px; place-items: center; border-radius: 14px; background: #5865f2; color: white; font-size: 24px; font-weight: 900; }
+    .cover-copy { position: absolute; left: 72px; top: 160px; width: 820px; }
+    .cover-copy h1 { max-width: 780px; }
+    .cover-copy p { margin-top: 20px; width: 700px; font-size: 22px; }
+    .cover-rule { position: absolute; right: 0; top: 0; width: 235px; height: 720px; background: #5865f2; }
+    .cover-rule::before { content: ""; position: absolute; left: -110px; bottom: -150px; width: 340px; height: 340px; border: 38px solid #f0b84b; border-radius: 50%; }
+    .team { position: absolute; left: 72px; bottom: 55px; color: #dbe0ee; font-size: 16px; line-height: 1.5; }
+    .page { position: absolute; right: 42px; bottom: 28px; font-size: 14px; color: #7e89a2; }
+    .navy .page { color: #aeb7cf; }
+
+    /* Metrics grid */
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 32px; }
+    .metric { border-top: 4px solid #5865f2; padding-top: 14px; }
+    .metric strong { display: block; font-size: 44px; line-height: 1; color: #17233f; }
+    .metric span { display: block; margin-top: 8px; font-size: 17px; line-height: 1.35; color: #5d6982; }
+
+    /* Job statement */
+    .jtbd { margin-top: 28px; padding: 20px 26px; border-left: 6px solid #f0b84b; background: white; font-size: 21px; font-weight: 700; line-height: 1.35; }
+
+    /* Impact table */
+    .impact-table { width: 100%; margin-top: 32px; border-collapse: collapse; font-size: 17px; }
+    .impact-table th { text-align: left; padding: 14px 16px; background: #17233f; color: white; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+    .impact-table td { padding: 14px 16px; border-bottom: 1px solid #e4e8f1; vertical-align: top; line-height: 1.4; }
+    .impact-table tr:last-child td { border-bottom: none; }
+    .impact-table .chosen { background: #eef0ff; }
+    .impact-table .eliminated { color: #8893aa; }
+    .tag-chosen { display: inline-block; padding: 4px 12px; border-radius: 999px; background: #5865f2; color: white; font-size: 13px; font-weight: 800; }
+    .tag-support { display: inline-block; padding: 4px 12px; border-radius: 999px; background: #e4e8f1; color: #3d4a65; font-size: 13px; font-weight: 800; }
+    .tag-no { display: inline-block; padding: 4px 12px; border-radius: 999px; background: #fde8e8; color: #b33a3a; font-size: 13px; font-weight: 800; }
+    .impact-why { margin-top: 24px; font-size: 19px; line-height: 1.45; color: #3d4a65; }
+    .impact-why strong { color: #17233f; }
+
+    /* Flow */
+    .flow { display: grid; grid-template-columns: 1fr 60px 1fr 60px 1fr; align-items: center; margin-top: 44px; }
+    .step { min-height: 200px; padding: 24px; background: white; border-top: 5px solid #5865f2; box-shadow: 0 12px 28px rgba(24,35,63,.08); }
+    .step .num { display: block; margin-bottom: 20px; color: #5865f2; font-size: 16px; font-weight: 800; }
+    .step p { margin-top: 12px; color: #63708b; font-size: 16px; }
+    .connector { height: 3px; background: #aeb5ff; }
+    .principle { margin-top: 28px; padding: 16px 22px; color: #23304d; background: #eef0ff; font-size: 19px; font-weight: 800; text-align: center; }
+    .tag { display: inline-block; margin-bottom: 18px; padding: 7px 14px; border-radius: 999px; color: #2b3ab8; background: #e9ebff; font-size: 14px; font-weight: 800; }
+    .demo-note { margin-top: 20px; padding: 16px 22px; background: #fff5e1; color: #70521b; font-size: 17px; line-height: 1.4; }
+
+    /* Bar chart */
+    .chart { margin-top: 36px; }
+    .bar-row { display: grid; grid-template-columns: 160px 1fr 72px; gap: 18px; align-items: center; margin: 22px 0; }
+    .bar-label { font-size: 17px; font-weight: 800; }
+    .track { height: 38px; background: #e4e8f1; overflow: hidden; }
+    .fill { height: 100%; background: #5865f2; }
+    .fill.baseline { background: #9aa4ba; }
+    .fill.bar { background: #f0b84b; }
+    .bar-value { font-size: 22px; font-weight: 900; }
+
+    /* Result grid */
+    .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 28px; }
+    .result-card { padding: 22px 26px; background: white; border-top: 4px solid #5865f2; box-shadow: 0 12px 28px rgba(24,35,63,.08); }
+    .result-card.fail { border-top-color: #e55364; }
+    .result-card h3 { margin-bottom: 10px; }
+    .result-card p { font-size: 17px; color: #5b6780; line-height: 1.4; }
+    .result-card strong { color: #192542; }
+
+    /* Validation */
+    .val-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; margin-top: 32px; }
+    .val-card { padding: 24px 28px; background: white; border-left: 5px solid #5865f2; box-shadow: 0 12px 28px rgba(24,35,63,.08); }
+    .val-card .name { font-size: 15px; font-weight: 800; color: #5865f2; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+    .val-card p { font-size: 17px; color: #3d4a65; line-height: 1.4; }
+    .val-summary { margin-top: 28px; padding: 18px 24px; background: #eef0ff; }
+    .val-summary p { font-size: 18px; color: #23304d; line-height: 1.45; }
+    .quote-block { margin-top: 8px; padding: 14px 20px; border-left: 5px solid #f0b84b; background: #fffbf0; font-size: 18px; font-weight: 700; font-style: italic; color: #5a4a1f; }
+
+    /* Future */
+    .future-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 36px; }
+    .future-block { border-top: 4px solid #5865f2; padding-top: 18px; }
+    .future-block h3 { margin-bottom: 14px; }
+    .future-block ul { margin: 0; padding-left: 22px; }
+    .future-block li { margin: 10px 0; font-size: 18px; line-height: 1.35; color: #3d4a65; }
+    .lesson-box { position: absolute; left: 72px; right: 72px; bottom: 65px; padding: 20px 24px; background: #17233f; color: white; display: flex; justify-content: space-between; align-items: center; }
+    .lesson-box strong { font-size: 20px; }
+    .lesson-box span { max-width: 620px; color: #c8cfe1; font-size: 16px; line-height: 1.4; text-align: right; }
+
+    /* Honesty bar */
+    .honesty { position: absolute; left: 72px; right: 72px; bottom: 50px; display: flex; justify-content: space-between; align-items: center; padding: 18px 22px; background: #17233f; color: white; }
+    .honesty strong { font-size: 19px; }
+    .honesty span { max-width: 600px; color: #c8cfe1; font-size: 15px; line-height: 1.4; text-align: right; }
+
+    @media print { html, body { background: white; } .slide { margin: 0; } }
+  </style>
+</head>
+<body>
+
+  <!-- ========== SLIDE 1 · USER & JOB (45") ========== -->
+  <section class="slide navy">
+    <div class="cover-rule"></div>
+    <div class="brand"><span class="brand-mark">B</span><span>Buddy</span></div>
+    <div class="cover-copy">
+      <p class="eyebrow">Slide 1 · User &amp; Job</p>
+      <h1>TA mất thời gian xác định câu hỏi Discord nào vẫn cần hỗ trợ</h1>
+      <p class="muted">Job executor: <strong style="color:white">TA/Mod rà soát Discord cuối ngày</strong></p>
+      <p class="muted" style="margin-top:32px; font-size:20px;">
+        <strong style="color:#f0b84b; font-size:36px">14/22</strong> gặp cùng câu hỏi nhiều cách &nbsp;·&nbsp;
+        <strong style="color:#f0b84b; font-size:36px">13/22</strong> mất ≥5 phút/lần<br>
+        <strong style="color:#f0b84b; font-size:36px">9/22</strong> không chắc đã trả lời chưa &nbsp;·&nbsp;
+        <strong style="color:#f0b84b; font-size:36px">9/22</strong> gặp đáp án ở luồng khác
+      </p>
+      <p class="muted" style="margin-top:20px; font-size:18px; opacity:.8;">Khảo sát n=22 · Mining 1.092 message, 264 candidate question · Evidence B kiểm lại được</p>
+    </div>
+    <div class="team">Nguyễn Đình Thái · Vũ Tiến Linh · Dương Đình Long<br>Track B2 · Trợ lý Discord · Lớp 3B · E402</div>
+    <span class="page">01</span>
+  </section>
+
+  <!-- ========== SLIDE 2 · VÌ SAO CHỌN TÍNH NĂNG NÀY (45") ========== -->
+  <section class="slide pad">
+    <p class="eyebrow">Slide 2 · Vì sao chọn tính năng này</p>
+    <h2>Ba ứng viên — chọn hướng có bằng chứng mạnh nhất</h2>
+    <table class="impact-table">
+      <tr>
+        <th style="width:22%">Ứng viên</th>
+        <th style="width:22%">Bằng chứng</th>
+        <th style="width:16%">Tần suất</th>
+        <th style="width:20%">Chi phí mỗi lần</th>
+        <th style="width:10%">Khả thi</th>
+        <th style="width:10%">Quyết định</th>
+      </tr>
+      <tr class="chosen">
+        <td><strong>A. Phát hiện câu hỏi chưa xử lý</strong></td>
+        <td>9/22 không chắc trạng thái<br>9/22 đáp án ở nơi khác</td>
+        <td>14/22 rà soát ≥3 lần/tuần</td>
+        <td>13/22 mất ≥5 phút + rủi ro bỏ sót</td>
+        <td>Cao</td>
+        <td><span class="tag-chosen">Chọn</span></td>
+      </tr>
+      <tr>
+        <td>B. Nhóm câu hỏi trùng/tương tự</td>
+        <td>14/22 (63,6%) gặp cùng ý định</td>
+        <td>Phổ biến</td>
+        <td>Rà soát trùng lặp</td>
+        <td>TB–Cao</td>
+        <td><span class="tag-support">Hỗ trợ</span></td>
+      </tr>
+      <tr class="eliminated">
+        <td>C. Phát hiện HV bế tắc</td>
+        <td>Chưa có số đo trực tiếp</td>
+        <td>Chưa xác định</td>
+        <td>Chưa đo được</td>
+        <td>Thấp</td>
+        <td><span class="tag-no">Loại</span></td>
+      </tr>
+    </table>
+    <p class="impact-why"><strong>C bị loại:</strong> bằng chứng yếu, phạm vi rộng, rủi ro quyền riêng tư. <strong>B không chọn làm lát cắt chính:</strong> chỉ gom nhóm chưa cho TA biết case nào còn cần xử lý. <strong>A được chọn:</strong> kết hợp 3 nguồn evidence, build nổi trong hackathon.</p>
+    <span class="page">02</span>
+  </section>
+
+  <!-- ========== SLIDE 3 · GIẢI PHÁP & DEMO LIVE (2') ========== -->
+  <section class="slide pad">
+    <p class="eyebrow">Slide 3 · Giải pháp &amp; Demo live</p>
+    <h2>Một quyết định AI, ba trạng thái, TA giữ quyền cuối cùng</h2>
+    <div class="flow">
+      <div class="step"><span class="num">01 · INPUT</span><h3>Câu hỏi + hội thoại liên quan</h3><p>20 case mock đã ẩn danh từ chatlog thật</p></div>
+      <div class="connector"></div>
+      <div class="step"><span class="num">02 · AI QUYẾT ĐỊNH</span><h3>resolved · unresolved · uncertain</h3><p>Gemini API thật · Structured output · Confidence + reason + source</p></div>
+      <div class="connector"></div>
+      <div class="step"><span class="num">03 · TA CHỐT</span><h3>Kiểm tra, ghi đè hoặc hoàn tác</h3><p>Không tự gửi tin · Không tự đóng câu hỏi · Audit trail</p></div>
+    </div>
+    <div class="principle">Conditional automation — vì false "resolved" bỏ sót học viên cần hỗ trợ (cost-of-error cao)</div>
+    <div class="demo-note">▶ <strong>Demo live:</strong> 1 case chuẩn (đáp án ở luồng khác → resolved) + 1 case chỗ khó (nguồn cộng đồng → uncertain, TA kiểm tra)</div>
+    <span class="page">03</span>
+  </section>
+
+  <!-- ========== SLIDE 4 · KẾT QUẢ ĐO (45") ========== -->
+  <section class="slide pad">
+    <p class="eyebrow">Slide 4 · Kết quả đo trên golden set cố định</p>
+    <h2>19/20 pass — vượt quality bar 85% đã khóa từ CP4</h2>
+    <div class="chart">
+      <div class="bar-row"><div class="bar-label">Baseline</div><div class="track"><div class="fill baseline" style="width:70%"></div></div><div class="bar-value">70%</div></div>
+      <div class="bar-row"><div class="bar-label">Quality bar</div><div class="track"><div class="fill bar" style="width:85%"></div></div><div class="bar-value">85%</div></div>
+      <div class="bar-row"><div class="bar-label">Final run</div><div class="track"><div class="fill" style="width:95%"></div></div><div class="bar-value">95%</div></div>
+    </div>
+    <div class="result-grid">
+      <div class="result-card">
+        <h3>Coverage & Reliability</h3>
+        <p><strong>20 case</strong>, đủ 4 lớp khó (①–④)<br>15 case từ pattern chatlog thật<br><strong>0 API fallback</strong> trong lượt báo cáo</p>
+      </div>
+      <div class="result-card fail">
+        <h3>Failure đáng kể nhất: cp3-018</h3>
+        <p>"Deadline tối nay là 9 giờ đúng không?" — nguồn chỉ từ học viên khác.<br><strong>Model:</strong> unresolved 90% · <strong>Policy:</strong> uncertain<br>Bài học: kiểm tra thẩm quyền nguồn trước confidence.</p>
+      </div>
+    </div>
+    <span class="page">04</span>
+  </section>
+
+  <!-- ========== SLIDE 5 · USER THẬT NÓI GÌ (45") ========== -->
+  <section class="slide pad">
+    <p class="eyebrow">Slide 5 · Validation — người ngoài nhóm dùng thử</p>
+    <h2>3 người hoàn thành luồng rà soát không cần hướng dẫn</h2>
+    <div class="val-grid">
+      <div class="val-card">
+        <div class="name">Nguyễn Việt Hoàng · willing user CP1</div>
+        <p>Đi đúng thứ tự: chọn issue → mở chi tiết → xem căn cứ → chốt trạng thái. Không bấm nhầm.</p>
+        <div class="quote-block">"Thao tác tự nhiên, thấy ngay lý do AI phân loại trước khi nhấn chốt."</div>
+      </div>
+      <div class="val-card">
+        <div class="name">Nguyễn Tiến Phát · willing user CP1</div>
+        <p>Tiếp cận source trước khi quyết định. Không cần hướng dẫn vị trí nút.</p>
+        <div class="quote-block">"Nhìn nhãn nguồn cộng đồng là biết ngay phải kiểm tra lại."</div>
+      </div>
+      <div class="val-card" style="border-left-color:#f0b84b">
+        <div class="name" style="color:#b38600">Đoàn Anh Quân · người ngoài nhóm</div>
+        <p>Hoàn thành task rà soát 100%. Phản hồi tốt về luồng thao tác.</p>
+        <div class="quote-block">"Giao diện trực quan, liên kết mở Discord giả lập hỗ trợ trả lời rất tiện."</div>
+      </div>
+      <div>
+        <div class="val-summary">
+          <p><strong>Thay đổi đã làm:</strong> Giữ bước "xem căn cứ trước khi chốt" + giữ cảnh báo nguồn cộng đồng + giữ human override.</p>
+          <p style="margin-top:12px"><strong>Chưa đủ evidence:</strong> comprehension về confidence và phân biệt nguồn chính thức/cộng đồng. Log còn thiếu thời gian + quote.</p>
+        </div>
+      </div>
+    </div>
+    <span class="page">05</span>
+  </section>
+
+  <!-- ========== SLIDE 6 · NẾU CÓ THÊM 1 TUẦN (30") ========== -->
+  <section class="slide pad">
+    <p class="eyebrow">Slide 6 · Nếu có thêm 1 tuần</p>
+    <h2>Hai ưu tiên từ failure + một bài học lớn</h2>
+    <div class="future-grid">
+      <div class="future-block">
+        <h3>Ưu tiên sửa</h3>
+        <ul>
+          <li><strong>Policy nguồn thẩm quyền:</strong> Deadline/điểm/quy chế chỉ có nguồn cộng đồng → bắt buộc uncertain (fix cp3-018)</li>
+          <li><strong>Validation đầy đủ:</strong> Thu quote + comprehension test cho confidence và source trust với ≥5 người</li>
+          <li><strong>Confidence calibration:</strong> Đối chiếu confidence với accuracy thực tế trên tập lớn hơn</li>
+        </ul>
+      </div>
+      <div class="future-block">
+        <h3>Giới hạn đã khai</h3>
+        <ul>
+          <li>20 hội thoại là mock đã ẩn danh, không phải live Discord</li>
+          <li>Chưa tích hợp Discord API/webhook</li>
+          <li>95% trên 20 case ≠ accuracy production</li>
+          <li>Validation 3/3 hoàn thành nhưng log chưa đủ quote</li>
+          <li>Confidence chưa calibrate thống kê</li>
+        </ul>
+      </div>
+    </div>
+    <div class="lesson-box">
+      <strong>Bài học lớn nhất</strong>
+      <span>Confidence cao không sửa được nguồn sai thẩm quyền. Có câu trả lời ≠ câu trả lời đáng tin. Giữ 19/20 trung thực hơn đổi nhãn để đạt 100%.</span>
+    </div>
+    <span class="page">06</span>
+  </section>
+
+</body>
+</html>

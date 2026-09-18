@@ -470,6 +470,7 @@ function renderDetail(id) {
     <div class="decision-buttons" aria-label="TA quyết định trạng thái">
       ${Object.entries(STATUSES).map(([key, config]) => `<button class="decision-button ${human?.status === key ? "active" : ""}" type="button" data-action="decide" data-id="${question.id}" data-status="${key}">${config.label}</button>`).join("")}
       ${human ? `<button class="decision-button undo-button" type="button" data-action="undo" data-id="${question.id}">Hoàn tác</button>` : ""}
+      <a class="decision-button discord-link" href="discord-mock.html#${question.id}" target="_blank" rel="noopener" title="Mở tin nhắn trên Discord (mô phỏng)">💬 Xem trên Discord</a>
     </div>`;
 
   elements.progress.querySelectorAll("li").forEach((item) => item.classList.remove("active", "done"));
@@ -707,3 +708,12 @@ document.addEventListener("keydown", (event) => {
 populateScenarioFilter();
 render();
 checkApiHealth();
+
+function openFromHash() {
+  const id = location.hash.replace("#", "");
+  if (id && questionById(id)) {
+    openDetail(id);
+  }
+}
+window.addEventListener("hashchange", openFromHash);
+setTimeout(openFromHash, 200);
