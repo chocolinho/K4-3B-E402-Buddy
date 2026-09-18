@@ -23,8 +23,18 @@
 
   <main class="page-shell" id="main-content">
     <section class="queue-intro" aria-labelledby="page-title">
-      <div><p class="eyebrow">Rà soát cuối ngày</p><h1 id="page-title">Hàng đợi cần rà soát</h1><p>Ưu tiên câu hỏi chưa xử lý, kiểm tra căn cứ AI và chốt quyết định trong một luồng.</p><p class="dataset-note">20 tình huống mô phỏng · tổng hợp từ hội thoại Discord đã ẩn danh</p></div>
+      <div><p class="eyebrow">Trung tâm hỗ trợ TA</p><h1 id="page-title">Từ phát hiện đến phản hồi Discord</h1><p>Buddy gom các câu hỏi cần chú ý, giải thích đề xuất của AI và đưa TA tới đúng tin nhắn để phản hồi.</p><p class="dataset-note">20 tình huống mô phỏng · tổng hợp từ hội thoại Discord đã ẩn danh</p></div>
       <div class="safety-note"><span aria-hidden="true">◉</span><div><strong>Không gửi tin tự động</strong><small>TA luôn là người quyết định cuối cùng.</small></div></div>
+    </section>
+
+    <section class="workflow-guide" aria-labelledby="workflow-title">
+      <div class="workflow-heading"><p class="eyebrow">Workflow dành cho TA</p><h2 id="workflow-title">Xử lý một câu hỏi trong 4 bước</h2></div>
+      <ol>
+        <li><span>1</span><div><strong>Chọn case ưu tiên</strong><small>Mở case “Chưa xử lý” hoặc confidence thấp.</small></div></li>
+        <li><span>2</span><div><strong>Kiểm tra đề xuất AI</strong><small>Đọc hội thoại, nguồn và policy trước khi hành động.</small></div></li>
+        <li><span>3</span><div><strong>Trả lời trên Discord</strong><small>Mở đúng tin nhắn, bổ sung hoặc xác minh thông tin.</small></div></li>
+        <li><span>4</span><div><strong>Quay lại và chốt</strong><small>Cập nhật trạng thái để cả đội biết case đã được xử lý.</small></div></li>
+      </ol>
     </section>
 
     <section class="session-dashboard" aria-label="Số liệu phiên hiện tại">
@@ -58,7 +68,7 @@
   <dialog class="detail-drawer" id="detail-dialog" aria-labelledby="detail-title">
     <div class="drawer-shell">
       <header class="drawer-header"><div><p class="eyebrow" id="detail-eyebrow">Chi tiết tình huống</p><h2 id="detail-title">Câu hỏi</h2></div><button class="icon-button" type="button" data-action="close-detail" aria-label="Đóng chi tiết">×</button></header>
-      <ol class="review-progress" id="review-progress" aria-label="Tiến trình rà soát"><li data-step="context"><span>1</span><strong>Xem căn cứ</strong></li><li data-step="analyze"><span>2</span><strong>AI phân tích</strong></li><li data-step="decide"><span>3</span><strong>TA quyết định</strong></li></ol>
+      <ol class="review-progress" id="review-progress" aria-label="Tiến trình rà soát"><li data-step="context"><span>1</span><strong>Xem căn cứ</strong></li><li data-step="analyze"><span>2</span><strong>Kiểm tra AI</strong></li><li data-step="reply"><span>3</span><strong>Trả lời Discord</strong></li><li data-step="decide"><span>4</span><strong>Chốt trạng thái</strong></li></ol>
       <div class="drawer-content" id="detail-content"></div>
       <footer class="drawer-footer" id="detail-footer"></footer>
     </div>
