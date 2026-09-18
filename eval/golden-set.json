@@ -2,6 +2,9 @@
   {
     "id": "cp3-001",
     "failure_mode": "answered elsewhere",
+    "difficulty_class": "④ domain-specific retrieval",
+    "case_tier": "common",
+    "origin": "chatlog",
     "question": "xem xp ở đâu",
     "thread_context": [
       "Một học viên hỏi lại câu hỏi về cách xem XP."
@@ -16,6 +19,9 @@
   {
     "id": "cp3-002",
     "failure_mode": "answered elsewhere paraphrase",
+    "difficulty_class": "④ domain-specific retrieval",
+    "case_tier": "hard",
+    "origin": "chatlog",
     "question": "mình muốn kiểm tra số XP hiện tại thì làm sao",
     "thread_context": [
       "Wording khác với câu hỏi trước nhưng cùng intent kiểm tra XP."
@@ -29,6 +35,9 @@
   {
     "id": "cp3-003",
     "failure_mode": "repeated sender unresolved",
+    "difficulty_class": "② low-confidence or ambiguous",
+    "case_tier": "common",
+    "origin": "chatlog",
     "question": "quy cách nộp daily standup, cả nhóm có phải nộp không, hình thức nộp như nào?",
     "thread_context": [
       "Cùng người gửi hỏi lại gần như cùng vấn đề sau khoảng một phút."
@@ -43,6 +52,9 @@
   {
     "id": "cp3-004",
     "failure_mode": "repeated question",
+    "difficulty_class": "② low-confidence or ambiguous",
+    "case_tier": "common",
+    "origin": "chatlog",
     "question": "cách nộp daily stand up",
     "thread_context": [
       "Cùng intent xuất hiện từ nhiều học viên khác nhau."
@@ -57,6 +69,9 @@
   {
     "id": "cp3-005",
     "failure_mode": "wrong answer for intent",
+    "difficulty_class": "① failure or no-grounding",
+    "case_tier": "common",
+    "origin": "chatlog",
     "question": "cách nộp daily stand up",
     "thread_context": [
       "Người dùng hỏi cách nộp nhưng BOT chỉ trả lời về khung giờ nộp."
@@ -71,6 +86,9 @@
   {
     "id": "cp3-006",
     "failure_mode": "answered elsewhere",
+    "difficulty_class": "④ domain-specific retrieval",
+    "case_tier": "common",
+    "origin": "chatlog",
     "question": "làm sao để tạo ticket",
     "thread_context": [
       "Một câu hỏi cùng intent đã có câu trả lời đúng ở message khác."
@@ -84,6 +102,9 @@
   {
     "id": "cp3-007",
     "failure_mode": "response inconsistency",
+    "difficulty_class": "② low-confidence or ambiguous",
+    "case_tier": "hard",
+    "origin": "chatlog",
     "question": "làm sao để tạo ticket",
     "thread_context": [
       "Hai input tương đương về nghĩa nhưng BOT từng xử lý khác nhau."
@@ -98,6 +119,9 @@
   {
     "id": "cp3-008",
     "failure_mode": "no-grounding official information",
+    "difficulty_class": "① failure or no-grounding",
+    "case_tier": "common",
+    "origin": "chatlog",
     "question": "Hạn nộp Lab02",
     "thread_context": [
       "Không có deadline chính thức trong context hiện tại."
@@ -112,6 +136,9 @@
   {
     "id": "cp3-009",
     "failure_mode": "repeated question unresolved",
+    "difficulty_class": "② low-confidence or ambiguous",
+    "case_tier": "common",
+    "origin": "chatlog",
     "question": "mã đội với mã nhóm là gì",
     "thread_context": [
       "Cùng một câu hỏi được gửi nhiều lần."
@@ -126,6 +153,9 @@
   {
     "id": "cp3-010",
     "failure_mode": "wrong answer for intent",
+    "difficulty_class": "④ domain-specific retrieval",
+    "case_tier": "common",
+    "origin": "chatlog",
     "question": "mình đặt sai cú pháp khi tham gia Zoom workshop nên không được ghi nhận, mình nên xử lí như nào?",
     "thread_context": [
       "Người dùng cần cách xử lý sau khi đã bị miss attendance."
@@ -140,6 +170,9 @@
   {
     "id": "cp3-011",
     "failure_mode": "ambiguous input",
+    "difficulty_class": "② low-confidence or ambiguous",
+    "case_tier": "hard",
+    "origin": "chatlog",
     "question": "ad ơi trường hợp của em thì nên xử lý thế nào ạ",
     "thread_context": [
       "Message đứng riêng, không nói rõ trường hợp là vấn đề gì."
@@ -153,6 +186,9 @@
   {
     "id": "cp3-012",
     "failure_mode": "missing attachment",
+    "difficulty_class": "② low-confidence or ambiguous",
+    "case_tier": "hard",
+    "origin": "chatlog",
     "question": "em chạy tới bước 3 thì bị lỗi như này ạ",
     "thread_context": [
       "Message phụ thuộc vào attachment nhưng nội dung attachment không có trong data."
@@ -166,6 +202,9 @@
   {
     "id": "cp3-013",
     "failure_mode": "ambiguous attachment dependent",
+    "difficulty_class": "② low-confidence or ambiguous",
+    "case_tier": "hard",
+    "origin": "chatlog",
     "question": "Dạ như này là đc rồi đúng kh ạ",
     "thread_context": [
       "Câu hỏi phụ thuộc hoàn toàn vào attachment và trạng thái trước đó."
@@ -179,6 +218,9 @@
   {
     "id": "cp3-014",
     "failure_mode": "bot message",
+    "difficulty_class": "③ out-of-scope input",
+    "case_tier": "rare",
+    "origin": "chatlog",
     "question": "Các bạn có thể theo dõi hoặc tìm kiếm điểm XP của mình bằng Discord ID...",
     "thread_context": [
       "Đây là message do BOT tạo, không phải yêu cầu hỗ trợ mới của học viên."
@@ -193,6 +235,9 @@
   {
     "id": "cp3-015",
     "failure_mode": "partial answer",
+    "difficulty_class": "① failure or no-grounding",
+    "case_tier": "hard",
+    "origin": "synthetic policy case",
     "question": "Checkpoint 3 nộp ở đâu và hạn cuối là mấy giờ?",
     "thread_context": [
       "Đây là câu hỏi gồm hai ý độc lập."
@@ -207,6 +252,9 @@
   {
     "id": "cp3-016",
     "failure_mode": "critical false resolved",
+    "difficulty_class": "① failure or no-grounding",
+    "case_tier": "hard",
+    "origin": "synthetic policy case",
     "question": "Em bị lỗi submit lab, xử lý thế nào ạ?",
     "thread_context": [
       "TA đã reply nhưng chưa đưa ra giải pháp."
@@ -220,6 +268,9 @@
   {
     "id": "cp3-017",
     "failure_mode": "conflicting answers",
+    "difficulty_class": "① failure or no-grounding",
+    "case_tier": "rare",
+    "origin": "synthetic policy case",
     "question": "Deadline checkpoint là mấy giờ?",
     "thread_context": [
       "Hai message cung cấp hai deadline khác nhau và không có nguồn chính thức xác nhận."
@@ -234,6 +285,9 @@
   {
     "id": "cp3-018",
     "failure_mode": "out-of-scope authority",
+    "difficulty_class": "③ out-of-scope authority",
+    "case_tier": "rare",
+    "origin": "synthetic policy case",
     "question": "Deadline checkpoint tối nay là 9 giờ đúng không?",
     "thread_context": [
       "Chỉ có thông tin từ một học viên khác, không có TA/BTC hoặc nguồn chính thức."
@@ -247,6 +301,9 @@
   {
     "id": "cp3-019",
     "failure_mode": "duplicate intent with misleading wording",
+    "difficulty_class": "④ domain-specific retrieval",
+    "case_tier": "common",
+    "origin": "chatlog",
     "question": "rank của mình coi ở chỗ nào vậy",
     "thread_context": [
       "Câu hỏi không dùng trực tiếp từ XP nhưng intent là xem thông tin rank/XP."
@@ -260,6 +317,9 @@
   {
     "id": "cp3-020",
     "failure_mode": "reply exists but does not solve issue",
+    "difficulty_class": "① failure or no-grounding",
+    "case_tier": "common",
+    "origin": "synthetic policy case",
     "question": "Em không vào được workshop, giờ cần làm gì để được ghi nhận attendance?",
     "thread_context": [
       "Có nhiều reply trong thread nhưng chưa có hướng dẫn giải quyết attendance."
