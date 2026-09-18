@@ -12,13 +12,14 @@ Sau đó mở `http://127.0.0.1:8000`. Xem [hướng dẫn CP3](ai/README.md) đ
 
 ## Bố cục màn hình
 
-1. Phần giới thiệu nói rõ khả năng và giới hạn của bản mẫu.
-2. Thanh luồng CP2 thể hiện `Tin nhắn Discord → AI phân loại → TA rà soát → TA quyết định`.
-3. Ba thẻ tổng quan vừa hiển thị số lượng vừa đóng vai trò bộ lọc.
-4. Hàng đợi ưu tiên hiển thị tình huống, đề xuất ban đầu, lý do, độ tin cậy và nguồn giả lập.
-5. Hộp thoại ngữ cảnh cho phép so sánh đề xuất của AI với quyết định hiện tại của TA.
+1. Hàng đợi ưu tiên xuất hiện ngay đầu màn hình, kèm số liệu của phiên hiện tại.
+2. Tab trạng thái, tìm kiếm, bộ lọc nguồn/tình huống và sắp xếp giúp TA quét nhanh 20 case.
+3. Mỗi case có một hành động chính, confidence dạng thanh kèm hướng dẫn và nhãn nguồn rõ ràng.
+4. Side panel hai cột hiển thị timeline hội thoại, bằng chứng, structured output, policy và lịch sử quyết định.
+5. TA có thể xác nhận, ghi đè hoặc hoàn tác; mọi thao tác được lưu trong audit trail của phiên.
+6. Chế độ **Demo nhanh**, dashboard phiên và phím tắt hỗ trợ video/pitch và hàng đợi lớn.
 
-Prototype có 10 tình huống được rút gọn từ các pattern trong `k4_messages.csv`: câu hỏi lặp, câu trả lời ở luồng khác, trả lời sai intent, thiếu grounding, thiếu attachment và message do bot gửi. Tên người gửi được thay bằng định danh giả; link gốc bị loại bỏ; message ID ẩn danh chỉ được giữ để nhóm đối chiếu nguồn.
+Prototype có 20 tình huống mô phỏng được tổng hợp từ các pattern trong `k4_messages.csv`: câu hỏi lặp, câu trả lời ở luồng khác, trả lời sai intent, thiếu grounding, thiếu attachment, message do bot gửi, lỗi điểm danh/XP, quy trình đề tài và câu hỏi cần nguồn có thẩm quyền. Nội dung đã được rút gọn hoặc viết lại; tên người gửi được thay bằng định danh giả; link gốc bị loại bỏ; message ID ẩn danh chỉ được giữ để nhóm đối chiếu nguồn. Repository không chứa tệp CSV hoặc hội thoại Discord gốc. Xem [bảng nguồn gốc case](../evidence/mock-case-provenance.md).
 
 ## Tương tác hoạt động thật
 
@@ -26,7 +27,9 @@ Prototype có 10 tình huống được rút gọn từ các pattern trong `k4_m
 - Rà soát trạng thái kèm số lượng tổng hợp.
 - Hộp thoại xem ngữ cảnh.
 - Sửa thủ công thành đã xử lý (`resolved`), chưa xử lý (`unresolved`) hoặc chưa chắc chắn (`uncertain`).
-- Quyết định sửa của TA được giữ trong phiên trình duyệt hiện tại bằng `sessionStorage` (bộ nhớ theo phiên).
+- Tìm kiếm, lọc theo loại nguồn/tình huống và sắp xếp theo ưu tiên hoặc confidence.
+- Audit trail, hoàn tác, số lần AI phân tích và tỷ lệ TA ghi đè.
+- Quyết định, kết quả phân tích và lịch sử của TA được giữ trong phiên trình duyệt hiện tại bằng `sessionStorage`.
 
 ## Hoạt động giả lập
 

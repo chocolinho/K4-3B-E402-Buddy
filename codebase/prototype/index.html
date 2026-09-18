@@ -3,113 +3,75 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Bản mẫu CP3 dùng AI thật để hỗ trợ TA rà soát vấn đề trên Discord.">
-  <title>Buddy — Rà soát hỗ trợ Discord</title>
+  <meta name="description" content="Buddy dùng AI thật để giúp TA rà soát các vấn đề hỗ trợ trên Discord.">
+  <title>Buddy — Hàng đợi rà soát Discord</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <a class="skip-link" href="#queue">Đi tới hàng đợi</a>
   <header class="topbar">
-    <a class="brand" href="#main-content" aria-label="Buddy — về nội dung chính">
+    <a class="brand" href="#queue" aria-label="Buddy — đi tới hàng đợi">
       <span class="brand-mark" aria-hidden="true">B</span>
-      <span class="brand-copy">
-        <small>Buddy · Không gian dành cho TA</small>
-        <strong>Rà soát hỗ trợ Discord</strong>
-      </span>
+      <span class="brand-copy"><strong>Buddy</strong><small>AI đề xuất · TA quyết định</small></span>
     </a>
-    <span class="mock-badge"><i aria-hidden="true"></i>CP3 · AI thật</span>
+    <div class="topbar-actions">
+      <span class="api-chip checking" id="api-chip" role="status"><i aria-hidden="true"></i><span id="api-status">Đang kiểm tra AI…</span></span>
+      <button class="topbar-button" type="button" data-action="open-metrics" aria-haspopup="dialog"><span aria-hidden="true">▥</span> Số đo</button>
+      <button class="topbar-button primary" type="button" data-action="quick-demo"><span aria-hidden="true">▶</span> Demo nhanh</button>
+    </div>
   </header>
 
   <main class="page-shell" id="main-content">
-    <section class="hero" aria-labelledby="page-title">
-      <div class="hero-copy">
-        <p class="eyebrow">Rà soát cuối ngày</p>
-        <h1 id="page-title">Vấn đề nào vẫn cần TA hỗ trợ?</h1>
-        <p class="helper">AI đề xuất trạng thái từ ngữ cảnh liên quan. TA kiểm tra căn cứ, sửa khi cần và luôn là người đưa ra quyết định cuối cùng.</p>
-        <div class="hero-meta" aria-label="Thông tin bản demo">
-          <span>10 tình huống demo</span>
-          <span>Không gửi tin tự động</span>
-          <span>Không dùng dữ liệu thật</span>
-        </div>
-      </div>
-      <aside class="proof-card" id="api-panel" aria-label="Bằng chứng CP3">
-        <div class="proof-live">
-          <span class="live-dot" aria-hidden="true"></span>
-          <div>
-            <small>Kết nối mô hình</small>
-            <strong id="api-status">Đang kiểm tra AI API…</strong>
-          </div>
-        </div>
-        <div class="proof-grid" aria-label="Kết quả đánh giá CP3">
-          <div><strong>20</strong><span>Test cases</span></div>
-          <div><strong>95%</strong><span>Pass rate</span></div>
-          <div><strong>0</strong><span>Fallback</span></div>
-        </div>
-        <p class="proof-note">Kết quả challenge set · Gemini 3.5 Flash-Lite</p>
-      </aside>
+    <section class="queue-intro" aria-labelledby="page-title">
+      <div><p class="eyebrow">Rà soát cuối ngày</p><h1 id="page-title">Hàng đợi cần rà soát</h1><p>Ưu tiên câu hỏi chưa xử lý, kiểm tra căn cứ AI và chốt quyết định trong một luồng.</p><p class="dataset-note">20 tình huống mô phỏng · tổng hợp từ hội thoại Discord đã ẩn danh</p></div>
+      <div class="safety-note"><span aria-hidden="true">◉</span><div><strong>Không gửi tin tự động</strong><small>TA luôn là người quyết định cuối cùng.</small></div></div>
     </section>
 
-    <section class="flow-card" aria-labelledby="flow-title">
-      <div class="flow-heading">
-        <p class="eyebrow">Luồng CP3</p>
-        <h2 id="flow-title">Từ tin nhắn đến quyết định của TA</h2>
-      </div>
-      <ol class="flow-steps">
-        <li><span>1</span><div><strong>Tin nhắn Discord</strong><small>Phát hiện câu hỏi ứng viên</small></div></li>
-        <li><span>2</span><div><strong>AI phân loại</strong><small>Lời gọi model thật qua backend</small></div></li>
-        <li><span>3</span><div><strong>TA rà soát</strong><small>Xem lý do và độ tin cậy</small></div></li>
-        <li><span>4</span><div><strong>TA quyết định</strong><small>Giữ hoặc sửa trạng thái</small></div></li>
-      </ol>
+    <section class="session-dashboard" aria-label="Số liệu phiên hiện tại">
+      <div><span id="metric-pending">0</span><small>Cần ưu tiên</small></div>
+      <div><span id="metric-analyzed">0</span><small>AI đã phân tích</small></div>
+      <div><span id="metric-overrides">0</span><small>TA đã ghi đè</small></div>
+      <div><span id="metric-rate">0%</span><small>Tỷ lệ ghi đè</small></div>
+      <div><span id="metric-time">—</span><small>Thời gian rà soát TB</small></div>
     </section>
 
-    <section class="summary-section" aria-labelledby="summary-title">
-      <div class="section-heading">
-        <div>
-          <p class="eyebrow">Tổng quan</p>
-          <h2 id="summary-title">Trạng thái hỗ trợ hôm nay</h2>
-        </div>
-        <p>Chọn một trạng thái để lọc danh sách.</p>
+    <section class="queue-panel" id="queue" aria-labelledby="queue-title">
+      <div class="queue-header">
+        <div><h2 id="queue-title">Danh sách vấn đề</h2><p id="result-summary" aria-live="polite">Đang tải tình huống…</p></div>
+        <button class="quiet-button" type="button" data-action="reset">Đặt lại phiên</button>
       </div>
-      <div class="summary-grid" id="summary-grid"></div>
-    </section>
-
-    <section class="review-panel" aria-labelledby="review-title">
-      <div class="panel-heading">
-        <div>
-          <p class="eyebrow">Hàng đợi ưu tiên</p>
-          <h2 id="review-title">Cần TA xem hôm nay</h2>
-          <p id="filter-description">Đang hiển thị các vấn đề chưa được xử lý.</p>
-        </div>
-        <div class="panel-actions">
-          <button class="button button-quiet" id="show-all-button" type="button" data-action="show-all">Hiện tất cả</button>
-          <button class="button button-quiet" id="reset-button" type="button" data-action="reset">Đặt lại demo</button>
-        </div>
+      <div class="status-tabs" id="status-tabs" role="tablist" aria-label="Lọc theo trạng thái"></div>
+      <div class="control-bar" aria-label="Tìm kiếm và lọc">
+        <label class="search-field"><span aria-hidden="true">⌕</span><span class="sr-only">Tìm câu hỏi</span><input id="search-input" type="search" placeholder="Tìm câu hỏi…" autocomplete="off"><kbd>/</kbd></label>
+        <label><span class="sr-only">Lọc theo tình huống</span><select id="scenario-filter"><option value="all">Mọi tình huống</option></select></label>
+        <label><span class="sr-only">Lọc theo nguồn</span><select id="source-filter"><option value="all">Mọi loại nguồn</option><option value="official">Nguồn chính thức</option><option value="community">Nguồn cộng đồng</option><option value="none">Không có nguồn</option></select></label>
+        <label><span class="sr-only">Sắp xếp</span><select id="sort-select"><option value="priority">Ưu tiên xử lý</option><option value="confidence-asc">Confidence thấp trước</option><option value="confidence-desc">Confidence cao trước</option><option value="alphabetical">Theo câu hỏi A–Z</option></select></label>
       </div>
-
-      <div id="question-list" class="question-list" aria-live="polite"></div>
-
-      <div id="empty-state" class="empty-state" hidden>
-        <span aria-hidden="true">✓</span>
-        <h3>Không có mục nào ở trạng thái này</h3>
-        <p>Chọn “Hiện tất cả” để xem toàn bộ tình huống.</p>
-      </div>
+      <div class="shortcut-hint" aria-label="Phím tắt"><span><kbd>J</kbd>/<kbd>K</kbd> chọn case</span><span><kbd>Enter</kbd> mở chi tiết</span><span><kbd>A</kbd> gọi AI</span><button type="button" data-action="open-shortcuts">Xem tất cả phím tắt</button></div>
+      <div class="question-list" id="question-list" aria-live="polite"></div>
+      <div class="empty-state" id="empty-state" hidden><span aria-hidden="true">⌕</span><h3>Không tìm thấy tình huống phù hợp</h3><p>Thử thay từ khóa hoặc xóa bớt bộ lọc.</p><button class="button secondary" type="button" data-action="clear-filters">Xóa bộ lọc</button></div>
     </section>
   </main>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <dialog id="context-dialog" aria-labelledby="dialog-title">
-    <div class="dialog-header">
-      <div>
-        <p class="eyebrow">Ngữ cảnh liên quan · dữ liệu giả lập</p>
-        <h2 id="dialog-title">Chi tiết tình huống</h2>
-      </div>
-      <button class="icon-button" id="close-dialog" type="button" aria-label="Đóng hộp thoại">×</button>
+  <dialog class="detail-drawer" id="detail-dialog" aria-labelledby="detail-title">
+    <div class="drawer-shell">
+      <header class="drawer-header"><div><p class="eyebrow" id="detail-eyebrow">Chi tiết tình huống</p><h2 id="detail-title">Câu hỏi</h2></div><button class="icon-button" type="button" data-action="close-detail" aria-label="Đóng chi tiết">×</button></header>
+      <ol class="review-progress" id="review-progress" aria-label="Tiến trình rà soát"><li data-step="context"><span>1</span><strong>Xem căn cứ</strong></li><li data-step="analyze"><span>2</span><strong>AI phân tích</strong></li><li data-step="decide"><span>3</span><strong>TA quyết định</strong></li></ol>
+      <div class="drawer-content" id="detail-content"></div>
+      <footer class="drawer-footer" id="detail-footer"></footer>
     </div>
-    <div id="dialog-content"></div>
-    <div class="dialog-footer">
-      <p>Hệ thống chỉ điều hướng; TA tự phản hồi trong luồng gốc.</p>
-      <button class="button button-primary" id="open-source-button" type="button">Mở luồng gốc (mô phỏng)</button>
-    </div>
+  </dialog>
+
+  <dialog class="modal" id="metrics-dialog" aria-labelledby="metrics-title">
+    <header class="modal-header"><div><p class="eyebrow">Minh chứng CP3</p><h2 id="metrics-title">Số đo và hoạt động phiên</h2></div><button class="icon-button" type="button" data-action="close-metrics" aria-label="Đóng số đo">×</button></header>
+    <div class="modal-body" id="metrics-content"></div>
+  </dialog>
+
+  <dialog class="modal shortcuts-modal" id="shortcuts-dialog" aria-labelledby="shortcuts-title">
+    <header class="modal-header"><div><p class="eyebrow">Thao tác nhanh</p><h2 id="shortcuts-title">Phím tắt cho TA</h2></div><button class="icon-button" type="button" data-action="close-shortcuts" aria-label="Đóng phím tắt">×</button></header>
+    <div class="modal-body shortcut-grid"><span><kbd>/</kbd><strong>Tìm kiếm</strong></span><span><kbd>J</kbd><strong>Case tiếp theo</strong></span><span><kbd>K</kbd><strong>Case trước</strong></span><span><kbd>Enter</kbd><strong>Mở chi tiết</strong></span><span><kbd>A</kbd><strong>Phân tích bằng AI</strong></span><span><kbd>1</kbd><strong>Chưa xử lý</strong></span><span><kbd>2</kbd><strong>Chưa chắc chắn</strong></span><span><kbd>3</kbd><strong>Đã xử lý</strong></span><span><kbd>Esc</kbd><strong>Đóng panel</strong></span></div>
   </dialog>
 
   <script src="script.js"></script>

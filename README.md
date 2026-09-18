@@ -123,6 +123,8 @@ Hai phòng cùng ca dùng chung lịch mốc. Năm link form phát đủ từ đ
 
 ### CP4 · Chốt `spec.md`
 
+**Trạng thái đội: ✅ Đã chốt nội dung** — chuẩn đạt được khóa trong `spec.md` mục 10; phần chưa hoàn thành và giới hạn được tự khai tại mục 11. Bước còn lại ngoài repository là commit/push và nộp link `spec.md` qua form CP4 trước hạn.
+
 **Để làm gì:** chốt **"thế nào là đạt"** trước khi biết kết quả. Đặt chuẩn sau khi đã thấy kết quả thì con số không nói lên điều gì — và người nghe cũng biết vậy.
 
 **Nộp:**
