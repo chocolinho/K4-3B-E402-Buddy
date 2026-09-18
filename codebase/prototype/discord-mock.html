@@ -3,336 +3,355 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Discord · AI20k Khoá 4 (mô phỏng)</title>
+  <meta name="description" content="Discord mock mô phỏng luồng TA phản hồi câu hỏi từ Buddy.">
+  <title>[L3–L4] AI20K Build Phase – Cohort 4 · Discord mock</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-    *{box-sizing:border-box;margin:0;padding:0}
-    html,body{height:100%;font-family:'Inter','Segoe UI',sans-serif;background:#313338;color:#dbdee1}
-    /* Layout */
-    .app{display:flex;height:100vh}
-    .sidebar{width:72px;background:#1e1f22;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px;flex-shrink:0}
-    .sidebar .server{width:48px;height:48px;border-radius:16px;background:#5865f2;display:grid;place-items:center;color:white;font-weight:700;font-size:18px;cursor:pointer;transition:border-radius .2s}
-    .sidebar .server:hover{border-radius:12px}
-    .sidebar .sep{width:32px;height:2px;background:#35363c;border-radius:1px}
-    .channels{width:240px;background:#2b2d31;display:flex;flex-direction:column;flex-shrink:0}
-    .channels .header{padding:12px 16px;font-size:15px;font-weight:700;color:#f2f3f5;border-bottom:1px solid #1e1f22;display:flex;align-items:center;gap:8px}
-    .channels .header .hash{color:#5865f2}
-    .ch-list{padding:8px;overflow-y:auto;flex:1}
-    .ch-item{padding:8px 12px;border-radius:4px;cursor:pointer;font-size:14px;color:#949ba4;display:flex;align-items:center;gap:8px;transition:background .15s,color .15s}
-    .ch-item:hover,.ch-item.active{background:#35373c;color:#f2f3f5}
-    .ch-item .hash{font-size:18px;color:#5865f2;font-weight:700}
-    .ch-item .badge{margin-left:auto;background:#f23f43;color:white;font-size:11px;font-weight:700;padding:1px 6px;border-radius:8px}
-    .ch-cat{padding:18px 8px 4px;font-size:11px;font-weight:700;color:#949ba4;text-transform:uppercase;letter-spacing:.04em}
-    /* Main chat */
-    .chat{flex:1;display:flex;flex-direction:column;background:#313338}
-    .chat-header{padding:12px 16px;border-bottom:1px solid #1e1f22;display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;color:#f2f3f5}
-    .chat-header .hash{color:#80848e;font-size:22px}
-    .chat-body{flex:1;overflow-y:auto;padding:16px 16px 8px;scroll-behavior:smooth}
-    .chat-input{padding:0 16px 24px}
-    .chat-input .box{background:#383a40;border-radius:8px;padding:12px 16px;color:#949ba4;font-size:14px;cursor:text}
-    /* Messages */
-    .msg-group{margin-bottom:20px;scroll-margin-top:80px}
-    .msg-group.highlight{background:#3a3524;border-left:3px solid #f0b84b;padding:8px 12px;border-radius:4px;animation:flash 2s ease}
-    @keyframes flash{0%,100%{background:#3a3524}50%{background:#4a4520}}
-    .msg{display:flex;gap:16px;padding:2px 0}
-    .msg.continued{padding-left:56px}
-    .avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;font-weight:700;font-size:14px;color:white}
-    .avatar.hv{background:#5865f2}
-    .avatar.bot{background:#57f287}
-    .avatar.ta{background:#f0b84b;color:#1e1f22}
-    .avatar.mod{background:#eb459e}
-    .msg-content{flex:1;min-width:0}
-    .msg-meta{display:flex;align-items:baseline;gap:8px}
-    .msg-name{font-weight:600;font-size:15px}
-    .msg-name.hv{color:#5865f2}
-    .msg-name.bot{color:#57f287}
-    .msg-name.ta{color:#f0b84b}
-    .msg-bot-tag{background:#5865f2;color:white;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;vertical-align:middle}
-    .msg-time{font-size:11px;color:#949ba4}
-    .msg-text{font-size:15px;line-height:1.45;color:#dbdee1;margin-top:2px;word-wrap:break-word}
-    .msg-text .mention{background:rgba(88,101,242,.3);color:#c9cdfb;padding:0 2px;border-radius:3px}
-    .msg-attachment{margin-top:6px;padding:8px 12px;background:#2b2d31;border:1px solid #1e1f22;border-radius:4px;font-size:13px;color:#949ba4;font-style:italic}
-    .divider{display:flex;align-items:center;margin:16px 0;gap:8px}
-    .divider hr{flex:1;border:none;border-top:1px solid #3f4147}
-    .divider span{font-size:11px;font-weight:700;color:#949ba4}
-    /* Reply box */
-    .reply-box{margin-top:12px;background:#383a40;border-radius:8px;padding:12px 16px;display:none;align-items:center;gap:8px}
-    .reply-box.show{display:flex}
-    .reply-box input{flex:1;background:none;border:none;color:#dbdee1;font-size:14px;outline:none;font-family:inherit}
-    .reply-box button{background:#5865f2;color:white;border:none;padding:8px 16px;border-radius:4px;font-weight:600;font-size:13px;cursor:pointer}
-    .reply-box button:hover{background:#4752c4}
-    /* Toast */
-    .toast-msg{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#248046;color:white;padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;display:none;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.4)}
-    .toast-msg.show{display:block;animation:slideUp .3s ease}
-    @keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
-    /* Buddy badge */
-    .buddy-link{position:fixed;top:12px;right:16px;background:#5865f2;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:13px;z-index:90;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:background .15s}
-    .buddy-link:hover{background:#4752c4}
-    .buddy-link .dot{width:8px;height:8px;border-radius:50%;background:#57f287}
-    .buddy-tag{margin-left:auto;font-size:11px;color:#c9cdfb;text-decoration:none;font-weight:600;background:rgba(88,101,242,.25);padding:2px 8px;border-radius:4px;transition:background .15s,color .15s}
-    .buddy-tag:hover{background:#5865f2;color:white}
-    /* Banner */
-    .banner{padding:12px 16px;background:#2b2d31;border-bottom:1px solid #1e1f22;font-size:12px;color:#949ba4;text-align:center}
-    .banner strong{color:#f0b84b}
+    :root { color-scheme: dark; --rail:#1e1f22; --sidebar:#2b2d31; --chat:#313338; --hover:#35373c; --active:#404249; --line:#3f4147; --text:#dbdee1; --muted:#949ba4; --soft:#b5bac1; --brand:#5865f2; --green:#23a55a; --red:#f23f43; --yellow:#f0b232; }
+    * { box-sizing:border-box; }
+    html,body { width:100%; height:100%; margin:0; overflow:hidden; }
+    body { background:var(--chat); color:var(--text); font-family:"Segoe UI",Inter,system-ui,sans-serif; font-size:15px; }
+    button,input { font:inherit; }
+    button,a { -webkit-tap-highlight-color:transparent; }
+    button:focus-visible,a:focus-visible,input:focus-visible { outline:2px solid #c9cdfb; outline-offset:2px; }
+
+    .window-bar { position:relative; display:flex; height:40px; align-items:center; justify-content:space-between; padding:0 16px; background:#292a2f; color:var(--soft); font-size:13px; user-select:none; }
+    .window-nav,.window-actions { display:flex; align-items:center; gap:16px; }
+    .window-nav span { color:#a6aab2; font-size:22px; }
+    .window-title { position:absolute; left:50%; display:flex; align-items:center; gap:8px; color:#f2f3f5; font-weight:650; transform:translateX(-50%); }
+    .window-title i { display:grid; width:20px; height:20px; place-items:center; border-radius:50%; background:#09213e; color:#3ba7ff; font-size:11px; font-style:normal; }
+    .window-actions span { display:grid; width:18px; height:18px; place-items:center; font-size:15px; }
+    .discord { display:grid; height:calc(100vh - 40px); grid-template-columns:72px 310px minmax(440px,1fr) 270px; }
+
+    .server-rail { display:flex; min-height:0; flex-direction:column; align-items:center; gap:8px; overflow-y:auto; padding:12px 0; background:var(--rail); scrollbar-width:none; }
+    .server-rail::-webkit-scrollbar { display:none; }
+    .server { position:relative; display:grid; width:48px; height:48px; flex:0 0 48px; place-items:center; overflow:visible; border:0; border-radius:50%; background:var(--chat); color:white; font-weight:800; cursor:pointer; transition:border-radius 150ms,background 150ms; }
+    .server:hover,.server.active { border-radius:15px; background:var(--brand); }
+    .server.active::before { content:""; position:absolute; top:6px; bottom:6px; left:-12px; width:4px; border-radius:0 4px 4px 0; background:white; }
+    .server.logo { overflow:hidden; background:linear-gradient(145deg,#092f5d,#005ad6 55%,#00a8ff); font-size:19px; }
+    .server.pink { background:linear-gradient(145deg,#ef476f,#9b2c72); }
+    .server.purple { background:linear-gradient(145deg,#9b5de5,#4c2388); }
+    .server.green { color:#23a55a; }
+    .server.folder { border-radius:15px; color:#7386ff; }
+    .server .notice { position:absolute; right:-5px; bottom:-4px; min-width:21px; padding:2px 4px; border:3px solid var(--rail); border-radius:12px; background:var(--red); color:white; font-size:10px; line-height:15px; }
+    .server-separator { width:32px; height:2px; flex:0 0 2px; border-radius:2px; background:var(--line); }
+
+    .channel-sidebar { display:grid; min-width:0; min-height:0; grid-template-rows:52px minmax(0,1fr) 62px; background:var(--sidebar); }
+    .server-header { display:flex; align-items:center; justify-content:space-between; gap:8px; padding:0 16px; border-bottom:1px solid #202225; box-shadow:0 1px 0 rgba(0,0,0,.2); color:#f2f3f5; font-weight:700; }
+    .server-name { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .channel-scroll { overflow-y:auto; padding:9px 8px; scrollbar-width:thin; scrollbar-color:#1a1b1e transparent; }
+    .browse { display:flex; align-items:center; gap:9px; margin:0 4px 10px; padding:8px; border-bottom:1px solid var(--line); color:var(--soft); font-size:14px; }
+    .category { display:flex; align-items:center; gap:5px; margin:16px 7px 4px; color:var(--muted); font-size:12px; font-weight:650; text-transform:uppercase; }
+    .category::before { content:"⌄"; font-size:10px; }
+    .channel { display:flex; min-height:36px; align-items:center; gap:8px; padding:5px 9px; border-radius:4px; color:var(--muted); text-decoration:none; cursor:pointer; }
+    .channel:hover { background:rgba(79,84,92,.32); color:var(--text); }
+    .channel.active { background:var(--active); color:white; }
+    .channel .icon { width:22px; flex:0 0 22px; color:#80848e; font-size:20px; text-align:center; }
+    .channel.active .icon { color:var(--soft); }
+    .channel-name { min-width:0; overflow:hidden; text-overflow:ellipsis; font-weight:520; white-space:nowrap; }
+    .channel.active .channel-name { font-weight:680; }
+    .channel .new { margin-left:auto; color:#949cf7; font-size:11px; font-weight:750; }
+    .nested { margin-left:28px; border-left:2px solid #4d5058; }
+    .nested .channel { border-radius:0 4px 4px 0; }
+    .user-panel { display:grid; grid-template-columns:36px minmax(0,1fr) repeat(3,30px); align-items:center; gap:4px; padding:8px; background:#232428; }
+    .user-avatar,.avatar,.member-avatar { position:relative; display:grid; place-items:center; flex:0 0 auto; border-radius:50%; color:white; font-weight:800; }
+    .user-avatar { width:36px; height:36px; background:linear-gradient(145deg,#d2e7ff,#5477a7); color:#15233a; }
+    .user-avatar::after,.member-avatar::after { content:""; position:absolute; right:-1px; bottom:-1px; width:10px; height:10px; border:3px solid #232428; border-radius:50%; background:var(--green); }
+    .user-copy { min-width:0; line-height:1.15; }
+    .user-copy strong,.user-copy small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .user-copy strong { color:white; font-size:13px; }
+    .user-copy small { margin-top:3px; color:var(--soft); font-size:11px; }
+    .user-tool { display:grid; width:30px; height:30px; place-items:center; border:0; border-radius:4px; background:transparent; color:var(--soft); cursor:pointer; }
+    .user-tool:hover { background:var(--hover); }
+
+    .chat { display:grid; min-width:0; min-height:0; grid-template-rows:52px auto minmax(0,1fr) auto; background:var(--chat); }
+    .chat-header { display:flex; min-width:0; align-items:center; gap:11px; padding:0 16px; border-bottom:1px solid #26272b; box-shadow:0 1px 0 rgba(0,0,0,.12); }
+    .chat-header .hash { color:#80848e; font-size:25px; font-weight:500; }
+    .chat-heading { display:flex; min-width:0; align-items:center; gap:11px; }
+    .chat-heading strong { flex:0 0 auto; color:white; font-size:15px; }
+    .chat-heading .divider-v { width:1px; height:24px; background:var(--line); }
+    .chat-topic { overflow:hidden; color:var(--muted); font-size:12px; text-overflow:ellipsis; white-space:nowrap; }
+    .chat-tools { display:flex; flex:0 0 auto; align-items:center; gap:8px; margin-left:auto; }
+    .chat-tool { display:grid; width:28px; height:28px; place-items:center; border:0; background:transparent; color:var(--soft); font-size:18px; cursor:pointer; }
+    .search { width:180px; height:30px; padding:0 10px; border:0; border-radius:4px; background:var(--rail); color:var(--text); font-size:12px; }
+    .buddy-link { display:inline-flex; min-height:32px; align-items:center; gap:7px; padding:0 11px; border-radius:5px; background:var(--brand); color:white; font-size:11px; font-weight:750; text-decoration:none; white-space:nowrap; }
+    .buddy-link:hover { background:#4752c4; }
+    .buddy-link .dot { width:7px; height:7px; border-radius:50%; background:#57f287; }
+    .mock-notice { display:flex; align-items:center; justify-content:center; gap:7px; padding:7px 12px; background:#2b2d31; color:var(--muted); font-size:11px; }
+    .mock-notice strong { color:var(--yellow); }
+    .case-banner { display:none; align-items:center; justify-content:space-between; gap:14px; padding:8px 16px; background:var(--brand); color:white; font-size:12px; font-weight:650; }
+    .case-banner.show { display:flex; }
+    .case-banner a { color:white; font-weight:750; text-decoration:none; }
+
+    .chat-body { min-height:0; overflow-y:auto; padding:8px 0 22px; scrollbar-color:#1a1b1e #2b2d31; scrollbar-width:thin; }
+    .channel-welcome { padding:36px 48px 24px; }
+    .welcome-icon { display:grid; width:68px; height:68px; place-items:center; border-radius:50%; background:#41434a; color:white; font-size:34px; }
+    .channel-welcome h1 { margin:14px 0 4px; color:white; font-size:27px; }
+    .channel-welcome p { margin:0; color:var(--muted); font-size:14px; }
+    .date-divider,.new-divider { display:flex; align-items:center; gap:8px; margin:18px 16px 12px; color:var(--muted); font-size:11px; font-weight:650; }
+    .date-divider::before,.date-divider::after,.new-divider::before,.new-divider::after { content:""; height:1px; flex:1; background:var(--line); }
+    .new-divider { color:var(--red); }
+    .new-divider::before,.new-divider::after { background:var(--red); }
+    .msg-group { position:relative; scroll-margin-top:95px; }
+    .msg-group.highlight { background:rgba(88,101,242,.12); box-shadow:inset 3px 0 #949cf7; }
+    .message { display:flex; gap:16px; padding:3px 48px; }
+    .message:first-child { padding-top:11px; }
+    .message:last-child { padding-bottom:11px; }
+    .message:hover { background:rgba(4,4,5,.07); }
+    .avatar { width:40px; height:40px; background:var(--brand); font-size:13px; }
+    .avatar.bot { background:var(--green); }
+    .avatar.ta { background:var(--yellow); color:#1e1f22; }
+    .avatar.pink { background:#eb459e; }
+    .message-content { min-width:0; flex:1; }
+    .message-meta { display:flex; align-items:baseline; gap:7px; }
+    .message-name { color:#57f287; font-size:14px; font-weight:650; }
+    .message-name.bot { color:#c9cdfb; }
+    .message-name.ta { color:var(--yellow); }
+    .message-time { color:var(--muted); font-size:11px; }
+    .bot-tag { padding:1px 5px; border-radius:3px; background:var(--brand); color:white; font-size:9px; font-weight:800; }
+    .message-text { margin-top:3px; color:var(--text); font-size:14px; line-height:1.45; word-break:break-word; }
+    .message-text .mention { padding:0 3px; border-radius:3px; background:rgba(88,101,242,.3); color:#c9cdfb; }
+    .ai-note { display:inline-flex; align-items:center; gap:6px; margin-top:7px; padding:5px 8px; border-radius:4px; background:rgba(242,63,67,.12); color:#ff8c91; font-size:11px; font-weight:650; }
+    .ai-note.warning { background:rgba(240,178,50,.12); color:#f6c85f; }
+    .attachment { display:inline-flex; margin-top:8px; padding:9px 12px; border:1px solid #202225; border-radius:6px; background:#2b2d31; color:var(--soft); font-size:12px; }
+
+    .composer-wrap { padding:0 16px 22px; background:var(--chat); }
+    .reply-context { display:none; align-items:center; justify-content:space-between; gap:12px; padding:8px 12px; border-radius:8px 8px 0 0; background:#2b2d31; color:var(--soft); font-size:11px; }
+    .reply-context.show { display:flex; }
+    .reply-context strong { color:white; }
+    .reply-context button { border:0; background:transparent; color:var(--soft); cursor:pointer; }
+    .composer { display:grid; min-height:52px; grid-template-columns:34px minmax(0,1fr) auto; align-items:center; gap:8px; padding:0 12px; border-radius:8px; background:#383a40; }
+    .reply-context.show + .composer { border-radius:0 0 8px 8px; }
+    .composer-plus { display:grid; width:24px; height:24px; place-items:center; border-radius:50%; background:var(--soft); color:#383a40; font-size:20px; font-weight:700; }
+    .composer input { width:100%; border:0; outline:0; background:transparent; color:var(--text); font-size:14px; }
+    .composer input::placeholder { color:#777d87; }
+    .composer-actions { display:flex; align-items:center; gap:13px; color:var(--soft); }
+    .send-button { min-height:32px; padding:0 13px; border:0; border-radius:4px; background:var(--brand); color:white; font-size:11px; font-weight:750; cursor:pointer; }
+    .send-button:hover { background:#4752c4; }
+
+    .member-sidebar { min-height:0; overflow-y:auto; padding:18px 8px; background:var(--sidebar); scrollbar-width:thin; scrollbar-color:#1a1b1e transparent; }
+    .member-category { margin:10px 8px 7px; color:var(--muted); font-size:11px; font-weight:650; text-transform:uppercase; }
+    .member { display:flex; align-items:center; gap:10px; min-height:44px; padding:4px 8px; border-radius:4px; }
+    .member:hover { background:var(--hover); }
+    .member-avatar { width:34px; height:34px; background:linear-gradient(145deg,#5965f2,#263075); font-size:11px; }
+    .member-avatar.yellow { background:#faa81a; color:#2b2d31; }
+    .member-avatar.pink { background:#eb459e; }
+    .member-avatar.red { background:#ed4245; }
+    .member-avatar.idle::after { background:var(--yellow); }
+    .member-copy { min-width:0; }
+    .member-copy strong,.member-copy small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .member-copy strong { color:#f0c232; font-size:13px; }
+    .member-copy strong.admin { color:#f04747; }
+    .member-copy strong.coach { color:#f65aa3; }
+    .member-copy small { margin-top:2px; color:var(--muted); font-size:10px; }
+    .toast { position:fixed; bottom:24px; left:50%; z-index:100; display:none; max-width:calc(100vw - 32px); padding:11px 18px; border-radius:7px; background:#248046; color:white; font-size:12px; font-weight:700; box-shadow:0 8px 30px rgba(0,0,0,.35); transform:translateX(-50%); }
+    .toast.show { display:block; animation:toast-in 180ms ease-out; }
+    @keyframes toast-in { from { opacity:0; transform:translate(-50%,12px); } }
+    @media (max-width:1180px) { .discord{grid-template-columns:72px 270px minmax(420px,1fr)} .member-sidebar{display:none} .search{width:140px} }
+    @media (max-width:820px) { .window-title{position:static;transform:none} .window-nav,.window-actions{display:none} .window-bar{justify-content:center} .discord{grid-template-columns:64px minmax(0,1fr)} .server-rail{grid-column:1} .channel-sidebar{display:none} .chat{grid-column:2} .chat-topic,.search,.chat-tool{display:none} .message{padding-inline:18px} .channel-welcome{padding-inline:18px} .buddy-link{margin-left:auto} }
+    @media (max-width:560px) { .discord{display:block} .server-rail{display:none} .chat{height:100%} .mock-notice{display:none} .case-banner{font-size:10px} .message{gap:10px;padding-inline:12px} .avatar{width:34px;height:34px} .composer-wrap{padding:0 8px 10px} .composer-actions>span{display:none} }
   </style>
 </head>
 <body>
-<div class="app">
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="server" style="background:#5865f2">A</div>
-    <div class="sep"></div>
-    <div class="server" style="background:#313338;border:2px dashed #3f4147;font-size:24px;color:#57f287">+</div>
+  <header class="window-bar" aria-label="Thanh cửa sổ Discord mô phỏng">
+    <div class="window-nav"><span>←</span><span>→</span></div>
+    <div class="window-title"><i>◈</i><span>[L3–L4] AI20K Build Phase – Cohort 4</span></div>
+    <div class="window-actions"><span>▣</span><span>?</span><span>—</span><span>□</span><span>×</span></div>
+  </header>
+  <div class="discord">
+    <nav class="server-rail" aria-label="Danh sách máy chủ">
+      <button class="server">⌁<span class="notice">212</span></button><div class="server-separator"></div>
+      <button class="server pink">P<span class="notice">1</span></button><button class="server logo active">AI</button>
+      <button class="server purple">3B<span class="notice">51</span></button><button class="server pink">LF<span class="notice">3</span></button>
+      <button class="server green">K4<span class="notice">5</span></button><button class="server folder">▰</button><button class="server green">＋</button>
+    </nav>
+
+    <aside class="channel-sidebar" aria-label="Kênh máy chủ">
+      <header class="server-header"><span class="server-name">🏠 [L3–L4] AI20K Build Phase</span><span>⌄</span></header>
+      <div class="channel-scroll">
+        <div class="browse">☷ <span>Browse Channels</span></div>
+        <div class="category">Build</div>
+        <a class="channel"><span class="icon">📣</span><span class="channel-name">thông-báo</span></a>
+        <a class="channel"><span class="icon">#</span><span class="channel-name">tài-nguyên</span></a>
+        <div class="category">Cộng đồng</div>
+        <a class="channel"><span class="icon">#</span><span class="channel-name">chung</span></a>
+        <a class="channel active"><span class="icon">☁</span><span class="channel-name">🙋-hỏi-đáp</span><span class="new">3 New</span></a>
+        <div class="category">Bot &amp; Tiện ích</div>
+        <a class="channel"><span class="icon">#</span><span class="channel-name">activity</span></a>
+        <div class="category">Tickets</div>
+        <a class="channel"><span class="icon">#</span><span class="channel-name">các-vấn-đề-khác</span></a>
+        <a class="channel"><span class="icon">#</span><span class="channel-name">đề-xuất-đề-tài-mới</span></a>
+        <a class="channel"><span class="icon">#</span><span class="channel-name">team</span></a>
+        <a class="channel"><span class="icon">#</span><span class="channel-name">vấn-đề-vlearn-codelab</span></a>
+        <div class="category">Office hours</div>
+        <a class="channel"><span class="icon">◉</span><span class="channel-name">OFFICE HOURS - KÊNH 01</span></a>
+        <a class="channel"><span class="icon">◉</span><span class="channel-name">OFFICE HOURS - KÊNH 02</span></a>
+        <div class="category">G-04</div>
+        <a class="channel"><span class="icon">☁</span><span class="channel-name">t-082</span></a>
+        <div class="nested"><a class="channel"><span class="icon">📢</span><span class="channel-name">Thông báo</span></a><a class="channel"><span class="icon">☁</span><span class="channel-name">Thảo luận</span></a></div>
+      </div>
+      <div class="user-panel">
+        <div class="user-avatar">TA</div><div class="user-copy"><strong>Nguoi Rung</strong><small>Do Not Disturb</small></div>
+        <button class="user-tool" aria-label="Tắt mic">🎙</button><button class="user-tool" aria-label="Tai nghe">🎧</button><button class="user-tool" aria-label="Cài đặt">⚙</button>
+      </div>
+    </aside>
+
+    <main class="chat">
+      <header class="chat-header">
+        <div class="chat-heading"><span class="hash">#</span><strong>🙋-hỏi-đáp</strong><span class="divider-v"></span><span class="chat-topic">Kênh hỏi đáp và hỗ trợ học viên Cohort 4</span></div>
+        <div class="chat-tools"><button class="chat-tool" aria-label="Thông báo">🔕</button><button class="chat-tool" aria-label="Tin đã ghim">📌</button><input class="search" type="search" placeholder="Search AI20K Cohort 4"><a class="buddy-link" href="index.html"><span class="dot"></span><span>Buddy</span></a></div>
+      </header>
+      <div><div class="mock-notice">⚠️ <span>Đây là <strong>Discord mô phỏng</strong> cho demo Buddy; tên và nội dung đã được ẩn danh.</span></div><div class="case-banner" id="case-banner"><span id="case-banner-text">Buddy đã mở đúng case cần phản hồi.</span><a href="#active-case">Bước 3/4 · trả lời học viên</a></div></div>
+
+      <div class="chat-body" id="chat-body">
+        <section class="channel-welcome"><div class="welcome-icon">#</div><h1>Chào mừng đến với #🙋-hỏi-đáp!</h1><p>Đây là nơi bắt đầu của kênh hỗ trợ học viên AI20K Cohort 4.</p></section>
+        <div class="date-divider">13 Tháng 9, 2026</div>
+
+        <section class="msg-group" id="q-201" data-student="Học viên-A">
+          <article class="message"><div class="avatar">A</div><div class="message-content"><div class="message-meta"><span class="message-name">T144–HỌC VIÊN A</span><time class="message-time">13/09 · 14:23</time></div><div class="message-text">Xem XP ở đâu? 🤔</div></div></article>
+          <article class="message"><div class="avatar bot">B</div><div class="message-content"><div class="message-meta"><span class="message-name bot">Buddy Bot</span><span class="bot-tag">APP</span><time class="message-time">13/09 · 14:24</time></div><div class="message-text">Có thể tra XP theo Discord ID hoặc xem lịch sử bằng lệnh <strong>/rank</strong>.</div></div></article>
+        </section>
+        <section class="msg-group" id="q-202" data-student="Học viên-C">
+          <article class="message"><div class="avatar pink">C</div><div class="message-content"><div class="message-meta"><span class="message-name">T027–HỌC VIÊN C</span><time class="message-time">13/09 · 15:01</time></div><div class="message-text">Hạn nộp daily stand-up là khi nào?</div></div></article>
+          <article class="message"><div class="avatar bot">B</div><div class="message-content"><div class="message-meta"><span class="message-name bot">Buddy Bot</span><span class="bot-tag">APP</span><time class="message-time">13/09 · 15:02</time></div><div class="message-text">Khung giờ nộp hàng ngày là 0h–10h; nộp muộn vẫn ghi nhận nhưng không cộng XP.</div></div></article>
+        </section>
+        <div class="new-divider">NEW · Buddy phát hiện case cần TA kiểm tra</div>
+        <section class="msg-group" id="q-206" data-student="Học viên-H">
+          <article class="message"><div class="avatar">H</div><div class="message-content"><div class="message-meta"><span class="message-name">T057–HỌC VIÊN H</span><time class="message-time">13/09 · 16:42</time></div><div class="message-text"><span class="mention">@Trợ lý Kute</span> Cách nộp daily stand-up như thế nào ạ?</div></div></article>
+          <article class="message"><div class="avatar bot">B</div><div class="message-content"><div class="message-meta"><span class="message-name bot">Buddy Bot</span><span class="bot-tag">APP</span><time class="message-time">13/09 · 16:43</time></div><div class="message-text">Khung giờ nộp là 0h–10h; nộp muộn không được cộng XP.</div><div class="ai-note">⚠ Trả lời sai intent — học viên hỏi cách nộp, không hỏi khung giờ</div></div></article>
+        </section>
+        <section class="msg-group" id="q-207" data-student="Học viên-I">
+          <article class="message"><div class="avatar pink">I</div><div class="message-content"><div class="message-meta"><span class="message-name">T129–HỌC VIÊN I</span><time class="message-time">13/09 · 17:15</time></div><div class="message-text">Hạn nộp Lab02 là khi nào?</div></div></article>
+          <article class="message"><div class="avatar bot">B</div><div class="message-content"><div class="message-meta"><span class="message-name bot">Buddy Bot</span><span class="bot-tag">APP</span><time class="message-time">13/09 · 17:16</time></div><div class="message-text">Mình chưa có ngày giờ cụ thể; hãy kiểm tra kênh thông báo, Phoenix hoặc VLearn.</div><div class="ai-note warning">⚠ Không có nguồn deadline — cần TA/BTC xác nhận</div></div></article>
+        </section>
+        <div class="date-divider">14 Tháng 9, 2026</div>
+        <section class="msg-group" id="q-208" data-student="Học viên-J">
+          <article class="message"><div class="avatar">J</div><div class="message-content"><div class="message-meta"><span class="message-name">T140–HỌC VIÊN J</span><time class="message-time">14/09 · 08:30</time></div><div class="message-text">Em đặt sai tên khi vào Zoom nên không được ghi nhận. Em cần xử lý thế nào?</div></div></article>
+          <article class="message"><div class="avatar bot">B</div><div class="message-content"><div class="message-meta"><span class="message-name bot">Buddy Bot</span><span class="bot-tag">APP</span><time class="message-time">14/09 · 08:31</time></div><div class="message-text">Hãy đăng nhập đúng email và đặt tên đúng cú pháp để được điểm danh tự động.</div><div class="ai-note">⚠ Chỉ nêu cách phòng tránh, chưa hướng dẫn khắc phục lượt đã mất</div></div></article>
+        </section>
+        <section class="msg-group" id="q-209" data-student="Học viên-K">
+          <article class="message"><div class="avatar pink">K</div><div class="message-content"><div class="message-meta"><span class="message-name">T152–HỌC VIÊN K</span><time class="message-time">14/09 · 09:12</time></div><div class="message-text">Em chạy tới bước 3 thì bị lỗi như này ạ.</div><div class="attachment">📎 screenshot_1.png &nbsp; 📎 screenshot_2.png</div></div></article>
+        </section>
+        <section class="msg-group" id="q-212" data-student="Học viên-M">
+          <article class="message"><div class="avatar">M</div><div class="message-content"><div class="message-meta"><span class="message-name">T082–HỌC VIÊN M</span><time class="message-time">14/09 · 10:45</time></div><div class="message-text">Em tham gia workshop đầy đủ nhưng chưa thấy được cộng XP, cần làm gì?</div><div class="ai-note">⚠ Chưa kiểm tra lượt XP cụ thể — nguồn cộng đồng</div></div></article>
+        </section>
+        <section class="msg-group" id="q-213" data-student="Học viên-N">
+          <article class="message"><div class="avatar pink">N</div><div class="message-content"><div class="message-meta"><span class="message-name">T095–HỌC VIÊN N</span><time class="message-time">14/09 · 11:20</time></div><div class="message-text">Em đã quét QR nhưng không thấy lịch sử điểm danh trên ứng dụng.</div></div></article>
+          <article class="message"><div class="avatar ta">TA</div><div class="message-content"><div class="message-meta"><span class="message-name ta">Lab Coach</span><time class="message-time">14/09 · 11:22</time></div><div class="message-text">Bạn cho biết lớp và buổi học để bên mình kiểm tra thêm nhé.</div></div></article>
+        </section>
+      </div>
+
+      <div class="composer-wrap">
+        <div class="reply-context" id="reply-context"><span>Đang trả lời <strong id="reply-target">học viên</strong> · case từ Buddy</span><button id="clear-reply" type="button" aria-label="Bỏ chọn case">×</button></div>
+        <div class="composer"><span class="composer-plus">+</span><input id="reply-input" type="text" placeholder="Nhắn tin vào #🙋-hỏi-đáp" autocomplete="off"><div class="composer-actions"><span>🎁</span><span>GIF</span><span>☺</span><button class="send-button" id="send-button" type="button">Gửi</button></div></div>
+      </div>
+    </main>
+
+    <aside class="member-sidebar" aria-label="Thành viên trong máy chủ">
+      <div class="member-category">Admin — 1</div><div class="member"><div class="member-avatar red">O</div><div class="member-copy"><strong class="admin">odin – ADMIN</strong><small>🔥 Phoenix Admin</small></div></div>
+      <div class="member-category">Coach — 8</div>
+      <div class="member"><div class="member-avatar yellow idle">G02</div><div class="member-copy"><strong>G02–Đoàn Việt Thắng</strong><small>Just give me a number</small></div></div>
+      <div class="member"><div class="member-avatar">G07</div><div class="member-copy"><strong>G07–Nguyên Bằng</strong></div></div>
+      <div class="member"><div class="member-avatar pink">G08</div><div class="member-copy"><strong>G08–Trần Thành Duy</strong></div></div>
+      <div class="member"><div class="member-avatar">G10</div><div class="member-copy"><strong>G10–Nguyễn Gia Thịnh</strong></div></div>
+      <div class="member"><div class="member-avatar yellow">G15</div><div class="member-copy"><strong>G15–Võ Nguyễn Ân Tín</strong></div></div>
+      <div class="member"><div class="member-avatar idle">G16</div><div class="member-copy"><strong>G16–Lê Hoàng Anh</strong></div></div>
+      <div class="member"><div class="member-avatar pink">G18</div><div class="member-copy"><strong>G18–Ngô Đình Luân</strong></div></div>
+      <div class="member"><div class="member-avatar yellow idle">G19</div><div class="member-copy"><strong>G19–Phan Minh Tâm</strong></div></div>
+      <div class="member-category">Lecturer — 3</div>
+      <div class="member"><div class="member-avatar red idle">HL</div><div class="member-copy"><strong class="admin">hoalenghiem</strong></div></div>
+      <div class="member"><div class="member-avatar">LK</div><div class="member-copy"><strong class="admin">Linh Kid</strong><small>⚡ GDev</small></div></div>
+      <div class="member"><div class="member-avatar yellow">TD</div><div class="member-copy"><strong class="admin">Tin Dương</strong></div></div>
+      <div class="member-category">VLearn Admin — 3</div>
+      <div class="member"><div class="member-avatar pink">LC</div><div class="member-copy"><strong class="coach">Lab Coach – Hải Vân</strong></div></div>
+      <div class="member"><div class="member-avatar yellow">LC</div><div class="member-copy"><strong class="coach">Lab Coach – nayumi</strong></div></div>
+    </aside>
   </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <!-- Channels -->
-  <div class="channels">
-    <div class="header"><span class="hash">#</span> AI20k · Khoá 4</div>
-    <div class="ch-list">
-      <div class="ch-cat">Thông báo</div>
-      <div class="ch-item" onclick="scrollTo('announcements')"><span class="hash">#</span> thông-báo</div>
-      <div class="ch-cat">Hỗ trợ</div>
-      <div class="ch-item active" onclick="scrollTo('ho-tro')"><span class="hash">#</span> hỗ-trợ-chung <span class="badge">6</span></div>
-      <div class="ch-item" onclick="scrollTo('ho-tro-ky-thuat')"><span class="hash">#</span> hỗ-trợ-kỹ-thuật <span class="badge">3</span></div>
-      <div class="ch-cat">Thảo luận</div>
-      <div class="ch-item" onclick="scrollTo('thao-luan')"><span class="hash">#</span> thảo-luận-chung</div>
-      <div class="ch-cat">Nhóm</div>
-      <div class="ch-item"><span class="hash">#</span> team-alpha</div>
-      <div class="ch-item"><span class="hash">#</span> team-beta</div>
-    </div>
-  </div>
+  <script>
+    const replyContext=document.querySelector("#reply-context");
+    const replyTarget=document.querySelector("#reply-target");
+    const replyInput=document.querySelector("#reply-input");
+    const caseBanner=document.querySelector("#case-banner");
+    const caseBannerText=document.querySelector("#case-banner-text");
+    const buddyLink=document.querySelector(".buddy-link");
+    const toast=document.querySelector("#toast");
+    let activeId=null;
+    let toastTimer;
 
-  <!-- Chat main -->
-  <div class="chat">
-    <div class="chat-header"><span class="hash">#</span> hỗ-trợ-chung</div>
-    <div class="banner">⚠️ Đây là <strong>giao diện mô phỏng Discord</strong> dùng cho demo Buddy. Tên và nội dung đã được ẩn danh.</div>
+    function showToast(message){
+      toast.textContent=message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer=setTimeout(()=>toast.classList.remove("show"),3200);
+    }
 
-    <div class="chat-body" id="chat-body">
+    function selectCase(id,shouldScroll=true){
+      const group=document.getElementById(id);
+      if(!group)return;
+      activeId=id;
+      document.querySelectorAll(".msg-group.highlight").forEach(item=>item.classList.remove("highlight"));
+      group.classList.add("highlight");
+      const student=group.dataset.student||"học viên";
+      replyTarget.textContent=student;
+      replyInput.placeholder=`Trả lời ${student} trong #🙋-hỏi-đáp`;
+      replyContext.classList.add("show");
+      caseBanner.classList.add("show");
+      caseBannerText.textContent=`Buddy đã đưa bạn tới ${id} · kiểm tra ngữ cảnh và phản hồi ${student}.`;
+      buddyLink.href=`index.html#${id}`;
+      if(shouldScroll)group.scrollIntoView({behavior:"smooth",block:"center"});
+      setTimeout(()=>replyInput.focus({preventScroll:true}),450);
+    }
 
-      <div class="divider"><hr><span>13 Tháng 9, 2026</span><hr></div>
+    function clearCase(){
+      activeId=null;
+      document.querySelectorAll(".msg-group.highlight").forEach(item=>item.classList.remove("highlight"));
+      replyContext.classList.remove("show");
+      caseBanner.classList.remove("show");
+      replyInput.placeholder="Nhắn tin vào #🙋-hỏi-đáp";
+      buddyLink.href="index.html";
+    }
 
-      <!-- q-201 -->
-      <div class="msg-group" id="q-201">
-        <div class="msg">
-          <div class="avatar hv">A</div>
-          <div class="msg-content">
-            <div class="msg-meta"><span class="msg-name hv">Học viên-A</span><span class="msg-time">13/09 · 14:23</span></div>
-            <div class="msg-text">Xem XP ở đâu? 🤔</div>
-          </div>
-        </div>
-        <div class="reply-box" id="reply-q-201">
-          <input type="text" placeholder="Trả lời Học viên-A...">
-          <button onclick="sendReply('q-201')">Gửi</button>
-        </div>
-      </div>
+    function selectFromHash(){
+      const id=location.hash.replace("#","");
+      if(id&&document.getElementById(id))selectCase(id);
+      else if(!activeId)selectCase("q-206",false);
+    }
 
-      <!-- q-202 -->
-      <div class="msg-group" id="q-202">
-        <div class="msg">
-          <div class="avatar hv">C</div>
-          <div class="msg-content">
-            <div class="msg-meta"><span class="msg-name hv">Học viên-C</span><span class="msg-time">13/09 · 15:01</span></div>
-            <div class="msg-text">Hạn nộp daily stand-up là khi nào?</div>
-          </div>
-        </div>
-        <div class="msg continued">
-          <div class="msg-content">
-            <div class="msg-text" style="color:#57f287"><span class="msg-bot-tag">BOT</span> Khung giờ nộp hàng ngày là 0h–10h; nộp muộn vẫn ghi nhận nhưng không cộng XP.</div>
-          </div>
-        </div>
-        <div class="reply-box" id="reply-q-202">
-          <input type="text" placeholder="Trả lời Học viên-C...">
-          <button onclick="sendReply('q-202')">Gửi</button>
-        </div>
-      </div>
+    function sendReply(){
+      const text=replyInput.value.trim();
+      const group=activeId?document.getElementById(activeId):null;
+      if(!group){showToast("Hãy chọn một case từ Buddy trước khi phản hồi.");return;}
+      if(!text){replyInput.focus();showToast("Nhập nội dung phản hồi trước khi gửi.");return;}
+      const article=document.createElement("article");
+      article.className="message";
+      const avatar=document.createElement("div");
+      avatar.className="avatar ta";
+      avatar.textContent="TA";
+      const content=document.createElement("div");
+      content.className="message-content";
+      const meta=document.createElement("div");
+      meta.className="message-meta";
+      meta.innerHTML='<span class="message-name ta">TA (bạn)</span><time class="message-time">Vừa xong</time>';
+      const body=document.createElement("div");
+      body.className="message-text";
+      body.textContent=text;
+      content.append(meta,body);
+      article.append(avatar,content);
+      group.append(article);
+      localStorage.setItem(`buddy-discord-reply:${activeId}`,JSON.stringify({at:new Date().toISOString(),text}));
+      replyInput.value="";
+      buddyLink.innerHTML='<span class="dot"></span><span>Quay lại Buddy · chốt trạng thái</span>';
+      group.scrollIntoView({behavior:"smooth",block:"center"});
+      showToast("✓ Đã phản hồi · quay lại Buddy để chốt trạng thái case");
+    }
 
-      <!-- q-206 UNRESOLVED -->
-      <div class="msg-group" id="q-206">
-        <div class="msg">
-          <div class="avatar hv">H</div>
-          <div class="msg-content">
-            <div class="msg-meta"><span class="msg-name hv">Học viên-H</span><span class="msg-time">13/09 · 16:42</span><a class="buddy-tag" href="index.html#q-206" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
-            <div class="msg-text"><strong>Cách nộp daily stand-up như thế nào?</strong></div>
-          </div>
-        </div>
-        <div class="msg continued">
-          <div class="msg-content">
-            <div class="msg-text" style="color:#57f287"><span class="msg-bot-tag">BOT</span> Khung giờ nộp là 0h–10h; nộp muộn không được cộng XP.</div>
-            <div class="msg-text" style="color:#f23f43;font-size:13px;margin-top:4px">⚠️ Trả lời sai intent — hỏi "cách nộp" nhưng chỉ nhận được "khung giờ"</div>
-          </div>
-        </div>
-        <div class="reply-box" id="reply-q-206">
-          <input type="text" placeholder="Trả lời Học viên-H...">
-          <button onclick="sendReply('q-206')">Gửi</button>
-        </div>
-      </div>
-
-      <!-- q-207 UNRESOLVED -->
-      <div class="msg-group" id="q-207">
-        <div class="msg">
-          <div class="avatar hv">I</div>
-          <div class="msg-content">
-            <div class="msg-meta"><span class="msg-name hv">Học viên-I</span><span class="msg-time">13/09 · 17:15</span><a class="buddy-tag" href="index.html#q-207" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
-            <div class="msg-text"><strong>Hạn nộp Lab02 là khi nào?</strong></div>
-          </div>
-        </div>
-        <div class="msg continued">
-          <div class="msg-content">
-            <div class="msg-text" style="color:#57f287"><span class="msg-bot-tag">BOT</span> Mình chưa có ngày giờ cụ thể; hãy kiểm tra kênh thông báo, Phoenix hoặc Vlearn.</div>
-            <div class="msg-text" style="color:#f0b84b;font-size:13px;margin-top:4px">⚠️ Không có nguồn deadline — cần TA/BTC xác nhận</div>
-          </div>
-        </div>
-        <div class="reply-box" id="reply-q-207">
-          <input type="text" placeholder="Trả lời Học viên-I...">
-          <button onclick="sendReply('q-207')">Gửi</button>
-        </div>
-      </div>
-
-      <div class="divider"><hr><span>14 Tháng 9, 2026</span><hr></div>
-
-      <!-- q-208 UNRESOLVED -->
-      <div class="msg-group" id="q-208">
-        <div class="msg">
-          <div class="avatar hv">J</div>
-          <div class="msg-content">
-            <div class="msg-meta"><span class="msg-name hv">Học viên-J</span><span class="msg-time">14/09 · 08:30</span><a class="buddy-tag" href="index.html#q-208" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
-            <div class="msg-text"><strong>Em đặt sai tên khi vào Zoom nên không được ghi nhận. Em cần xử lý thế nào?</strong></div>
-          </div>
-        </div>
-        <div class="msg continued">
-          <div class="msg-content">
-            <div class="msg-text" style="color:#57f287"><span class="msg-bot-tag">BOT</span> Hãy đăng nhập đúng email và đặt tên đúng cú pháp để được điểm danh tự động.</div>
-            <div class="msg-text" style="color:#f23f43;font-size:13px;margin-top:4px">⚠️ Chỉ nêu cách phòng tránh, chưa hướng dẫn khắc phục lượt đã mất</div>
-          </div>
-        </div>
-        <div class="reply-box" id="reply-q-208">
-          <input type="text" placeholder="Trả lời Học viên-J...">
-          <button onclick="sendReply('q-208')">Gửi</button>
-        </div>
-      </div>
-
-      <!-- q-209 UNCERTAIN -->
-      <div class="msg-group" id="q-209">
-        <div class="msg">
-          <div class="avatar hv">K</div>
-          <div class="msg-content">
-            <div class="msg-meta"><span class="msg-name hv">Học viên-K</span><span class="msg-time">14/09 · 09:12</span><a class="buddy-tag" href="index.html#q-209" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
-            <div class="msg-text"><strong>Em chạy tới bước 3 thì bị lỗi như này ạ.</strong></div>
-            <div class="msg-attachment">📎 screenshot_1.png · 📎 screenshot_2.png (nội dung không có trong data pack)</div>
-          </div>
-        </div>
-        <div class="reply-box" id="reply-q-209">
-          <input type="text" placeholder="Trả lời Học viên-K...">
-          <button onclick="sendReply('q-209')">Gửi</button>
-        </div>
-      </div>
-
-      <!-- q-212 UNRESOLVED -->
-      <div class="msg-group" id="q-212">
-        <div class="msg">
-          <div class="avatar hv">M</div>
-          <div class="msg-content">
-            <div class="msg-meta"><span class="msg-name hv">Học viên-M</span><span class="msg-time">14/09 · 10:45</span><a class="buddy-tag" href="index.html#q-212" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
-            <div class="msg-text"><strong>Em tham gia workshop đầy đủ nhưng chưa thấy được cộng XP, cần làm gì?</strong></div>
-          </div>
-        </div>
-        <div class="msg continued">
-          <div class="msg-content">
-            <div class="msg-text">Cần đặt đúng tên Zoom và có tương tác trong workshop. — <em style="color:#949ba4">Người tham gia</em></div>
-            <div class="msg-text" style="color:#f23f43;font-size:13px;margin-top:4px">⚠️ Chưa kiểm tra lượt XP cụ thể — nguồn cộng đồng</div>
-          </div>
-        </div>
-        <div class="reply-box" id="reply-q-212">
-          <input type="text" placeholder="Trả lời Học viên-M...">
-          <button onclick="sendReply('q-212')">Gửi</button>
-        </div>
-      </div>
-
-      <!-- q-213 UNRESOLVED -->
-      <div class="msg-group" id="q-213">
-        <div class="msg">
-          <div class="avatar hv">N</div>
-          <div class="msg-content">
-            <div class="msg-meta"><span class="msg-name hv">Học viên-N</span><span class="msg-time">14/09 · 11:20</span><a class="buddy-tag" href="index.html#q-213" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
-            <div class="msg-text"><strong>Em đã quét QR nhưng không thấy lịch sử điểm danh trên ứng dụng.</strong></div>
-          </div>
-        </div>
-        <div class="msg continued">
-          <div class="msg-content">
-            <div class="msg-text">Bạn cho biết lớp và buổi học để bên mình kiểm tra thêm nhé. — <em style="color:#949ba4">Người hỗ trợ</em></div>
-          </div>
-        </div>
-        <div class="reply-box" id="reply-q-213">
-          <input type="text" placeholder="Trả lời Học viên-N...">
-          <button onclick="sendReply('q-213')">Gửi</button>
-        </div>
-      </div>
-
-      <!-- Padding bottom -->
-      <div style="height:80px"></div>
-    </div>
-
-    <div class="chat-input">
-      <div class="box">💬 Nhắn tin vào #hỗ-trợ-chung</div>
-    </div>
-  </div>
-</div>
-
-<!-- Buddy link -->
-<a class="buddy-link" href="index.html" title="Quay lại Buddy Dashboard"><span class="dot"></span> Buddy Dashboard</a>
-
-<!-- Toast -->
-<div class="toast-msg" id="toast"></div>
-
-<script>
-// Highlight message from hash
-function highlightFromHash() {
-  const id = location.hash.replace('#', '');
-  if (!id) return;
-  const el = document.getElementById(id);
-  if (!el) return;
-  document.querySelectorAll('.msg-group.highlight').forEach(g => g.classList.remove('highlight'));
-  el.classList.add('highlight');
-  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  // Show reply box
-  const reply = document.getElementById('reply-' + id);
-  if (reply) reply.classList.add('show');
-}
-
-window.addEventListener('hashchange', highlightFromHash);
-window.addEventListener('load', () => {
-  setTimeout(highlightFromHash, 300);
-});
-
-function scrollTo(section) {
-  const el = document.getElementById(section);
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
-}
-
-function sendReply(id) {
-  const box = document.querySelector('#reply-' + id + ' input');
-  const text = box.value.trim();
-  if (!text) return;
-  
-  const group = document.getElementById(id);
-  const msgDiv = document.createElement('div');
-  msgDiv.className = 'msg';
-  msgDiv.innerHTML = `
-    <div class="avatar ta">TA</div>
-    <div class="msg-content">
-      <div class="msg-meta"><span class="msg-name ta">TA (bạn)</span><span class="msg-time">Vừa xong</span></div>
-      <div class="msg-text">${text}</div>
-    </div>
-  `;
-  group.insertBefore(msgDiv, document.getElementById('reply-' + id));
-  box.value = '';
-  
-  // Toast
-  const toast = document.getElementById('toast');
-  toast.textContent = '✅ Đã phản hồi — quay lại Buddy để cập nhật trạng thái';
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3000);
-}
-</script>
+    document.querySelector("#send-button").addEventListener("click",sendReply);
+    document.querySelector("#clear-reply").addEventListener("click",clearCase);
+    replyInput.addEventListener("keydown",event=>{if(event.key==="Enter"&&!event.shiftKey){event.preventDefault();sendReply();}});
+    document.querySelectorAll(".msg-group").forEach(group=>group.addEventListener("click",()=>selectCase(group.id,false)));
+    window.addEventListener("hashchange",selectFromHash);
+    window.addEventListener("load",()=>setTimeout(selectFromHash,250));
+  </script>
 </body>
 </html>

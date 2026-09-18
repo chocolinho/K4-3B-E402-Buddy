@@ -428,6 +428,18 @@ function formatDuration(seconds) {
   return `${Math.floor(seconds / 60)}m ${seconds % 60}s`;
 }
 
+function discordReplyFor(id) {
+  try { return JSON.parse(localStorage.getItem(`buddy-discord-reply:${id}`) || "null"); }
+  catch { return null; }
+}
+
+function nextActionFor(status, replied) {
+  if (replied) return "Phản hồi Discord đã được ghi nhận. Kiểm tra lại nội dung rồi chốt trạng thái ở bước 4.";
+  if (status === "resolved") return "Đối chiếu câu trả lời hiện có. Nếu đã đủ, xác nhận Đã xử lý; nếu chưa đủ, mở Discord để bổ sung.";
+  if (status === "uncertain") return "Mở Discord để hỏi thêm dữ kiện hoặc xác minh với TA/BTC trước khi kết luận.";
+  return "Mở đúng tin nhắn Discord, trả lời học viên, sau đó quay lại Buddy để đánh dấu Đã xử lý.";
+}
+
 function renderDetail(id) {
   const question = questionById(id);
   if (!question) return;
@@ -437,6 +449,7 @@ function renderDetail(id) {
   const source = SOURCES[question.sourceTrust];
   const confidence = confidenceMeta(decision.confidence);
   const engine = engineMeta(decision);
+  const discordReply = discordReplyFor(question.id);
   const output = {
     status: decision.status,
     confidence: decision.confidence,
@@ -458,6 +471,7 @@ function renderDetail(id) {
       <div class="decision-card">
         <div class="decision-topline"><span class="pill status-${decision.status}">${STATUSES[decision.status].label}</span><strong>${Math.round(decision.confidence * 100)}% · ${confidence.label}</strong></div>
         <h4>Lý do</h4><p>${escapeHtml(decision.reason)}</p>
+        <div class="ta-next-action"><strong>Việc TA cần làm tiếp</strong><p>${escapeHtml(nextActionFor(status, Boolean(discordReply)))}</p></div>
       </div>
       <div class="decision-card source-card ${question.sourceTrust}"><h4>${source.label}</h4><p>${escapeHtml(source.note)}</p><p><strong>Tham chiếu:</strong> ${escapeHtml(decision.source_reference || question.source || "Không có")}</p></div>
       <div class="decision-card"><h4>Policy đang áp dụng</h4><ul class="policy-list">${policyFor(question, decision).map((rule) => `<li>${escapeHtml(rule)}</li>`).join("")}</ul></div>
@@ -466,19 +480,24 @@ function renderDetail(id) {
     </aside>`;
 
   elements.detailFooter.innerHTML = `
-    <div class="footer-status"><strong>Quyết định hiện tại: ${STATUSES[status].label}</strong>${human ? (human.status === decision.status ? "TA đã xác nhận đề xuất AI." : "TA đã ghi đè đề xuất AI.") : "Chưa có quyết định của TA trong phiên này."}</div>
-    <div class="decision-buttons" aria-label="TA quyết định trạng thái">
-      ${Object.entries(STATUSES).map(([key, config]) => `<button class="decision-button ${human?.status === key ? "active" : ""}" type="button" data-action="decide" data-id="${question.id}" data-status="${key}">${config.label}</button>`).join("")}
-      ${human ? `<button class="decision-button undo-button" type="button" data-action="undo" data-id="${question.id}">Hoàn tác</button>` : ""}
-      <a class="decision-button discord-link" href="discord-mock.html#${question.id}" target="_blank" rel="noopener" title="Mở tin nhắn trên Discord (mô phỏng)">💬 Xem trên Discord</a>
+    <div class="footer-status"><strong>Trạng thái hiện tại: ${STATUSES[status].label}</strong>${discordReply ? `Đã phản hồi Discord lúc ${formatTime(discordReply.at)}.` : (human ? (human.status === decision.status ? "TA đã xác nhận đề xuất AI." : "TA đã ghi đè đề xuất AI.") : "Chưa có quyết định của TA trong phiên này.")}</div>
+    <div class="footer-actions">
+      <p class="footer-action-label">Làm lần lượt: mở Discord → phản hồi → quay lại chốt trạng thái</p>
+      <div class="decision-buttons" aria-label="Các bước xử lý của TA">
+        <a class="decision-button discord-link ${discordReply ? "replied" : ""}" href="discord-mock.html#${question.id}" target="_blank" rel="noopener" title="Mở đúng tin nhắn trên Discord mô phỏng">${discordReply ? "✓ Đã trả lời · Mở lại Discord" : "3. Mở Discord & trả lời"}</a>
+        ${Object.entries(STATUSES).map(([key, config]) => `<button class="decision-button ${human?.status === key ? "active" : ""}" type="button" data-action="decide" data-id="${question.id}" data-status="${key}" title="Bước 4: cập nhật thành ${config.label}">${key === "resolved" ? "4. " : ""}${config.label}</button>`).join("")}
+        ${human ? `<button class="decision-button undo-button" type="button" data-action="undo" data-id="${question.id}">Hoàn tác</button>` : ""}
+      </div>
     </div>`;
 
   elements.progress.querySelectorAll("li").forEach((item) => item.classList.remove("active", "done"));
   elements.progress.querySelector('[data-step="context"]')?.classList.add("done");
   if (decision.live) elements.progress.querySelector('[data-step="analyze"]')?.classList.add("done");
   else elements.progress.querySelector('[data-step="analyze"]')?.classList.add("active");
+  if (discordReply) elements.progress.querySelector('[data-step="reply"]')?.classList.add("done");
+  else if (decision.live) elements.progress.querySelector('[data-step="reply"]')?.classList.add("active");
   if (human) elements.progress.querySelector('[data-step="decide"]')?.classList.add("done");
-  else if (decision.live) elements.progress.querySelector('[data-step="decide"]')?.classList.add("active");
+  else if (discordReply) elements.progress.querySelector('[data-step="decide"]')?.classList.add("active");
 }
 
 function openDetail(id) {
@@ -716,4 +735,10 @@ function openFromHash() {
   }
 }
 window.addEventListener("hashchange", openFromHash);
+window.addEventListener("storage", () => {
+  if (state.activeQuestionId && elements.detailDialog.open) renderDetail(state.activeQuestionId);
+});
+window.addEventListener("focus", () => {
+  if (state.activeQuestionId && elements.detailDialog.open) renderDetail(state.activeQuestionId);
+});
 setTimeout(openFromHash, 200);
