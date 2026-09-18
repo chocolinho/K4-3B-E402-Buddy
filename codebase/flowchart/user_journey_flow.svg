@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 700" width="100%" height="100%" style="background:#1e1f22; font-family:'Inter',system-ui,sans-serif;">
+  <defs>
+    <linearGradient id="gradBlurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#5865f2"/>
+      <stop offset="100%" stop-color="#4752c4"/>
+    </linearGradient>
+    <linearGradient id="gradGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#23a55a"/>
+      <stop offset="100%" stop-color="#1b8246"/>
+    </linearGradient>
+    <linearGradient id="gradRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f23f43"/>
+      <stop offset="100%" stop-color="#be2629"/>
+    </linearGradient>
+    <linearGradient id="gradYellow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f0b232"/>
+      <stop offset="100%" stop-color="#c28b1e"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#949ba4"/>
+    </marker>
+  </defs>
+
+  <!-- Title & Meta -->
+  <text x="50" y="45" fill="#ffffff" font-size="22" font-weight="700">Sơ đồ Luồng Trải Nghiệm Người Dùng (UX Flow) — CP2 Prototype</text>
+  <text x="50" y="70" fill="#949ba4" font-size="13">Hệ thống AI Triage Hỗ trợ TA/Mod rà soát câu hỏi Discord K4 cuối ngày · Mức: Conditional Automation</text>
+
+  <!-- STEP 1: INPUT -->
+  <rect x="50" y="110" width="220" height="90" rx="10" fill="#2b2d31" stroke="#3f4147" stroke-width="1.5"/>
+  <text x="70" y="140" fill="#5865f2" font-size="12" font-weight="700">1. ĐẦU VÀO (INPUT)</text>
+  <text x="70" y="165" fill="#ffffff" font-size="14" font-weight="600">Tin nhắn Discord K4</text>
+  <text x="70" y="185" fill="#949ba4" font-size="11">Từ các kênh channel_02, 10, 11</text>
+
+  <!-- Connection 1 -> 2 -->
+  <line x1="270" y1="155" x2="330" y2="155" stroke="#949ba4" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- STEP 2: PARSING & RETRIEVAL -->
+  <rect x="330" y="110" width="240" height="90" rx="10" fill="#2b2d31" stroke="#3f4147" stroke-width="1.5"/>
+  <text x="350" y="140" fill="#5865f2" font-size="12" font-weight="700">2. TIỀN XỬ LÝ & TRUY XUẤT</text>
+  <text x="350" y="165" fill="#ffffff" font-size="14" font-weight="600">Gom nhóm & Rút thread</text>
+  <text x="350" y="185" fill="#949ba4" font-size="11">Phát hiện câu hỏi ứng viên + context</text>
+
+  <!-- Connection 2 -> 3 -->
+  <line x1="570" y1="155" x2="630" y2="155" stroke="#949ba4" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- STEP 3: AI DECISION NODE -->
+  <rect x="630" y="95" width="260" height="120" rx="12" fill="url(#gradBlurple)" stroke="#ffffff" stroke-width="1"/>
+  <text x="650" y="125" fill="#ffffff" font-size="12" font-weight="700" letter-spacing="1">3. ĐIỂM QUYẾT ĐỊNH AI (TRIAGE)</text>
+  <text x="650" y="155" fill="#ffffff" font-size="16" font-weight="700">AI Đánh giá 3 Trạng thái</text>
+  <text x="650" y="180" fill="#e0e3ff" font-size="12">Phân tích hội thoại + Nguồn quy chế</text>
+  <text x="650" y="198" fill="#ffffff" font-size="11" font-weight="600">[HAX G10: Narrow scope when uncertain]</text>
+
+  <!-- 4 BRANCHES (PATHS) -->
+  <!-- Branch lines from AI Decision -->
+  <path d="M 760 215 L 760 260 L 160 260 L 160 290" fill="none" stroke="#949ba4" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 760 215 L 760 260 L 420 260 L 420 290" fill="none" stroke="#949ba4" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 760 215 L 760 260 L 680 260 L 680 290" fill="none" stroke="#949ba4" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 760 215 L 760 260 L 950 260 L 950 290" fill="none" stroke="#949ba4" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- PATH 1: HAPPY PATH -->
+  <rect x="50" y="290" width="220" height="175" rx="8" fill="#2b2d31" stroke="#23a55a" stroke-width="2"/>
+  <rect x="50" y="290" width="220" height="30" rx="8" fill="url(#gradGreen)"/>
+  <text x="65" y="310" fill="#ffffff" font-size="12" font-weight="700">① HAPPY PATH (Tự tin cao)</text>
+  <text x="65" y="340" fill="#ffffff" font-size="12" font-weight="600">Đã xong / Trùng FAQ chuẩn</text>
+  <text x="65" y="360" fill="#949ba4" font-size="11">• Thread có xác nhận kết thúc</text>
+  <text x="65" y="375" fill="#949ba4" font-size="11">• Hoặc trùng FAQ quy chế điểm danh</text>
+  <text x="65" y="400" fill="#23a55a" font-size="11" font-weight="700">Trạng thái: RESOLVED</text>
+  <text x="65" y="418" fill="#949ba4" font-size="11">Hành vi: Gợi ý 1-click trả lời</text>
+  <text x="65" y="445" fill="#5865f2" font-size="10" font-weight="600">Áp HAX G2 (Đo lường rõ ràng)</text>
+
+  <!-- PATH 2: LOW CONFIDENCE (Lớp 2) -->
+  <rect x="310" y="290" width="220" height="175" rx="8" fill="#2b2d31" stroke="#f0b232" stroke-width="2"/>
+  <rect x="310" y="290" width="220" height="30" rx="8" fill="url(#gradYellow)"/>
+  <text x="325" y="310" fill="#ffffff" font-size="12" font-weight="700">② LOW CONFIDENCE (Lớp ②)</text>
+  <text x="325" y="340" fill="#ffffff" font-size="12" font-weight="600">Mơ hồ / Thiếu thông tin</text>
+  <text x="325" y="360" fill="#949ba4" font-size="11">• Bot hedging ("có thể...")</text>
+  <text x="325" y="375" fill="#949ba4" font-size="11">• Bạn học nói "hình như"</text>
+  <text x="325" y="400" fill="#f0b232" font-size="11" font-weight="700">Trạng thái: UNCERTAIN</text>
+  <text x="325" y="418" fill="#949ba4" font-size="11">Hành vi: Cảnh báo vàng, mời TA duyệt</text>
+  <text x="325" y="445" fill="#5865f2" font-size="10" font-weight="600">Áp HAX G10 (Thu hẹp phạm vi)</text>
+
+  <!-- PATH 3: NO GROUNDING (Lớp 1) -->
+  <rect x="570" y="290" width="220" height="175" rx="8" fill="#2b2d31" stroke="#f23f43" stroke-width="2"/>
+  <rect x="570" y="290" width="220" height="30" rx="8" fill="url(#gradRed)"/>
+  <text x="585" y="310" fill="#ffffff" font-size="12" font-weight="700">③ NO GROUNDING (Lớp ①)</text>
+  <text x="585" y="340" fill="#ffffff" font-size="12" font-weight="600">Không có căn cứ quy chế</text>
+  <text x="585" y="360" fill="#949ba4" font-size="11">• Chưa có tài liệu đối chiếu</text>
+  <text x="585" y="375" fill="#949ba4" font-size="11">• Cảnh báo bot cũ từng bịa tin</text>
+  <text x="585" y="400" fill="#f23f43" font-size="11" font-weight="700">Trạng thái: UNRESOLVED</text>
+  <text x="585" y="418" fill="#949ba4" font-size="11">Hành vi: Anti-hallucinate, gán đỏ</text>
+  <text x="585" y="445" fill="#5865f2" font-size="10" font-weight="600">Áp HAX G11 (Giải thích vì sao)</text>
+
+  <!-- PATH 4: CORRECTION -->
+  <rect x="830" y="290" width="230" height="175" rx="8" fill="#2b2d31" stroke="#5865f2" stroke-width="2"/>
+  <rect x="830" y="290" width="230" height="30" rx="8" fill="url(#gradBlurple)"/>
+  <text x="845" y="310" fill="#ffffff" font-size="12" font-weight="700">④ CORRECTION (Người sửa)</text>
+  <text x="845" y="340" fill="#ffffff" font-size="12" font-weight="600">TA ghi đè quyết định AI</text>
+  <text x="845" y="360" fill="#949ba4" font-size="11">• AI gán nhầm Resolved / Unresolved</text>
+  <text x="845" y="375" fill="#949ba4" font-size="11">• TA bấm 1-click sửa trạng thái</text>
+  <text x="845" y="400" fill="#5865f2" font-size="11" font-weight="700">Thao tác: 1-Click Override</text>
+  <text x="845" y="418" fill="#949ba4" font-size="11">Hành vi: Ghi nhận sửa, update số đếm</text>
+  <text x="845" y="445" fill="#5865f2" font-size="10" font-weight="600">Áp HAX G9 (Sửa dễ dàng)</text>
+
+  <!-- CONNECTION TO TA DASHBOARD -->
+  <path d="M 160 465 L 160 510 L 550 510 L 550 540" fill="none" stroke="#949ba4" stroke-width="2" marker-end="url(#arrow)"/>
+  <path d="M 420 465 L 420 510 L 550 510 L 550 540" fill="none" stroke="#949ba4" stroke-width="2"/>
+  <path d="M 680 465 L 680 510 L 550 510 L 550 540" fill="none" stroke="#949ba4" stroke-width="2"/>
+  <path d="M 945 465 L 945 510 L 550 510 L 550 540" fill="none" stroke="#949ba4" stroke-width="2"/>
+
+  <!-- STEP 5: TA ACTION ON DASHBOARD -->
+  <rect x="250" y="540" width="600" height="120" rx="10" fill="#232428" stroke="#5865f2" stroke-width="2"/>
+  <text x="270" y="570" fill="#5865f2" font-size="12" font-weight="700">4. GIAO DIỆN RÀ SOÁT CUỐI NGÀY (TA DASHBOARD - PROTOTYPE)</text>
+  <text x="270" y="595" fill="#ffffff" font-size="14" font-weight="600">TA kiểm soát toàn diện qua 3 hành động chính:</text>
+  <text x="270" y="620" fill="#dbdee1" font-size="12">1. Xem KPI Bar (Resolved/Unresolved/Uncertain) &amp; Lọc danh sách theo mức độ cấp bách</text>
+  <text x="270" y="640" fill="#dbdee1" font-size="12">2. Đọc Thread Context &amp; Căn cứ giải thích của AI (Reasoning)</text>
+  <text x="270" y="660" fill="#dbdee1" font-size="12">3. Bấm 1-click: "⚡ Duyệt trả lời chuẩn", "✓ Xác nhận", hoặc "✍ Mở Discord phản hồi tay"</text>
+
+  <!-- Final Output arrow -->
+  <line x1="850" y1="600" x2="920" y2="600" stroke="#23a55a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <!-- FINAL RESULT -->
+  <rect x="920" y="555" width="140" height="90" rx="8" fill="#111214" stroke="#23a55a" stroke-width="1.5"/>
+  <text x="935" y="585" fill="#23a55a" font-size="11" font-weight="700">KẾT QUẢ CUỐI</text>
+  <text x="935" y="610" fill="#ffffff" font-size="13" font-weight="600">Không sót tin</text>
+  <text x="935" y="630" fill="#949ba4" font-size="10">Tiết kiệm 80% tgian</text>
+</svg>

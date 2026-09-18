@@ -1,30 +1,31 @@
-# Bản mẫu CP2
+# Mã nguồn giao diện & Bản mẫu tương tác (CP2 Codebase)
 
-**Mức độ bản mẫu:** Mô phỏng / Có thể bấm thử
+Thư mục này chứa mã nguồn bản mẫu tương tác tĩnh (Interactive Clickable Prototype) phục vụ Checkpoint 2 (CP2) của nhóm **Buddy (Phòng E402)**.
 
-Mở trực tiếp [prototype/index.html](prototype/index.html) bằng trình duyệt. Không cần máy chủ, bước đóng gói, khung phát triển, giao diện lập trình ứng dụng bên ngoài hoặc kết nối mạng.
+## Cấu trúc thư mục
 
-## Tương tác hoạt động thật
+- `prototype/index.html`: Giao diện Dashboard rà soát cuối ngày dành cho TA/Mod trên nền Web tĩnh (HTML/CSS/JS).
+- `prototype/triage_engine.js`: Bộ dữ liệu giả lập và engine điều hướng trạng thái 3 mức (`RESOLVED` / `UNRESOLVED` / `UNCERTAIN`).
+- `flowchart/user_journey_flow.svg`: Sơ đồ luồng trải nghiệm vector SVG đầy đủ các bước nhập liệu, điểm gọi AI và 4 nhánh xử lý.
+- `flowchart/README.md`: Tài liệu đặc tả luồng hành trình chi tiết bằng sơ đồ Mermaid.
 
-- Điều hướng và lọc danh sách câu hỏi.
-- Rà soát trạng thái kèm số lượng tổng hợp.
-- Hộp thoại xem ngữ cảnh.
-- Sửa thủ công thành đã xử lý (`resolved`), chưa xử lý (`unresolved`) hoặc chưa chắc chắn (`uncertain`).
-- Quyết định sửa của TA được giữ trong phiên trình duyệt hiện tại bằng `sessionStorage` (bộ nhớ theo phiên).
+## Mức độ Prototype nhắm tới
 
-## Hoạt động giả lập
+- **Mức:** `Mock` (Bản mẫu tương tác tĩnh).
+- **Phần chạy thật trên trình duyệt:**
+  - Toàn bộ luồng bấm điều hướng, lọc tab trạng thái (*Tất cả / Cần xử lý gấp / Cần duyệt / Đã xong*).
+  - Khung xem ngữ cảnh hội thoại liên quan (Thread context).
+  - Thao tác 1-Click của TA: Chuyển đổi trạng thái, sửa ghi đè (Override), gửi câu trả lời chuẩn (Canonical Reply).
+  - Bộ đếm thời gian thực cập nhật trên thanh KPI Bar.
+- **Phần chạy giả lập (Mock):**
+  - Dữ liệu 6 case câu hỏi Discord K4 (được trích xuất từ 1.092 tin nhắn thật trong `data/discord-pack/`).
+  - Quyết định phân loại của AI, điểm tự tin (confidence) và câu giải thích lý do (reasoning). *Phần này sẽ được thay thế bằng lời gọi API mô hình thật tại CP3.*
 
-- Nhận dữ liệu từ Discord.
-- Kết quả phân loại của AI.
-- Điểm tin cậy.
-- Truy xuất luồng thảo luận/ngữ cảnh và liên kết nguồn.
+## Hướng dẫn mở và kiểm tra
 
-## Trạng thái của AI
-
-- `resolved`: đã xử lý.
-- `unresolved`: chưa xử lý.
-- `uncertain`: chưa chắc chắn, cần TA kiểm tra.
-
-Tất cả hội thoại hiển thị đều là dữ liệu giả lập. Bản mô phỏng CP2 không gọi AI thật và không bao giờ gửi tin nhắn.
-
-Xem [luồng hoạt động](flowchart/README.md) và [đặc tả sản phẩm](../spec.md).
+1. Mở trực tiếp file `codebase/prototype/index.html` (hoặc `prototype/discord_ta_triage.html`) trên bất kỳ trình duyệt nào (Chrome, Edge).
+2. Hoặc khởi chạy qua máy chủ nội bộ:
+   ```bash
+   python -m http.server 8000
+   ```
+   Truy cập: `http://localhost:8000/codebase/prototype/index.html`.

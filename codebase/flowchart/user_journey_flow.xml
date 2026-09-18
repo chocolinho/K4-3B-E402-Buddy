@@ -1,0 +1,152 @@
+<mxfile host="app.diagrams.net" modified="2026-09-17T20:55:00.000Z" agent="Mozilla/5.0" version="21.0.0" type="device">
+  <diagram id="cp2-triage-flowchart" name="CP2-UX-Flowchart">
+    <mxGraphModel dx="1422" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1550" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <!-- Title Banner -->
+        <mxCell id="title" value="&lt;b style=&quot;font-size: 20px;&quot;&gt;SƠ ĐỒ LUỒNG TRẢI NGHIỆM NGƯỜI DÙNG (UX FLOW) — CP2 PROTOTYPE&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 13px; color: #dbdee1;&quot;&gt;Hệ thống Triage Hỗ trợ TA/Mod rà soát câu hỏi Discord K4 cuối ngày · Mức: Conditional Automation (Nhóm Buddy - E402)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1e1f22;strokeColor=#5865f2;strokeWidth=2;fontColor=#ffffff;align=center;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="50" y="20" width="1400" height="70" as="geometry" />
+        </mxCell>
+
+        <!-- STEP 1: Input -->
+        <mxCell id="step1" value="&lt;b style=&quot;color: #5865f2; font-size: 12px;&quot;&gt;1. ĐẦU VÀO (INPUT)&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;Tin nhắn Discord K4&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 11px; color: #949ba4;&quot;&gt;Thu thập từ channel_02, 10, 11&lt;br&gt;Câu hỏi thắc mắc, hỏi bài, hỏi quy chế&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2b2d31;strokeColor=#3f4147;strokeWidth=2;fontColor=#ffffff;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="50" y="120" width="220" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- STEP 2: Preprocessing -->
+        <mxCell id="step2" value="&lt;b style=&quot;color: #5865f2; font-size: 12px;&quot;&gt;2. TIỀN XỬ LÝ (PREPROCESS)&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;Gom nhóm &amp; Rút thread&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 11px; color: #949ba4;&quot;&gt;Trích xuất câu hỏi ứng viên + Ngữ cảnh hội thoại&lt;br&gt;Loại trừ tin chào hỏi / Bot auto reply&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2b2d31;strokeColor=#3f4147;strokeWidth=2;fontColor=#ffffff;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="320" y="120" width="240" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- STEP 3: KB Retrieval -->
+        <mxCell id="step3" value="&lt;b style=&quot;color: #5865f2; font-size: 12px;&quot;&gt;3. TRUY XUẤT CĂN CỨ&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;So khớp Knowledge Base&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 11px; color: #949ba4;&quot;&gt;Tra cứu FAQ quy chế chính thức&lt;br&gt;(Điểm danh, Ghép đội, Link Zoom, Deadline)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2b2d31;strokeColor=#3f4147;strokeWidth=2;fontColor=#ffffff;align=center;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="610" y="120" width="230" height="90" as="geometry" />
+        </mxCell>
+
+        <!-- STEP 4: AI Decision Node -->
+        <mxCell id="step4" value="&lt;b style=&quot;color: #ffffff; font-size: 13px;&quot;&gt;4. ĐIỂM QUYẾT ĐỊNH AI (TRIAGE)&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;font-size: 16px; color: #ffffff;&quot;&gt;Đánh giá 3 Trạng thái&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 12px; color: #e0e3ff;&quot;&gt;Phân tích mức độ đầy đủ của bằng chứng&lt;/span&gt;&lt;br&gt;&lt;b style=&quot;font-size: 11px; color: #ffd700;&quot;&gt;[Áp HAX G10: Thu hẹp phạm vi khi nghi ngờ]&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#5865f2;strokeColor=#ffffff;strokeWidth=2;fontColor=#ffffff;align=center;arcSize=12;" vertex="1" parent="1">
+          <mxGeometry x="890" y="105" width="280" height="120" as="geometry" />
+        </mxCell>
+
+        <!-- Edges Top Row -->
+        <mxCell id="e1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#949ba4;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="step1" target="step2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#949ba4;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="step2" target="step3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#949ba4;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="step3" target="step4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- ==================== 4 BRANCHES ==================== -->
+
+        <!-- Branch 1: Happy Path -->
+        <mxCell id="b1" value="&lt;b style=&quot;font-size: 13px; color: #23a55a;&quot;&gt;① HAPPY PATH (Tự tin cao)&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;Đã xong / Trùng FAQ chuẩn&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;div style=&quot;text-align: left; font-size: 11px; color: #dbdee1; line-height: 1.4;&quot;&gt;• Thread có xác nhận kết thúc (&quot;Em làm được rồi&quot;)&lt;br&gt;• Hoặc trùng FAQ quy chế điểm danh tự động&lt;br&gt;&lt;b style=&quot;color: #23a55a;&quot;&gt;→ Đề xuất: RESOLVED (Xanh)&lt;/b&gt;&lt;br&gt;• Gợi ý 1-click gửi câu trả lời chuẩn&lt;br&gt;&lt;b style=&quot;color: #5865f2;&quot;&gt;[HAX G2: Đo lường rõ ràng]&lt;/b&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2b2d31;strokeColor=#23a55a;strokeWidth=2.5;fontColor=#ffffff;align=center;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="50" y="280" width="310" height="190" as="geometry" />
+        </mxCell>
+
+        <!-- Branch 2: Low Confidence -->
+        <mxCell id="b2" value="&lt;b style=&quot;font-size: 13px; color: #f0b232;&quot;&gt;② LOW CONFIDENCE (Lớp chỗ khó ②)&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;Mơ hồ / Thiếu thông tin&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;div style=&quot;text-align: left; font-size: 11px; color: #dbdee1; line-height: 1.4;&quot;&gt;• Học viên hỏi mập mờ, thiếu log lỗi&lt;br&gt;• Bot hedging (&quot;có thể&quot;) hoặc bạn học nói &quot;hình như&quot;&lt;br&gt;&lt;b style=&quot;color: #f0b232;&quot;&gt;→ Đề xuất: UNCERTAIN (Vàng)&lt;/b&gt;&lt;br&gt;• Cảnh báo vàng, mời TA duyệt, không đoán liều&lt;br&gt;&lt;b style=&quot;color: #5865f2;&quot;&gt;[HAX G10: Thu hẹp phạm vi]&lt;/b&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2b2d31;strokeColor=#f0b232;strokeWidth=2.5;fontColor=#ffffff;align=center;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="400" y="280" width="310" height="190" as="geometry" />
+        </mxCell>
+
+        <!-- Branch 3: No Grounding -->
+        <mxCell id="b3" value="&lt;b style=&quot;font-size: 13px; color: #f23f43;&quot;&gt;③ NO GROUNDING (Lớp chỗ khó ①)&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;Không có căn cứ tài liệu&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;div style=&quot;text-align: left; font-size: 11px; color: #dbdee1; line-height: 1.4;&quot;&gt;• Chưa có văn bản quy chế chính thức&lt;br&gt;• Cảnh báo bot cũ từng trả lời bịa (hallucination)&lt;br&gt;&lt;b style=&quot;color: #f23f43;&quot;&gt;→ Đề xuất: UNRESOLVED (Đỏ)&lt;/b&gt;&lt;br&gt;• Chặn tự sinh text, báo TA liên hệ BTC&lt;br&gt;&lt;b style=&quot;color: #5865f2;&quot;&gt;[HAX G11: Giải thích vì sao]&lt;/b&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2b2d31;strokeColor=#f23f43;strokeWidth=2.5;fontColor=#ffffff;align=center;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="750" y="280" width="310" height="190" as="geometry" />
+        </mxCell>
+
+        <!-- Branch 4: Correction -->
+        <mxCell id="b4" value="&lt;b style=&quot;font-size: 13px; color: #5865f2;&quot;&gt;④ CORRECTION (Người dùng sửa)&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;font-size: 14px;&quot;&gt;TA ghi đè quyết định AI&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;div style=&quot;text-align: left; font-size: 11px; color: #dbdee1; line-height: 1.4;&quot;&gt;• AI nhận diện nhầm trạng thái (False Positive)&lt;br&gt;• TA bấm 1-click sửa ngay trên giao diện&lt;br&gt;&lt;b style=&quot;color: #5865f2;&quot;&gt;→ Nút: Xác nhận / Đổi trạng thái / Mở lại&lt;/b&gt;&lt;br&gt;• Cập nhật ngay bộ đếm KPI, lưu log sửa&lt;br&gt;&lt;b style=&quot;color: #ffd700;&quot;&gt;[HAX G9: Hỗ trợ sửa dễ dàng]&lt;/b&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#2b2d31;strokeColor=#5865f2;strokeWidth=2.5;fontColor=#ffffff;align=center;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="280" width="350" height="190" as="geometry" />
+        </mxCell>
+
+        <!-- Connections from Step 4 to Branches -->
+        <mxCell id="e_b1" value="Đầy đủ căn cứ (&gt;=85%)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#23a55a;strokeWidth=2;fontColor=#23a55a;endArrow=classic;" edge="1" parent="1" source="step4" target="b1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1030" y="250" />
+              <mxPoint x="205" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_b2" value="Thiếu thông tin (&lt;70%)" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#f0b232;strokeWidth=2;fontColor=#f0b232;endArrow=classic;" edge="1" parent="1" source="step4" target="b2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1030" y="250" />
+              <mxPoint x="555" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_b3" value="Không có tài liệu" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#f23f43;strokeWidth=2;fontColor=#f23f43;endArrow=classic;" edge="1" parent="1" source="step4" target="b3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1030" y="250" />
+              <mxPoint x="905" y="250" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_b4" value="TA phát hiện AI nhầm" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5865f2;strokeWidth=2;fontColor=#5865f2;endArrow=classic;dashed=1;" edge="1" parent="1" source="b1" target="b4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="205" y="260" />
+              <mxPoint x="1275" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ==================== BOTTOM ROW ==================== -->
+
+        <!-- STEP 5: TA Dashboard Action -->
+        <mxCell id="step5" value="&lt;b style=&quot;color: #5865f2; font-size: 13px;&quot;&gt;5. BẢNG ĐIỀU KHIỂN TA CUỐI NGÀY (TA DASHBOARD - PROTOTYPE)&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;font-size: 15px;&quot;&gt;TA Rà soát tập trung &amp; Thực thi hành động&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;div style=&quot;text-align: left; font-size: 12px; color: #dbdee1; line-height: 1.5;&quot;&gt;1. &lt;b&gt;Theo dõi KPI Bar thời gian thực:&lt;/b&gt; Đếm số lượng theo 3 khối màu (Resolved / Unresolved / Uncertain)&lt;br&gt;2. &lt;b&gt;Lọc danh sách ưu tiên:&lt;/b&gt; Bấm tab lọc nhanh các ca &quot;Cần xử lý gấp&quot; hoặc &quot;Cần duyệt&quot;&lt;br&gt;3. &lt;b&gt;Kiểm tra ngữ cảnh (Thread):&lt;/b&gt; Đọc tin nhắn học viên, phản hồi của bot, và câu giải thích căn cứ AI&lt;br&gt;4. &lt;b&gt;Thao tác 1-Click:&lt;/b&gt; [⚡ Gửi câu trả lời chuẩn &amp; Resolved] | [✓ Xác nhận Resolved] | [✍ Mở Discord trả lời tay]&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#232428;strokeColor=#5865f2;strokeWidth=2;fontColor=#ffffff;align=center;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="150" y="520" width="850" height="170" as="geometry" />
+        </mxCell>
+
+        <!-- STEP 6: Final Outcome -->
+        <mxCell id="step6" value="&lt;b style=&quot;color: #23a55a; font-size: 13px;&quot;&gt;6. KẾT QUẢ CUỐI CÙNG (OUTCOME)&lt;/b&gt;&lt;br&gt;&lt;b style=&quot;font-size: 16px; color: #ffffff;&quot;&gt;Xử lý triệt để thắc mắc&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;div style=&quot;text-align: left; font-size: 12px; color: #dbdee1; line-height: 1.5;&quot;&gt;✓ &lt;b style=&quot;color: #23a55a;&quot;&gt;0 câu hỏi bị bỏ sót&lt;/b&gt; cuối ngày&lt;br&gt;✓ &lt;b style=&quot;color: #23a55a;&quot;&gt;Giảm 80% thời gian rà soát&lt;/b&gt; (từ 25 phút xuống &lt; 5 phút)&lt;br&gt;✓ Học viên nhận phản hồi chuẩn xác, an tâm học tập&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#111214;strokeColor=#23a55a;strokeWidth=2.5;fontColor=#ffffff;align=center;arcSize=8;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="520" width="380" height="170" as="geometry" />
+        </mxCell>
+
+        <!-- Connections to Dashboard & Outcome -->
+        <mxCell id="e_d1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#949ba4;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="b1" target="step5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="205" y="495" />
+              <mxPoint x="400" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_d2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#949ba4;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="b2" target="step5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="555" y="495" />
+              <mxPoint x="555" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_d3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#949ba4;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="b3" target="step5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="905" y="495" />
+              <mxPoint x="750" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_d4" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#949ba4;strokeWidth=2;endArrow=classic;" edge="1" parent="1" source="b4" target="step5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1275" y="495" />
+              <mxPoint x="880" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_out" value="Hoàn tất rà soát" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#23a55a;strokeWidth=3;fontColor=#23a55a;fontStyle=1;endArrow=classic;" edge="1" parent="1" source="step5" target="step6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
