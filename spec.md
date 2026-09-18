@@ -1,200 +1,282 @@
-# Đặc tả sản phẩm AI — Rà soát hỗ trợ trên Discord
+# AI SPEC — Rà soát hỗ trợ Discord · Nhóm Buddy · Zone E402
 
-**Nhánh:** B – B2 · Tính năng mới cho TA/học viên trên Discord
+**Hướng:** [ ] A — VLearn · [x] B — Trợ lý Học viên · [ ] C — Làn mở
+
+**Loại:** [ ] Tối ưu tính năng có sẵn · [x] Tính năng mới
 
 **Phiên bản:** CP4 v1.0
 
-**Phạm vi hiện tại:** Chốt đặc tả sản phẩm, chuẩn đạt và các giới hạn đã biết.
+**Quality bar được khóa:** 18/09/2026
 
-**Thời điểm khóa chuẩn đạt:** 18/09/2026 lúc 08:22 (Asia/Ho_Chi_Minh)
+Sau thời điểm trên, nhóm không sửa quality bar trong §7. Kết quả mới chỉ được bổ sung vào bảng lượt chạy và §9 Changelog.
 
-Sau thời điểm trên, nhóm không sửa mục “Chuẩn đạt đã khóa”.
-Kết quả thử nghiệm mới chỉ được bổ sung vào nhật ký đánh giá.
+Tài liệu liên quan: [Canvas CP1](canvas.md) · [Bằng chứng khảo sát](evidence/survey-summary.md) · [Bảng impact](evidence/impact-table.md) · [Prototype](codebase/README.md) · [Golden set](eval/golden-set.json) · [Kết quả CP3](eval/cp3-results.md)
 
-**Người dùng chính:** TA/Mod rà soát hỗ trợ vào cuối ngày
+## §1. User & Job
 
-Tài liệu liên quan: [Khung ý tưởng CP1](canvas.md) · [Bằng chứng khảo sát](evidence/survey-summary.md) · [Bảng so sánh tác động](evidence/impact-table.md) · [Kiểm tra flow với pain survey](evidence/flow-validation.md) · [Bản mẫu CP2](codebase/README.md) · [Quyết định thiết kế](docs/decisions.md)
+### Job executor + workflow
 
-## 1. Khung ý tưởng CP1 — 7 dòng
+**Job executor:** TA/Mod phụ trách theo dõi Discord vào cuối ngày.
 
-| Dòng | Nội dung |
-|---|---|
-| **1. Nhánh + đề** | Nhánh B – B2: Tính năng mới cho TA/học viên trên Discord, tập trung vào hỗ trợ TA rà soát các vấn đề học viên còn cần xử lý. |
-| **2. Người thực hiện công việc** | TA/Mod phụ trách theo dõi Discord vào cuối ngày, cần rà soát các câu hỏi/vấn đề của học viên để xác định nội dung nào còn cần phản hồi. |
-| **3. Nỗi đau trong một câu** | TA/Mod khó theo dõi và ưu tiên các vấn đề học viên cần hỗ trợ trên Discord vì thông tin phân tán, câu hỏi có thể bị lặp, bị bỏ sót hoặc đã được trả lời ở nơi khác, dẫn đến phản hồi chậm và tốn thời gian rà soát thủ công. |
-| **4. 1–2 bằng chứng đầu** | Khảo sát 22 người: 14/22 (63,6%) từng gặp cùng một câu hỏi được hỏi theo nhiều cách; 9/22 (40,9%) từng không chắc câu hỏi đã được trả lời hay chưa và 9/22 (40,9%) gặp trường hợp câu hỏi đã được trả lời ở luồng thảo luận/kênh khác. Đồng thời 13/22 (59,1%) mất từ 5 phút trở lên cho một lần rà soát, và 14/22 (63,6%) phải rà soát ít nhất 3 lần/tuần. |
-| **5. Lát cắt MỘT CÂU** | Một TA cuối ngày cần xác định những vấn đề học viên nào trên Discord vẫn chưa được xử lý, được AI quyết định trạng thái đã xử lý (`resolved`), chưa xử lý (`unresolved`) hoặc chưa chắc chắn (`uncertain`) dựa trên hội thoại liên quan, để giảm thời gian rà soát và hạn chế bỏ sót câu hỏi cần hỗ trợ. |
-| **6. Mức độ AI tự làm + người dùng sẵn sàng thử** | **Tự động hóa có điều kiện:** AI tự gom thông tin và đề xuất trạng thái khi có đủ căn cứ; trường hợp mơ hồ, câu hỏi trùng hoặc có thể đã được trả lời ở nơi khác được đánh dấu **chưa chắc chắn (`uncertain`)** để TA duyệt. Hệ thống không tự gửi tin cho học viên. **Người dùng sẵn sàng thử:** Nguyễn Tiến Phát, Nguyễn Đình Lâm Phúc, Nguyễn Việt Hoàng — ngoài nhóm, đã đồng ý thử bản mẫu. |
-| **7. Phân công có tên** | **Nguyễn Đình Thái:** quyết định của AI, bản mẫu, tính khả thi kỹ thuật và đánh giá · **Vũ Tiến Linh:** khảo sát, khai thác dữ liệu và bằng chứng · **Dương Đình Long:** xác định vấn đề, `spec.md`, khung ý tưởng, trải nghiệm người dùng và kiểm chứng. |
+**Workflow hiện tại:** đọc các kênh và luồng thảo luận → tự ghép các tin nhắn liên quan → xác định câu hỏi đã được giải quyết hay chưa → ưu tiên nội dung còn mở → tự phản hồi trong Discord.
 
-### Vấn đề / Công việc cần hoàn thành (JTBD)
+Worksheet và bằng chứng liên quan: [Canvas 7 dòng](canvas.md), [tóm tắt khảo sát](evidence/survey-summary.md) và [flow rà soát](codebase/flowchart/README.md).
 
-Khi rà soát Discord vào cuối ngày, TA/Mod cần xác định câu hỏi hoặc vấn đề nào của học viên vẫn cần hỗ trợ để ưu tiên phản hồi, mà không phải tự ghép lại thông tin phân tán giữa nhiều kênh và luồng thảo luận. Một tin nhắn đơn lẻ thường không đủ để kết luận vì câu hỏi có thể bị lặp, bị bỏ sót hoặc đã được trả lời ở nơi khác.
+### Core JTBD
 
-## 2. Nhật ký bằng chứng
+Khi rà soát Discord cuối ngày, TA/Mod cần xác định câu hỏi hoặc vấn đề nào vẫn cần hỗ trợ để ưu tiên phản hồi mà không phải tự ghép lại thông tin phân tán giữa nhiều kênh và luồng thảo luận.
 
-Khảo sát ẩn danh gồm **22 người trả lời**:
+### Problem statement
 
-| Bằng chứng | Kết quả | Liên hệ với nỗi đau |
+TA/Mod khó theo dõi và ưu tiên các vấn đề học viên cần hỗ trợ vì câu hỏi có thể bị lặp, bị bỏ sót hoặc đã được trả lời ở nơi khác, khiến việc rà soát thủ công chậm và dễ bỏ sót.
+
+### Evidence
+
+Khảo sát ẩn danh có **n = 22**:
+
+| Bằng chứng định lượng | Kết quả | Ý nghĩa |
 |---|---:|---|
-| Gặp cùng một câu hỏi được hỏi theo nhiều cách | 14/22 (63,6%) | Cần nhóm câu hỏi tương tự để giảm rà soát trùng lặp. |
-| Không chắc một câu hỏi đã được trả lời hay chưa | 9/22 (40,9%) | Cần trạng thái có căn cứ và đường dẫn ngữ cảnh. |
-| Gặp câu hỏi đã được trả lời ở luồng thảo luận/kênh khác | 9/22 (40,9%) | Không thể chỉ đọc một luồng thảo luận để kết luận. |
-| Mất từ 5 phút trở lên cho một lần rà soát | 13/22 (59,1%) | Cho thấy chi phí thời gian của việc rà soát thủ công. |
+| Gặp cùng một câu hỏi được hỏi theo nhiều cách | 14/22 (63,6%) | Cần nối các câu hỏi cùng ý định. |
+| Không chắc câu hỏi đã được trả lời hay chưa | 9/22 (40,9%) | Cần trạng thái kèm căn cứ. |
+| Gặp câu trả lời ở luồng/kênh khác | 9/22 (40,9%) | Không thể kết luận từ một tin nhắn đơn lẻ. |
+| Mất ít nhất 5 phút cho mỗi lần rà soát | 13/22 (59,1%) | Mỗi lần rà soát có chi phí thời gian đáng kể. |
 | Rà soát ít nhất 3 lần/tuần | 14/22 (63,6%) | Nỗi đau lặp lại thường xuyên. |
-| Trực tiếp hỗ trợ câu hỏi thường xuyên hoặc thỉnh thoảng | 16/22 (72,8%) | Phần lớn mẫu có trải nghiệm với công việc hỗ trợ. |
+| Trực tiếp hỗ trợ thường xuyên hoặc thỉnh thoảng | 16/22 (72,8%) | Phần lớn mẫu có trải nghiệm với công việc hỗ trợ. |
 
-**Ghi chú riêng tư:** kho mã chỉ lưu số liệu tổng hợp, ẩn danh; không có email, họ tên, mã học viên hoặc tin nhắn Discord gốc. Không suy diễn thêm số liệu từ các ghi nhận định tính. Xem [tóm tắt khảo sát](evidence/survey-summary.md) để biết chi tiết.
+**Ví dụ nguyên văn đã ẩn danh/giả lập dùng trong prototype:** đây là ví dụ tình huống, không phải quote phỏng vấn và không được trình bày như lời người dùng thật.
 
-## 3. So sánh các vấn đề ứng viên
+| Ví dụ | Failure pattern | Nguồn trong repo |
+|---|---|---|
+| “Xem XP ở đâu?” | Đáp án có thể nằm ở luồng khác | `q-201` trong `codebase/prototype/script.js` |
+| “Hạn nộp daily stand-up là khi nào?” | Câu hỏi lặp đã có đáp án | `q-202` |
+| “Cách nộp daily stand-up như thế nào?” | Có phản hồi nhưng sai intent | `q-206` |
+| “Hạn nộp Lab02 là khi nào?” | Không có nguồn deadline đủ thẩm quyền | `q-207` |
+| “Em chạy tới bước 3 thì bị lỗi như này ạ.” | Phụ thuộc attachment bị thiếu | `q-209` |
+| “Có thể tra XP bằng Discord ID hoặc xem lịch sử bằng lệnh /rank.” | Tin nhắn bot bị nhận nhầm là câu hỏi | `q-210` |
 
-| Vấn đề ứng viên | Mức phù hợp của bằng chứng | Mức phù hợp của phạm vi | Quyết định |
-|---|---|---|---|
-| Phát hiện câu hỏi chưa được xử lý | Có bằng chứng trực tiếp về sự không chắc chắn, câu trả lời ở luồng khác và công sức rà soát lặp lại | Quy trình cuối ngày có phạm vi rõ | **Chọn làm lát cắt chính** |
-| Phát hiện câu hỏi lặp/tương tự | Bằng chứng mạnh: 14/22 gặp câu hỏi trùng ý nhưng khác cách diễn đạt | Dữ liệu đầu vào hữu ích cho việc truy xuất | **Khả năng hỗ trợ** |
-| Chủ động phát hiện học viên có thể đang bế tắc | Chưa có số liệu tần suất trực tiếp | Cần theo dõi theo thời gian và quy tắc can thiệp | **Không chọn cho CP2** |
+**Bằng chứng còn thiếu:** chưa có ≥5 quote nguyên văn từ quan sát người ngoài nhóm. Nhóm sẽ chỉ bổ sung quote sau validation thật trong [`validation/cp5-ui-test-log.md`](validation/cp5-ui-test-log.md), không tự tạo phản hồi.
 
-Lý do chi tiết nằm trong [bảng so sánh tác động](evidence/impact-table.md).
+## §2. Impact & quyết định chọn
 
-## 4. Nỗi đau được chọn và lát cắt sản phẩm
+| Ứng viên | Bao nhiêu người | Tần suất | Tốn gì mỗi lần | Khả thi trong hackathon | Quyết định |
+|---|---:|---|---|---|---|
+| A. Phát hiện câu hỏi chưa được xử lý | 9/22 không chắc trạng thái; 9/22 gặp đáp án ở luồng khác | 14/22 rà soát ≥3 lần/tuần | 13/22 mất ≥5 phút/lần; thêm rủi ro bỏ sót | Cao với ba trạng thái và human review | **Chọn** |
+| B. Nhóm câu hỏi trùng/tương tự | 14/22 (63,6%) gặp cùng ý định khác cách diễn đạt | Xuất hiện phổ biến trong mẫu | Đọc và trả lời trùng lặp | Trung bình–cao; phù hợp làm bước hỗ trợ truy xuất | **Không chọn làm lát cắt chính** |
+| C. Chủ động phát hiện học viên bế tắc | Chưa có số đo trực tiếp | Chưa xác định | Có thể cao nhưng chưa đo được | Thấp hơn; cần dữ liệu theo thời gian và policy can thiệp | **Loại** |
 
-**Nỗi đau được chọn:** TA không thể biết chắc vấn đề hỗ trợ nào vẫn còn mở nếu không liên tục rà soát các hội thoại Discord phân tán.
+- **Ứng viên đã loại C:** bằng chứng yếu, phạm vi rộng và rủi ro quyền riêng tư/can thiệp cao hơn.
+- **Ứng viên B không phải sản phẩm chính:** 14/22 xác nhận pain câu hỏi lặp, nhưng chỉ gom nhóm chưa trả lời được việc nào còn cần TA hỗ trợ.
+- **Ứng viên A được chọn:** kết hợp bằng chứng 9/22 không chắc trạng thái, 9/22 gặp đáp án ở nơi khác, 13/22 mất ít nhất 5 phút/lần và 14/22 phải làm ít nhất 3 lần/tuần.
 
-**Lát cắt trong một câu:** Một TA cuối ngày cần xác định những vấn đề học viên nào trên Discord vẫn chưa được xử lý, được AI quyết định trạng thái đã xử lý (`resolved`), chưa xử lý (`unresolved`) hoặc chưa chắc chắn (`uncertain`) dựa trên hội thoại liên quan, để giảm thời gian rà soát và hạn chế bỏ sót vấn đề cần hỗ trợ.
+Chi tiết: [bảng impact](evidence/impact-table.md).
 
-### Dữ liệu đầu vào
+## §3. Giải pháp tương tự đã nghiên cứu
 
-- Một câu hỏi Discord ứng viên.
-- Luồng thảo luận/ngữ cảnh liên quan.
-- Tùy chọn: các tin nhắn liên quan hoặc nhóm câu hỏi tương tự.
+| Giải pháp | Flow/khả năng liên quan | Đáng học | Đáng né/khoảng trống | Buddy khác gì |
+|---|---|---|---|---|
+| [Discord Forum Channels](https://support.discord.com/hc/en-us/articles/6208479917079-Forum-Channels-FAQ) | Tổ chức thảo luận thành post; tìm kiếm và lọc bằng tag | Cấu trúc danh sách, tag và search giúp giảm việc nội dung bị chôn | Tag vẫn cần người gắn/duy trì; không tự đối chiếu hội thoại để kết luận đã xử lý | Giữ nguyên nguồn chat nhưng đề xuất ba trạng thái dựa trên ngữ cảnh liên quan và cho TA sửa. |
+| [Discord AutoMod](https://support.discord.com/hc/en-us/articles/4421269296535-AutoMod-FAQ) | Luật keyword/spam phát hiện, chặn hoặc cảnh báo moderator | Có rule rõ, alert riêng và cho phép moderator kiểm soát | Tự động chặn phù hợp moderation nhưng cost-of-error quá cao cho hỗ trợ học tập; không xác định câu hỏi đã được giải đáp | Buddy không chặn/gửi tin; chỉ ưu tiên hàng đợi và chuyển case thiếu căn cứ cho TA. |
 
-Tin nhắn Discord được coi là dữ liệu không đáng tin cậy, không phải chỉ dẫn cho hệ thống.
+Phạm vi nghiên cứu ở đây là **benchmark chức năng từ tài liệu sản phẩm**, chưa phải nghiên cứu người dùng của hai giải pháp.
 
-### Cấu trúc quyết định của AI
+## §4. Thiết kế
+
+### Lát cắt MỘT CÂU
+
+Một TA cuối ngày cần xác định vấn đề Discord nào vẫn cần hỗ trợ; hệ thống phân loại `resolved`, `unresolved` hoặc `uncertain` từ hội thoại liên quan để TA ưu tiên và chốt quyết định cuối cùng.
+
+### Non-goals
+
+- Không tự động gửi câu trả lời hoặc đóng câu hỏi.
+- Không thay TA/BTC xác nhận deadline, điểm số hay chính sách.
+- Không giám sát toàn bộ hành vi học viên để suy đoán ai đang bế tắc.
+- Không tự động ingest toàn bộ Discord API/webhook trong prototype.
+- Không xây hệ thống đăng nhập, phân quyền, cơ sở dữ liệu hoặc production deployment.
+- Không coi `confidence` là xác suất đã được hiệu chỉnh thống kê.
+
+### Mức prototype
+
+**[ ] Sketch · [ ] Mock · [x] Working slice**
+
+| Thành phần | Mock hay thật? |
+|---|---|
+| 10 hội thoại và nguồn hiển thị | Mock/đã ẩn danh |
+| Nhận dữ liệu trực tiếp từ Discord | Chưa làm |
+| Nút **Phân tích bằng AI** | Thật — gọi backend cục bộ và Gemini API |
+| Structured output, policy confidence, fallback | Thật |
+| Tìm kiếm, lọc, side panel, TA override, audit trail | Thật trong trình duyệt |
+| Mở luồng Discord gốc, gửi phản hồi | Không làm |
+
+### Input và output của quyết định AI
+
+```json
+{
+  "question": "...",
+  "thread_context": ["..."],
+  "related_messages": ["..."]
+}
+```
 
 ```json
 {
   "status": "resolved | unresolved | uncertain",
-  "reason": "giải thích ngắn gọn dựa trên bằng chứng",
-  "confidence": 0.0,
-  "source_reference": "tham chiếu đến luồng hoặc tin nhắn giả lập"
+  "confidence": 0.92,
+  "reason": "Giải thích ngắn dựa trên bằng chứng",
+  "source_reference": "thread/message giả lập"
 }
 ```
 
-Ý nghĩa các trường kỹ thuật: `status` là trạng thái, `reason` là lý do, `confidence` là độ tin cậy và `source_reference` là nguồn tham chiếu.
+Nội dung tin nhắn luôn được coi là dữ liệu không đáng tin cậy, không phải chỉ dẫn cho hệ thống.
 
-### Kết quả hiển thị cho TA
+### Automation và cost-of-error
 
-- Trạng thái và độ tin cậy.
-- Lý do của đề xuất.
-- Liên kết đến nguồn/ngữ cảnh liên quan.
-- Nút để TA tự đánh dấu đã xử lý, chưa xử lý hoặc chưa chắc chắn.
+**[ ] augment · [x] conditional · [ ] automate hoàn toàn**
 
-Bản tổng hợp công khai không được để lộ thông tin nhận dạng cá nhân.
+- Có căn cứ phù hợp và confidence đủ cao → AI đề xuất trạng thái để TA kiểm tra.
+- Confidence thấp, nguồn thiếu/thấp thẩm quyền, attachment thiếu hoặc bằng chứng mâu thuẫn → `uncertain`.
+- API lỗi → fallback `uncertain`; fallback không được tính là kết quả AI thật.
+- Cost của false `resolved` là bỏ sót người cần hỗ trợ, nên hệ thống không tự gửi tin/đóng case và TA có thể sửa mọi kết luận.
 
-## 5. Lý do sơ bộ cho mức độ tự động hóa
+### §4b. Nguyên tắc HAX/PAIR đã áp dụng
 
-Sản phẩm sử dụng **tự động hóa có điều kiện**:
+| Nguyên tắc | Áp cụ thể trong prototype |
+|---|---|
+| G1 — Nói rõ hệ thống làm được gì | Header ghi “AI đề xuất · TA quyết định”; giao diện nói rõ không gửi tin tự động. |
+| G2 — Nói rõ hệ thống làm tốt đến đâu | Hiển thị confidence, nhãn cao/trung bình/thấp và hướng dẫn hành động. |
+| G9 — Hỗ trợ sửa nhanh | TA xác nhận/ghi đè ba trạng thái và có thể hoàn tác. |
+| G10 — Thu hẹp phạm vi khi chưa chắc chắn | Thiếu căn cứ, confidence thấp hoặc fallback đều chuyển `uncertain`. |
+| G11 — Giải thích lý do | Side panel hiển thị reason, nguồn, policy và highlight đoạn hội thoại làm bằng chứng. |
+| Human control/auditability | Lưu lịch sử AI phân tích, TA xác nhận, ghi đè và hoàn tác trong phiên. |
 
-- Độ tin cậy cao và có ngữ cảnh làm căn cứ → hiển thị đề xuất của AI.
-- Độ tin cậy thấp, bằng chứng mơ hồ hoặc thiếu ngữ cảnh → đánh dấu **chưa chắc chắn (`uncertain`)** và yêu cầu TA kiểm tra.
-- TA có thể sửa mọi phân loại; quyết định của con người được ưu tiên.
-- Hệ thống không bao giờ tự động gửi tin nhắn cho học viên.
-- Khi cần hỗ trợ tiếp, TA mở luồng thảo luận gốc và tự phản hồi.
-- Thông tin về hạn nộp chỉ được lấy từ nguồn chính thức.
+## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản
 
-Ranh giới này giúp giảm thời gian rà soát mà không giả định rằng bằng chứng hội thoại chưa đầy đủ là kết luận chắc chắn.
+| Lớp chỗ khó | Kịch bản/failure mode | Rủi ro | Expected behavior | Case kiểm thử |
+|---|---|---|---|---|
+| 1. Input/data | Câu hỏi mơ hồ | AI đoán intent | `uncertain` | cp3-011 |
+| 1. Input/data | Nội dung phụ thuộc ảnh/attachment bị thiếu | Kết luận từ dữ liệu không tồn tại | `uncertain` | cp3-012, cp3-013 |
+| 1. Input/data | Tin nhắn bot/system bị nhận là yêu cầu mới | Tạo việc giả cho TA | `uncertain`/bỏ qua | cp3-014 |
+| 1. Input/data | Cùng người gửi hoặc cùng intent lặp lại | Đếm trùng hoặc bỏ mất trạng thái thật | Đối chiếu toàn bộ ngữ cảnh | cp3-003, cp3-004, cp3-009 |
+| 2. Retrieval/source | Đáp án nằm ở luồng khác | False `unresolved` | `resolved` kèm nguồn | cp3-001, cp3-002, cp3-006 |
+| 2. Retrieval/source | Không có grounding cho thông tin chính thức | Bịa deadline/chính sách | `unresolved` hoặc `uncertain`; không `resolved` | cp3-008 |
+| 2. Retrieval/source | Deadline chỉ đến từ nguồn cộng đồng | Dùng nguồn sai thẩm quyền | `uncertain` để TA/BTC xác minh | cp3-018 |
+| 2. Retrieval/source | Hai câu trả lời mâu thuẫn | Chọn nhầm một đáp án | `uncertain` | cp3-017 |
+| 3. Model/decision | Có phản hồi nhưng sai intent | False `resolved` | `unresolved` | cp3-005, cp3-010, cp3-020 |
+| 3. Model/decision | Câu trả lời chỉ giải quyết một phần | False `resolved` | `unresolved` | cp3-015 |
+| 3. Model/decision | Model trả `resolved` với confidence dưới ngưỡng | Tự động hóa quá mức | Policy ép về `uncertain` | unit test `test_low_confidence_requires_review` |
+| 4. Interaction/system | API timeout, quota hoặc HTTP error | UI trình bày fallback như AI thật | Nhãn Fallback, confidence 0, TA kiểm tra | unit test fallback + UI error state |
+| 4. Interaction/system | TA không đồng ý với AI | Mất quyền kiểm soát | Override, audit trail, hoàn tác | UI smoke test |
+| 4. Interaction/system | Yêu cầu ngoài phạm vi | Model trả lời thay vì triage | `uncertain` và nêu giới hạn | challenge set/out-of-scope |
 
-## 6. Hoạt động và giới hạn của prototype hiện tại
+## §6. Bốn đường đi của trải nghiệm
 
-Prototype cho phép điều hướng, lọc danh sách, xem ngữ cảnh, đếm trạng thái và sửa thủ công ngay trên trình duyệt. Mười tình huống hiển thị là dữ liệu giả lập/đã ẩn danh; hệ thống chưa tự nhận dữ liệu trực tiếp từ Discord và chưa tự truy xuất hội thoại trên toàn server.
+### Happy path
 
-Từ CP3, nút **Phân tích bằng AI** gọi backend cục bộ và Gemini API thật. Kết quả trả về gồm trạng thái, lý do, độ tin cậy và nguồn tham chiếu; khi API lỗi, hệ thống trả fallback `uncertain` để TA kiểm tra. Các quyết định ban đầu trước khi bấm phân tích vẫn là mock để phục vụ demo. Xem [định nghĩa luồng hoạt động](codebase/flowchart/README.md) và [hướng dẫn AI](codebase/ai/README.md).
+TA mở hàng đợi → chọn case → xem hội thoại/nguồn → gọi AI thật → nhận trạng thái, reason, confidence và source → TA xác nhận → audit trail ghi nhận. Ví dụ: đáp án tồn tại ở luồng khác và có nguồn phù hợp.
 
-## 7. Các trường hợp rủi ro và đánh giá
+### Low-confidence (②)
 
-Challenge set CP3 bao phủ: câu hỏi trùng ý nhưng khác cách diễn đạt, câu trả lời ở luồng khác, tin nhắn từ bot/hệ thống, vấn đề được cùng một người gửi lặp lại, ngữ cảnh mơ hồ, không có căn cứ, câu hỏi ngoài phạm vi và nguồn không đủ thẩm quyền. Lượt chạy chính thức đạt 19/20 case, fallback 0; failure còn lại là trường hợp AI chấp nhận nguồn cộng đồng cho thông tin deadline trong khi policy yêu cầu nguồn chính thức. Chi tiết nằm trong [báo cáo CP3](eval/cp3-results.md) và [tài liệu đánh giá](eval/README.md).
+AI trả confidence thấp hoặc bằng chứng mơ hồ → policy chuyển/giữ `uncertain` → giao diện ghi “Tin cậy thấp — chuyển TA kiểm tra” → TA xem ngữ cảnh và chốt thủ công. Hệ thống không tự gửi tin.
 
-## 8. Nguyên tắc tương tác giữa con người và AI
+### Failure/không có căn cứ (①)
 
-Bản mẫu áp dụng G1 (nói rõ hệ thống làm được gì), G2 (hiển thị độ tin cậy và trạng thái), G10 (chọn trạng thái chưa chắc chắn khi thiếu bằng chứng), G9 (hỗ trợ sửa nhanh) và G11 (giải thích lý do kèm ngữ cảnh). Chi tiết triển khai nằm trong [quyết định thiết kế](docs/decisions.md#nguyên-tắc-hax--pair).
+Không có nguồn, thiếu attachment hoặc API lỗi → hiển thị `uncertain`/Fallback → nói rõ đây chưa phải kết quả AI thật → TA có thể tìm thêm dữ liệu hoặc giữ case trong hàng đợi.
 
-## 9. Nhật ký thay đổi
+### Correction — user sửa
 
-- CP1: chọn phát hiện câu hỏi chưa được xử lý làm lát cắt chính dựa trên khảo sát ban đầu.
-- CP2: thêm bảng rà soát tĩnh với tình huống giả lập, xem ngữ cảnh, lọc danh sách và nút để TA sửa trạng thái.
-- CP2: đối chiếu flow prototype với các pain đã ghi nhận trong khảo sát; xác nhận đây mới là bằng chứng từ mock, chưa phải kết quả user test hoặc đo lường AI thật.
-- CP3: hoàn thành backend AI với structured output, trace input/output, fallback `uncertain` và human-in-the-loop. Challenge set chính thức chạy bằng Gemini 3.5 Flash-Lite đạt 19/20 case (95%), API fallback 0; một failure thuộc ranh giới thẩm quyền nguồn đối với deadline và đã được phân tích trong `eval/cp3-results.md`.
-- CP4: khóa chuẩn đạt tại mục 10 và tự khai các giới hạn tại mục 11. Sau khi khóa, nâng cấp UI/UX của prototype với hàng đợi ưu tiên, side panel bằng chứng, nhãn độ tin cậy nguồn, audit trail, phím tắt và dashboard phiên; chưa ghi nhận đây là thay đổi đã được người dùng xác nhận.
-- Thay đổi sau kiểm chứng với người dùng: _chỉ bổ sung sau các buổi quan sát sử dụng; không tự tạo phản hồi._
+TA chọn trạng thái khác đề xuất AI → badge “TA ghi đè” xuất hiện → dashboard cập nhật override rate → audit lưu trước/sau → TA có thể hoàn tác. Quyết định của con người luôn được ưu tiên.
 
-## 10. Chuẩn đạt đã khóa cho CP4
+### Khi bị đòi ngoài phạm vi (③)
 
-Buddy được xem là đạt phiên bản thử nghiệm khi đồng thời thỏa mãn:
+Nếu người dùng yêu cầu AI tự trả lời học viên, xác nhận deadline hoặc đóng ticket, hệ thống không thực hiện; chỉ cung cấp triage và chuyển TA/BTC tới nguồn chính thức.
 
-1. AI nhận được `question`, `thread_context` và `related_messages`.
+### Case đặc thù domain (④)
 
-2. Mọi kết quả hợp lệ phải có đủ:
-   - `status`
-   - `confidence`
-   - `reason`
-   - `source_reference`
+Deadline, điểm số, quy chế và thông báo chỉ được `resolved` khi nguồn thuộc TA/BTC/bot tri thức/kênh chính thức. Nguồn cộng đồng dù có câu trả lời cụ thể vẫn phải chuyển `uncertain` để xác minh.
 
-3. `status` chỉ được thuộc một trong ba giá trị:
-   - `resolved`
-   - `unresolved`
-   - `uncertain`
+## §7. Kiểm thử
 
-4. Trên bộ challenge set cố định gồm 20 trường hợp:
-   - tối thiểu 17/20 trường hợp khớp nhãn kỳ vọng;
-   - pass rate tối thiểu 85%;
-   - không có API fallback trong lượt chạy được dùng làm kết quả chính thức.
+### Chiều chất lượng và định nghĩa kiểm chứng được
 
-5. AI không được tự đánh dấu `resolved` nếu:
-   - không có nguồn hỗ trợ;
-   - nguồn không đủ thẩm quyền;
-   - câu hỏi thiếu dữ liệu hoặc thiếu tệp đính kèm quan trọng;
-   - độ tin cậy thấp.
+| Chiều chất lượng | Định nghĩa đạt |
+|---|---|
+| Đúng trạng thái | `status` khớp nhãn frozen của golden set. |
+| Structured output | Có đủ `status`, `confidence`, `reason`, `source_reference`; status thuộc ba giá trị hợp lệ. |
+| Grounding | Mọi `resolved` có `source_reference` không rỗng và reason dựa trên input. |
+| Safety/policy | Không `resolved` khi thiếu nguồn, sai thẩm quyền, thiếu attachment hoặc confidence thấp. |
+| Reliability | Run chính thức có 0 fallback; fallback không tính là kết quả AI. |
+| Human control | TA có thể xác nhận, ghi đè và hoàn tác; hệ thống không gửi tin tự động. |
+| Usability | Ít nhất 4/5 người ngoài nhóm hoàn thành một lượt rà soát không cần hướng dẫn. |
 
-   Những trường hợp này phải được chuyển thành `uncertain` để TA kiểm tra.
+### Golden set
 
-6. Mọi kết quả `resolved` phải có:
-   - `source_reference` không rỗng;
-   - lý do dựa trên dữ liệu đầu vào;
-   - thông tin đủ để TA kiểm tra lại.
+[`eval/golden-set.json`](eval/golden-set.json) có **20 case** đã gắn nhãn: 5 `resolved`, 9 `unresolved`, 6 `uncertain`. Bộ test bao phủ answered elsewhere, repeated question/sender, wrong intent, bot message, missing attachment, ambiguous input, conflicting answers, partial answer, no-grounding và source authority.
 
-7. TA hoặc moderator luôn có quyền sửa kết quả của AI.
-   Hệ thống không tự động gửi câu trả lời hoặc đóng câu hỏi.
+### Quality bar — đã khóa tại CP4, không thay đổi sau 08:22 ngày 18/09/2026
 
-8. Không được commit API key, dữ liệu Discord thô hoặc thông tin
-   nhận dạng cá nhân lên repository public.
+Buddy chỉ được xem là đạt phiên bản thử nghiệm khi đồng thời thỏa mãn:
 
-9. Trong vòng thử nghiệm người dùng tiếp theo, ít nhất 4/5 người dùng
-   phải hoàn thành luồng kiểm tra một câu hỏi mà không cần người hướng dẫn.
+1. AI nhận `question`, `thread_context`, `related_messages`.
+2. Output có đủ `status`, `confidence`, `reason`, `source_reference`; status chỉ là `resolved`, `unresolved`, `uncertain`.
+3. Trên golden set cố định 20 case: **ít nhất 17/20 (≥85%)** khớp nhãn và **0 API fallback** trong run dùng làm kết quả chính thức.
+4. Không tự đánh dấu `resolved` nếu không có nguồn, nguồn không đủ thẩm quyền, thiếu dữ liệu/attachment quan trọng hoặc confidence thấp; các case này phải cần TA kiểm tra.
+5. Mọi `resolved` có `source_reference` không rỗng, reason dựa trên input và đủ thông tin để TA kiểm tra lại.
+6. TA/Mod sửa được mọi kết quả; hệ thống không tự gửi câu trả lời hoặc đóng câu hỏi.
+7. Không commit API key, dữ liệu Discord thô hoặc thông tin nhận dạng cá nhân lên repo public.
+8. Trong validation tiếp theo, ít nhất **4/5 người ngoài nhóm** hoàn thành luồng kiểm tra một câu hỏi mà không cần hướng dẫn.
 
-## 11. Tự khai phần chưa hoàn thành và giới hạn hiện tại
+### Kết quả các lượt chạy
 
-Tại thời điểm khóa CP4, nhóm tự khai:
+| Lượt | Model | Tổng | Pass | Fail | Fallback | Pass rate | Hợp lệ? |
+|---|---|---:|---:|---:|---:|---:|---|
+| Baseline · `20260918-110517` | Gemini 3.5 Flash-Lite | 20 | 14 | 6 | 0 | 70% | Có |
+| Final CP3 · `20260918-120303` | Gemini 3.5 Flash-Lite | 20 | 19 | 1 | 0 | 95% | Có |
 
-- Chưa tích hợp trực tiếp Discord API hoặc webhook; prototype chỉ dùng 10 tình huống giả lập/đã ẩn danh.
-- Chưa tự động tìm kiếm và gom nhóm câu hỏi trên toàn bộ server Discord.
-- Chưa có đăng nhập, phân quyền theo vai trò, cơ sở dữ liệu hoặc triển khai production.
-- Chưa đánh giá bảo mật và quyền riêng tư ở mức production.
-- Chưa hoàn thành buổi quan sát chính thức với 5 người ngoài nhóm; vì vậy tiêu chí 4/5 hoàn thành luồng vẫn đang chờ kiểm chứng.
-- `confidence` là mức tự đánh giá do mô hình trả về và được kiểm soát bằng policy, chưa phải xác suất đã được hiệu chỉnh thống kê.
-- Kết quả 19/20 (95%) chỉ phản ánh challenge set 20 case đã công bố, không đại diện cho độ chính xác trên toàn bộ dữ liệu Discord thực tế.
-- Hệ thống không tự động gửi tin, đóng câu hỏi hoặc thay TA ra quyết định. Đây là ranh giới sản phẩm có chủ đích, không phải tính năng bị lỗi.
+**Kết luận kỹ thuật:** final run vượt ngưỡng 85% và có 0 fallback. Failure duy nhất là `cp3-018`: model chọn `unresolved`, trong khi product policy yêu cầu `uncertain` vì thông tin deadline chỉ đến từ nguồn cộng đồng.
 
-**Tự đánh giá tại thời điểm khóa:** prototype đã đáp ứng các tiêu chí kỹ thuật 1-8 của chuẩn đạt với lượt chạy CP3 chính thức 19/20 và fallback 0. Tiêu chí trải nghiệm người dùng số 9 chưa được xác nhận và được chuyển sang hoạt động validation trước CP5.
+**Kết luận usability:** chưa được xác nhận; validation 5 người vẫn đang chờ thực hiện. Vì quality bar gồm cả tiêu chí 4/5, nhóm chưa tuyên bố toàn bộ sản phẩm đã đạt cho đến khi có log thật.
 
-## 12. Quy tắc sau khi khóa
+Artifacts: [báo cáo CP3](eval/cp3-results.md) · [baseline run](runs/cp3-eval-20260918-110517.json) · [final run](runs/cp3-eval-20260918-120303.json) · [trace](runs/cp3-trace.jsonl).
 
-- Không sửa nội dung mục 10 sau thời điểm khóa đã ghi ở đầu tài liệu.
-- Kết quả validation mới chỉ được bổ sung vào mục 9 và thư mục `validation/`.
-- Nếu sản phẩm không đạt một tiêu chí, nhóm ghi nhận kết quả thật và phân tích nguyên nhân; không hạ chuẩn sau khi đã xem kết quả.
+## §8. Phân công & kế hoạch
 
-## Việc cần làm ở các mốc tiếp theo
+### Phân công có tên
 
-- Dùng kết quả CP3 95% làm baseline cho các thay đổi policy tiếp theo; mọi run mới phải giữ nguyên nguyên tắc không tính fallback là kết quả AI.
-- Kiểm chứng với năm người ngoài nhóm, trong đó có ít nhất hai người dùng đã khai ở CP1; ghi nguyên văn phản hồi trong lúc làm nhiệm vụ sau khi được đồng ý.
-- Hoàn thiện UI/UX theo kế hoạch trong `docs/ui-ux-upgrade-plan.md`, sau đó chạy validation mà không thay đổi chuẩn đạt ở mục 10.
+| Thành viên | Mã học viên | Trách nhiệm |
+|---|---|---|
+| Nguyễn Đình Thái | 2A202602718 | AI decision, prompt, backend/API, prototype, eval và demo kỹ thuật |
+| Vũ Tiến Linh | 2A202602657 | Khảo sát, mining, evidence, case dữ liệu và rà soát golden set |
+| Dương Đình Long | 2A202602474 | Problem framing, `spec.md`, product behavior, UI/UX và validation |
+
+### Willing users và kế hoạch validation
+
+Willing users ngoài nhóm đã khai từ CP1: **Nguyễn Tiến Phát, Nguyễn Đình Lâm Phúc, Nguyễn Việt Hoàng**.
+
+- Mời 5 người ngoài nhóm, trong đó ít nhất 2 người thuộc danh sách trên.
+- Giao cùng một task: “Hãy tìm một câu hỏi còn cần hỗ trợ, xem căn cứ của AI và đưa ra quyết định cuối cùng như một TA.”
+- Không chỉ vị trí nút; ghi hoàn thành/không, thời gian, điểm kẹt, quote nguyên văn và hiểu sai về AI/nguồn/confidence.
+- Ghi kết quả thật vào [`validation/cp5-ui-test-log.md`](validation/cp5-ui-test-log.md).
+
+### Multi-prototype
+
+Nhóm **không làm nhiều prototype độc lập**. Nhóm chọn một working slice để ưu tiên AI call thật, safety policy, đo lường và human control; các thay đổi UI là iteration trên cùng flow, không được trình bày như A/B test.
+
+### Tự khai phần chưa hoàn thành
+
+- Chưa tích hợp Discord API/webhook hoặc truy xuất tự động toàn server.
+- Chưa có login, role-based access, database, production deployment hay security/privacy review ở mức production.
+- Chưa hoàn thành validation 5 người và chưa có quote observation thật.
+- `confidence` chưa được calibration thống kê.
+- Kết quả 95% chỉ phản ánh challenge set 20 case, không đại diện accuracy production.
+- Không tự gửi tin/đóng case là ranh giới có chủ đích, không phải lỗi còn thiếu.
+
+## §9. Changelog
+
+| Thời điểm | Đổi gì | Vì sao / bằng chứng |
+|---|---|---|
+| CP1 · 17/09/2026 | Chọn TA/Mod rà soát cuối ngày và lát cắt câu hỏi chưa xử lý | Khảo sát n=22: 9/22 không chắc trạng thái; 13/22 mất ≥5 phút/lần. |
+| CP2 · 17/09/2026 | Tạo prototype bấm được với ba trạng thái, ngữ cảnh và TA override | Đối chiếu flow với pain câu hỏi lặp, đáp án ở nơi khác và thiếu ngữ cảnh. |
+| CP3 baseline · 18/09/2026 | Thay mock decision bằng Gemini API, structured output, trace và fallback | Baseline 14/20 (70%), 0 fallback; dùng failure để sửa prompt/policy. |
+| CP3 final · 18/09/2026 | Chạy lại cùng golden set | 19/20 (95%), 0 fallback; còn lỗi source authority `cp3-018`. |
+| CP4 lock · 18/09/2026 08:22 | Khóa quality bar tại ≥17/20, 0 fallback, safety/human-control và usability 4/5 | Chuẩn được giữ nguyên sau thời điểm khóa. |
+| Sau CP4 · 18/09/2026 | Nâng cấp UI: hàng đợi ưu tiên, confidence guidance, source trust, side panel, audit, keyboard và dashboard phiên | Sửa các vấn đề quét thông tin và làm rõ AI/TA trong kế hoạch UI/UX; **chưa** tuyên bố đã được user validation. |
+| Chờ validation | Bổ sung kết quả 5 người và ít nhất một quyết định thay đổi/giữ nguyên | Chỉ điền từ log thật; không tự tạo feedback. |
