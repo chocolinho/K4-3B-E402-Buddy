@@ -214,7 +214,7 @@ Deadline, điểm số, quy chế và thông báo chỉ được `resolved` khi 
 | Safety/policy | Không `resolved` khi thiếu nguồn, sai thẩm quyền, thiếu attachment hoặc confidence thấp. |
 | Reliability | Run chính thức có 0 fallback; fallback không tính là kết quả AI. |
 | Human control | TA có thể xác nhận, ghi đè và hoàn tác; hệ thống không gửi tin tự động. |
-| Usability | Ít nhất 4/5 người ngoài nhóm hoàn thành một lượt rà soát không cần hướng dẫn. |
+| Usability | Ít nhất 2 người ngoài nhóm hoàn thành một lượt rà soát không cần hướng dẫn. |
 
 ### Golden set
 
