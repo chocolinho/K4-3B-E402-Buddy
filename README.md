@@ -4,7 +4,7 @@
 
 ## 👥 Thành viên nhóm & Phân công vai trò
 
-**Lớp:** 3B · **Phòng:** E402 · **Cụm:** ____ · **Track:** B – B2 · Trợ lý Discord
+**Lớp:** 3B · **Phòng:** E402 · **Cụm:** C4 · **Track:** B – B2 · Trợ lý Discord
 
 | Họ và Tên | Mã Học Viên | Vai trò chính | Phần việc đảm nhiệm trong dự án |
 |---|---|---|---|
