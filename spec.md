@@ -117,12 +117,12 @@ Bản mẫu áp dụng G1 (nói rõ hệ thống làm được gì), G2 (hiển 
 - CP1: chọn phát hiện câu hỏi chưa được xử lý làm lát cắt chính dựa trên khảo sát ban đầu.
 - CP2: thêm bảng rà soát tĩnh với tình huống giả lập, xem ngữ cảnh, lọc danh sách và nút để TA sửa trạng thái.
 - CP2: đối chiếu flow prototype với các pain đã ghi nhận trong khảo sát; xác nhận đây mới là bằng chứng từ mock, chưa phải kết quả user test hoặc đo lường AI thật.
+- CP3: hoàn thành backend AI với structured output, trace input/output, fallback `uncertain` và human-in-the-loop. Challenge set chính thức chạy bằng Gemini 3.5 Flash-Lite đạt 19/20 case (95%), API fallback 0; một failure thuộc ranh giới thẩm quyền nguồn đối với deadline và đã được phân tích trong `eval/cp3-results.md`.
 - Thay đổi sau kiểm chứng với người dùng: _chỉ bổ sung sau các buổi quan sát sử dụng; không tự tạo phản hồi._
 
 ## Việc cần làm ở các mốc tiếp theo
 
 - Chọn và ghi nhận đội trưởng cùng mã học viên của tất cả thành viên.
 - Xác định và khóa tiêu chuẩn đạt của CP4 trước khi đánh giá.
-- Triển khai ít nhất một lần gọi AI thật cho CP3 và công khai giới hạn.
-- Tạo bộ dữ liệu chuẩn có phiên bản bằng dữ liệu giả lập/ẩn danh và báo cáo kết quả đo thực tế.
+- Dùng kết quả CP3 95% làm baseline cho các thay đổi policy tiếp theo; mọi run mới phải giữ nguyên nguyên tắc không tính fallback là kết quả AI.
 - Kiểm chứng với năm người ngoài nhóm, trong đó có ít nhất hai người dùng đã khai ở CP1; ghi nguyên văn phản hồi trong lúc làm nhiệm vụ sau khi được đồng ý.

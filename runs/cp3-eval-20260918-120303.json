@@ -1,0 +1,237 @@
+{
+  "timestamp": "2026-09-18T05:03:03.503703+00:00",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "confidence_threshold": 0.65,
+  "cases_file": "C:\\Users\\Admin\\K4-3B-E402-Buddy\\eval\\golden-set.json",
+  "summary": {
+    "total": 20,
+    "passed": 19,
+    "failed": 1,
+    "fallbacks": 0,
+    "pass_rate_percent": 95.0,
+    "valid_run": true
+  },
+  "results": [
+    {
+      "id": "cp3-001",
+      "failure_mode": "answered elsewhere",
+      "expected_status": "resolved",
+      "predicted_status": "resolved",
+      "confidence": 1.0,
+      "reason": "Đã có câu trả lời trực tiếp từ bot tri thức và nguồn chính thức được ghi nhận tại M42137.",
+      "source_reference": "M42137",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-002",
+      "failure_mode": "answered elsewhere paraphrase",
+      "expected_status": "resolved",
+      "predicted_status": "resolved",
+      "confidence": 0.95,
+      "reason": "Có câu trả lời trực tiếp đúng intent từ nguồn chính thức hướng dẫn cách kiểm tra XP.",
+      "source_reference": "M42137",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-003",
+      "failure_mode": "repeated sender unresolved",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.95,
+      "reason": "Câu hỏi về quy cách nộp daily standup rất rõ ràng nhưng chưa có câu trả lời từ TA hay nguồn chính thức trong ngữ cảnh.",
+      "source_reference": "M57734,M79664",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-004",
+      "failure_mode": "repeated question",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.9,
+      "reason": "Câu hỏi về cách nộp daily stand up rõ ràng nhưng chưa có câu trả lời trực tiếp từ TA hoặc nguồn chính thức.",
+      "source_reference": "M97705,M36622,M41736",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-005",
+      "failure_mode": "wrong answer for intent",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.95,
+      "reason": "Câu hỏi về cách nộp daily stand up rõ ràng nhưng các phản hồi hiện tại chỉ nói về khung giờ nộp, chưa trả lời đúng intent hướng dẫn cách nộp.",
+      "source_reference": "M41736,M11802",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-006",
+      "failure_mode": "answered elsewhere",
+      "expected_status": "resolved",
+      "predicted_status": "resolved",
+      "confidence": 1.0,
+      "reason": "Đã có câu trả lời trực tiếp và đúng intent tại nguồn M11596.",
+      "source_reference": "M11596",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-007",
+      "failure_mode": "response inconsistency",
+      "expected_status": "resolved",
+      "predicted_status": "resolved",
+      "confidence": 0.95,
+      "reason": "Có câu trả lời trực tiếp và đúng intent từ nguồn tin cậy.",
+      "source_reference": "M11596",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-008",
+      "failure_mode": "no-grounding official information",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.9,
+      "reason": "Câu hỏi về hạn nộp Lab02 rõ ràng nhưng chưa có câu trả lời trực tiếp hoặc nguồn chính thức xác định hạn nộp trong context.",
+      "source_reference": "M07416,M28485",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-009",
+      "failure_mode": "repeated question unresolved",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.95,
+      "reason": "Câu hỏi về mã đội và mã nhóm rất rõ ràng nhưng chưa có câu trả lời trực tiếp hoặc đúng intent trong các tin nhắn liên quan.",
+      "source_reference": "M07981,M90856",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-010",
+      "failure_mode": "wrong answer for intent",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.95,
+      "reason": "Người dùng hỏi cách xử lý khi tham gia sai cú pháp Zoom nhưng các phản hồi chỉ nhắc lại cách đặt tên đúng mà chưa cung cấp giải pháp khắc phục vấn đề đã xảy ra.",
+      "source_reference": "M45740,M51183",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-011",
+      "failure_mode": "ambiguous input",
+      "expected_status": "uncertain",
+      "predicted_status": "uncertain",
+      "confidence": 1.0,
+      "reason": "Câu hỏi mơ hồ và thiếu ngữ cảnh, không rõ vấn đề cụ thể của học viên là gì.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-012",
+      "failure_mode": "missing attachment",
+      "expected_status": "uncertain",
+      "predicted_status": "uncertain",
+      "confidence": 1.0,
+      "reason": "Thiếu attachment, log và ngữ cảnh cần thiết để hiểu rõ vấn đề của học viên.",
+      "source_reference": "M51326",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-013",
+      "failure_mode": "ambiguous attachment dependent",
+      "expected_status": "uncertain",
+      "predicted_status": "uncertain",
+      "confidence": 0.95,
+      "reason": "Câu hỏi mơ hồ và phụ thuộc hoàn toàn vào attachment hoặc trạng thái trước đó nhưng không có ngữ cảnh cụ thể.",
+      "source_reference": "M03651",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-014",
+      "failure_mode": "bot message",
+      "expected_status": "uncertain",
+      "predicted_status": "uncertain",
+      "confidence": 1.0,
+      "reason": "Tin nhắn do bot hệ thống gửi, không phải yêu cầu hỗ trợ mới của học viên.",
+      "source_reference": "M42137",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-015",
+      "failure_mode": "partial answer",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.9,
+      "reason": "Câu hỏi có hai ý nhưng TA chỉ trả lời ý nộp ở đâu trên VLearn, còn ý hạn cuối chưa có câu trả lời trực tiếp.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-016",
+      "failure_mode": "critical false resolved",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.95,
+      "reason": "Câu hỏi rõ ràng về lỗi submit lab nhưng TA chưa đưa ra giải pháp chính thức, chỉ mới ghi nhận kiểm tra.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-017",
+      "failure_mode": "conflicting answers",
+      "expected_status": "uncertain",
+      "predicted_status": "uncertain",
+      "confidence": 0.95,
+      "reason": "Các nguồn thông tin mâu thuẫn về deadline và thiếu nguồn chính thức xác nhận.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-018",
+      "failure_mode": "out-of-scope authority",
+      "expected_status": "uncertain",
+      "predicted_status": "unresolved",
+      "confidence": 0.9,
+      "reason": "Câu hỏi rõ ràng về deadline nhưng chưa có câu trả lời từ TA, nguồn chính thức hoặc bot tri thức.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": false
+    },
+    {
+      "id": "cp3-019",
+      "failure_mode": "duplicate intent with misleading wording",
+      "expected_status": "resolved",
+      "predicted_status": "resolved",
+      "confidence": 0.95,
+      "reason": "Có câu trả lời trực tiếp từ M42137 hướng dẫn dùng /rank để xem thông tin XP đúng intent.",
+      "source_reference": "M42137",
+      "fallback": false,
+      "passed": true
+    },
+    {
+      "id": "cp3-020",
+      "failure_mode": "reply exists but does not solve issue",
+      "expected_status": "unresolved",
+      "predicted_status": "unresolved",
+      "confidence": 0.95,
+      "reason": "Câu hỏi của học viên rất rõ ràng về việc không vào được workshop và hỏi cách ghi nhận attendance, nhưng các phản hồi hiện tại chưa có câu trả lời trực tiếp hoặc đúng hướng dẫn từ nguồn chính thức.",
+      "source_reference": "",
+      "fallback": false,
+      "passed": true
+    }
+  ]
+}

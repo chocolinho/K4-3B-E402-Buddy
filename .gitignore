@@ -1,11 +1,13 @@
 .env
 .env.*
+!.env.example
 .venv/
 venv/
 __pycache__/
 *.pyc
 data/
 *.log
+/tmp/
 
 02-guide.md
 03-ai-spec-template.md

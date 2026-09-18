@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Bản mẫu CP2 giúp TA rà soát vấn đề hỗ trợ trên Discord bằng dữ liệu giả lập.">
+  <meta name="description" content="Bản mẫu CP3 dùng AI thật để hỗ trợ TA rà soát vấn đề trên Discord.">
   <title>Buddy — Rà soát hỗ trợ Discord</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -16,32 +16,46 @@
         <strong>Rà soát hỗ trợ Discord</strong>
       </span>
     </a>
-    <span class="mock-badge"><i aria-hidden="true"></i>Dữ liệu mô phỏng</span>
+    <span class="mock-badge"><i aria-hidden="true"></i>CP3 · AI thật</span>
   </header>
 
   <main class="page-shell" id="main-content">
     <section class="hero" aria-labelledby="page-title">
-      <div>
+      <div class="hero-copy">
         <p class="eyebrow">Rà soát cuối ngày</p>
         <h1 id="page-title">Vấn đề nào vẫn cần TA hỗ trợ?</h1>
         <p class="helper">AI đề xuất trạng thái từ ngữ cảnh liên quan. TA kiểm tra căn cứ, sửa khi cần và luôn là người đưa ra quyết định cuối cùng.</p>
         <div class="hero-meta" aria-label="Thông tin bản demo">
-          <span>6 tình huống giả lập</span>
+          <span>10 tình huống demo</span>
           <span>Không gửi tin tự động</span>
           <span>Không dùng dữ liệu thật</span>
         </div>
       </div>
-      <button class="button button-secondary" id="reset-button" type="button" data-action="reset">Đặt lại bản demo</button>
+      <aside class="proof-card" id="api-panel" aria-label="Bằng chứng CP3">
+        <div class="proof-live">
+          <span class="live-dot" aria-hidden="true"></span>
+          <div>
+            <small>Kết nối mô hình</small>
+            <strong id="api-status">Đang kiểm tra AI API…</strong>
+          </div>
+        </div>
+        <div class="proof-grid" aria-label="Kết quả đánh giá CP3">
+          <div><strong>20</strong><span>Test cases</span></div>
+          <div><strong>95%</strong><span>Pass rate</span></div>
+          <div><strong>0</strong><span>Fallback</span></div>
+        </div>
+        <p class="proof-note">Kết quả challenge set · Gemini 3.5 Flash-Lite</p>
+      </aside>
     </section>
 
     <section class="flow-card" aria-labelledby="flow-title">
       <div class="flow-heading">
-        <p class="eyebrow">Luồng CP2</p>
+        <p class="eyebrow">Luồng CP3</p>
         <h2 id="flow-title">Từ tin nhắn đến quyết định của TA</h2>
       </div>
       <ol class="flow-steps">
         <li><span>1</span><div><strong>Tin nhắn Discord</strong><small>Phát hiện câu hỏi ứng viên</small></div></li>
-        <li><span>2</span><div><strong>AI phân loại</strong><small>Dựa trên ngữ cảnh liên quan</small></div></li>
+        <li><span>2</span><div><strong>AI phân loại</strong><small>Lời gọi model thật qua backend</small></div></li>
         <li><span>3</span><div><strong>TA rà soát</strong><small>Xem lý do và độ tin cậy</small></div></li>
         <li><span>4</span><div><strong>TA quyết định</strong><small>Giữ hoặc sửa trạng thái</small></div></li>
       </ol>
@@ -65,7 +79,10 @@
           <h2 id="review-title">Cần TA xem hôm nay</h2>
           <p id="filter-description">Đang hiển thị các vấn đề chưa được xử lý.</p>
         </div>
-        <button class="button button-quiet" id="show-all-button" type="button" data-action="show-all">Hiện tất cả</button>
+        <div class="panel-actions">
+          <button class="button button-quiet" id="show-all-button" type="button" data-action="show-all">Hiện tất cả</button>
+          <button class="button button-quiet" id="reset-button" type="button" data-action="reset">Đặt lại demo</button>
+        </div>
       </div>
 
       <div id="question-list" class="question-list" aria-live="polite"></div>

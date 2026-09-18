@@ -13,6 +13,20 @@ Tin nhắn Discord
 
 AI chỉ đề xuất trạng thái để rà soát. AI không gửi tin nhắn cho học viên.
 
+## Phần được thay bằng AI thật ở CP3
+
+```text
+question + thread_context + related_messages
+  → backend Python
+  → OpenRouter/Gemini API trả structured output
+  → kiểm tra schema
+  → nếu confidence thấp: ép về uncertain
+  → ghi trace input/output
+  → hiển thị để TA rà soát hoặc sửa trạng thái
+```
+
+Khi API lỗi hoặc thiếu key, backend không dùng quyết định mock để giả làm kết quả thật. Hệ thống trả fallback `uncertain` và yêu cầu TA kiểm tra.
+
 ## Các nhánh bắt buộc
 
 ### Nhánh thuận lợi
