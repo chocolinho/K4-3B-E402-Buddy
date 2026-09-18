@@ -6,13 +6,13 @@
 
 ## 👥 Thành viên nhóm & Phân công vai trò
 
-**Lớp:** 3B · **Phòng:** E402 · **Cụm:** ____ · **Track:** B – B2 · Trợ lý Discord
+**Lớp:** 3B · **Phòng:** E402 · **Cụm:** C4 · **Track:** B – B2 · Trợ lý Discord
 
 | Họ và Tên | Mã Học Viên | Vai trò chính | Phần việc đảm nhiệm trong dự án |
 |---|---|---|---|
-| Nguyễn Đình Thái | 2A202602718| AI / Kỹ thuật | Quyết định của AI, tính khả thi kỹ thuật, bản mẫu và đánh giá |
-| Vũ Tiến Linh | 2A202602657 | Nghiên cứu / Bằng chứng | Khảo sát, khai thác dữ liệu và tổng hợp bằng chứng |
-| Dương Đình Long | 2A202602474 | Sản phẩm / Trải nghiệm người dùng | Xác định vấn đề, đặc tả, trải nghiệm người dùng và kiểm chứng |
+| Nguyễn Đình Thái | 2A202602718| AI / Kỹ thuật (Trưởng nhóm) | Quyết định của AI, tính khả thi kỹ thuật, bản mẫu và đánh giá |
+| Vũ Tiến Linh | 2A202602657 | Nghiên cứu / Bằng chứng (Thành viên) | Khảo sát, khai thác dữ liệu và tổng hợp bằng chứng |
+| Dương Đình Long | 2A202602474 | Sản phẩm / Trải nghiệm người dùng (Thành viên) | Xác định vấn đề, đặc tả, trải nghiệm người dùng và kiểm chứng |
 |  |  |  |  |
 |  |  |  |  |
 

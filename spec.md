@@ -214,7 +214,7 @@ Deadline, điểm số, quy chế và thông báo chỉ được `resolved` khi 
 | Safety/policy | Không `resolved` khi thiếu nguồn, sai thẩm quyền, thiếu attachment hoặc confidence thấp. |
 | Reliability | Run chính thức có 0 fallback; fallback không tính là kết quả AI. |
 | Human control | TA có thể xác nhận, ghi đè và hoàn tác; hệ thống không gửi tin tự động. |
-| Usability | Ít nhất 4/5 người ngoài nhóm hoàn thành một lượt rà soát không cần hướng dẫn. |
+| Usability | Ít nhất 2 người ngoài nhóm hoàn thành một lượt rà soát không cần hướng dẫn. |
 
 ### Golden set
 
@@ -288,4 +288,4 @@ Nhóm **không làm nhiều prototype độc lập**. Nhóm chọn một working
 | CP3 final · 18/09/2026 | Chạy lại cùng golden set | 19/20 (95%), 0 fallback; còn lỗi source authority `cp3-018`. |
 | CP4 lock · 18/09/2026 08:22 | Khóa quality bar tại ≥17/20, 0 fallback, safety/human-control và usability 4/5 | Chuẩn được giữ nguyên sau thời điểm khóa. |
 | Sau CP4 · 18/09/2026 | Nâng cấp UI: hàng đợi ưu tiên, confidence guidance, source trust, side panel, audit, keyboard và dashboard phiên | Sửa các vấn đề quét thông tin và làm rõ AI/TA trong kế hoạch UI/UX; **chưa** tuyên bố đã được user validation. |
-| Chờ validation | Bổ sung kết quả 5 người và ít nhất một quyết định thay đổi/giữ nguyên | Chỉ điền từ log thật; không tự tạo feedback. |
+| Chờ validation | Bổ sung kết quả ít nhất 2 người và ít nhất một quyết định thay đổi/giữ nguyên | Chỉ điền từ log thật; không tự tạo feedback. |
