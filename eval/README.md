@@ -17,6 +17,14 @@ Không đưa dữ liệu Discord thô hoặc thông tin nhận dạng cá nhân 
 
 [`golden-set.json`](golden-set.json) chứa 20 case giả lập, đã gắn nhãn mong đợi trước khi chạy AI. Nhóm cần rà soát từng nhãn và thay bằng bộ test đã chuẩn bị nếu bộ đó có bằng chứng tốt hơn. Không đổi nhãn sau khi xem kết quả chỉ để tăng pass rate.
 
+Metadata được ghi trực tiếp trong từng case để rubric có thể kiểm tra:
+
+- `difficulty_class`: lớp ① failure/no-grounding, ② low-confidence/ambiguous, ③ out-of-scope hoặc ④ domain-specific.
+- `case_tier`: 10 case thường (`common`), 7 case khó (`hard`), 3 case hiếm (`rare`).
+- `origin`: 15 case từ pattern/chatlog thật đã ẩn danh và 5 case tổng hợp để ép policy ở biên.
+
+Phân bố theo bốn lớp: ① có 6 case, ② có 7 case, ③ có 2 case, ④ có 5 case. Việc bổ sung metadata không thay đổi input, expected label hoặc quality bar đã khóa.
+
 Chạy phép đo thật bằng:
 
 ```powershell

@@ -4,7 +4,7 @@
 
 Flow của prototype phản ánh đúng **hướng pain đã chọn**: TA/Mod cần rà soát cuối ngày để biết vấn đề nào còn cần hỗ trợ trong bối cảnh câu hỏi bị lặp, thông tin nằm ở luồng khác hoặc thiếu ngữ cảnh.
 
-Đây là kiểm tra đối chiếu tài liệu và mã nguồn cho CP2. Nó **không phải** bằng chứng rằng sản phẩm đã giảm thời gian rà soát hoặc phân loại đúng trên dữ liệu Discord thật. Prototype hiện dùng dữ liệu giả lập cố định và không gọi AI thật.
+Đây ban đầu là kiểm tra đối chiếu tài liệu và mã nguồn cho CP2. Sau CP3/CP4, prototype vẫn dùng tình huống đã ẩn danh/tổng hợp để trình diễn nhưng nút phân tích đã gọi AI thật qua backend. Tài liệu này **không phải** bằng chứng rằng sản phẩm đã giảm thời gian rà soát; kết quả phân loại được đo riêng trong `eval/`.
 
 ## Đối chiếu pain với flow
 
@@ -33,16 +33,16 @@ Flow của prototype phản ánh đúng **hướng pain đã chọn**: TA/Mod c�
 
 - Khảo sát ẩn danh với 22 người trả lời trong [tóm tắt khảo sát](survey-summary.md).
 - Bảng so sánh tác động và lý do chọn lát cắt trong [impact-table.md](impact-table.md).
-- Sáu case giả lập trong `codebase/prototype/script.js`, bao phủ câu hỏi chưa xử lý, câu hỏi trùng ý, câu trả lời ở nơi khác, bot/system, người gửi lặp lại và thiếu ngữ cảnh.
+- Hai mươi case giả lập trong `codebase/prototype/script.js`, có bảng nguồn gốc và cách biến đổi tại [mock-case-provenance.md](mock-case-provenance.md).
 - Flow tổng quát và các nhánh `uncertain` trong [flowchart](../codebase/flowchart/README.md).
+- Golden set 20 case và kết quả full-run trong [`../eval/`](../eval/).
+- Lời gọi AI thật, fallback có nhãn và trace trong [`../runs/`](../runs/).
 
 ### Chưa thể kết luận từ repository
 
 - Chưa có nhật ký người dùng thật dùng prototype.
 - Chưa có quote nguyên văn hoặc observation từ willing users.
-- Chưa có số đo thời gian rà soát trước/sau.
-- Chưa có số đo độ đúng của phân loại trên một golden set.
-- Chưa có bằng chứng AI thật đã xử lý bước phát hiện, nhóm và truy xuất.
+- Chưa có số đo thời gian rà soát trước/sau với TA/mod thật.
 
 Các mục trên không được tự điền bằng giả định. Chúng cần được bổ sung sau khi có buổi dùng thử, dữ liệu kiểm thử hoặc lượt chạy AI thật.
 
@@ -50,5 +50,5 @@ Các mục trên không được tự điền bằng giả định. Chúng cần
 
 1. Nhóm đã cho Nguyễn Tiến Phát, Nguyễn Đình Lâm Phúc hoặc Nguyễn Việt Hoàng dùng thử prototype chưa? Nếu có, cần ngày thử, task giao, điểm kẹt, quote nguyên văn và sự đồng ý ghi nhận.
 2. Nhóm đã có thêm người ngoài nhóm dùng thử chưa? Nếu có, cần nhật ký từng người; không cần đưa thông tin nhận dạng cá nhân vào repo.
-3. Nhóm đã chạy AI thật hoặc kiểm thử bằng golden set chưa? Nếu có, cần số case, tiêu chuẩn đạt đã chốt trước, kết quả đúng/sai và các case lỗi.
-4. Nhóm có được phép dùng trích dẫn ẩn danh từ Discord pack không? Nếu có, cần mã case/đoạn trích theo quy định bảo mật, không đưa dữ liệu thô vào repo công khai.
+3. Khi validation, người dùng có phân biệt đúng đề xuất AI, fallback và TA override không?
+4. Có thay đổi nào từ feedback cần ghi vào changelog của `spec.md` không?

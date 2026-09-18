@@ -2,6 +2,8 @@
 
 **SPEC → Prototype → Demo.** Đây không phải cuộc thi code — đây là cuộc thi **tư duy sản phẩm AI**.
 
+> Đối chiếu nhanh tình trạng bài theo rubric: [`docs/rubric-checklist.md`](docs/rubric-checklist.md).
+
 ## 👥 Thành viên nhóm & Phân công vai trò
 
 **Lớp:** 3B · **Phòng:** E402 · **Cụm:** C4 · **Track:** B – B2 · Trợ lý Discord
@@ -123,7 +125,7 @@ Hai phòng cùng ca dùng chung lịch mốc. Năm link form phát đủ từ đ
 
 ### CP4 · Chốt `spec.md`
 
-**Trạng thái đội: ✅ Đã chốt nội dung** — chuẩn đạt được khóa trong `spec.md` mục 10; phần chưa hoàn thành và giới hạn được tự khai tại mục 11. Bước còn lại ngoài repository là commit/push và nộp link `spec.md` qua form CP4 trước hạn.
+**Trạng thái đội: ✅ Đã chốt nội dung** — chuẩn đạt được khóa trong `spec.md` §7; phần chưa hoàn thành và giới hạn được tự khai trong spec. Bước còn lại ngoài repository là commit/push và nộp link `spec.md` qua form CP4 trước hạn.
 
 **Để làm gì:** chốt **"thế nào là đạt"** trước khi biết kết quả. Đặt chuẩn sau khi đã thấy kết quả thì con số không nói lên điều gì — và người nghe cũng biết vậy.
 
@@ -167,13 +169,9 @@ Giám khảo có thể hỏi **bất kỳ thành viên nào** về phần có t�
 | CP4 | *(cập nhật lúc khai mạc)* |
 | CP5 | *(cập nhật lúc khai mạc)* |
 
-> **Đội trưởng nộp form thay cả nhóm** — một phiếu cho cả nhóm ở mỗi mốc, không phải mỗi thành viên tự nộp.
-> **25 điểm nộp là điểm chung của nhóm**: mọi thành viên cùng được hoặc cùng mất.
-
-> ⚠️ **Cả 5 mốc phải nộp bằng cùng một mã học viên của đội trưởng.**
-> BTC ghép 5 phiếu của nhóm lại với nhau **dựa trên mã học viên người nộp**. Mốc này người A nộp, mốc kia người B nộp thì hệ thống hiểu là hai nhóm khác nhau, và nhóm mất điểm ở những mốc lệch.
+> **Mỗi thành viên nộp form riêng và cả nhóm dùng chung một link repository.** Đây là yêu cầu trong rubric chấm điểm được nhóm dùng làm bản đối chiếu cuối.
 >
-> Chọn đội trưởng là người **chắc chắn có mặt và theo được cả năm mốc**. Nếu bất khả kháng phải đổi người nộp, báo coach ngay trong buổi.
+> Mỗi người phải dùng đúng mã học viên của mình và kiểm tra link repo mở được trước khi gửi. Đội trưởng vẫn chịu trách nhiệm điều phối, nhưng không nộp thay các thành viên.
 
 Link được công bố tại khai mạc, **ghim trên Discord và đăng trên VLearn** — hai nơi, cùng một bộ link.
 
@@ -285,7 +283,7 @@ Mã học viên phải đúng — đây là căn cứ đối chiếu điểm.
 
 Tổng **100 điểm = 25 điểm nộp checkpoint + 67 điểm chấm bài nộp + 8 điểm R6** (cho người ngoài dùng thử). Chi tiết từng ý điểm: `04-rubric.md`.
 
-**25 điểm nộp — mỗi checkpoint 5 điểm (CP1-CP5):** nộp đúng hạn → 5 điểm · nộp muộn → 0 điểm cho mốc đó. **Đội trưởng nộp thay cả nhóm — đây là điểm chung của nhóm, không phải điểm cá nhân.**
+**25 điểm nộp — mỗi checkpoint 5 điểm (CP1-CP5):** nộp đúng hạn → 5 điểm · nộp muộn → 0 điểm cho mốc đó. **Mỗi thành viên nộp riêng và dùng chung link repo của nhóm.**
 
 **67 điểm chấm + 8 điểm R6 — trên file trong repo, mỗi con điểm trỏ về một chỗ:**
 

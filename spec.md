@@ -10,7 +10,7 @@
 
 Sau thời điểm trên, nhóm không sửa quality bar trong §7. Kết quả mới chỉ được bổ sung vào bảng lượt chạy và §9 Changelog.
 
-Tài liệu liên quan: [Canvas CP1](canvas.md) · [Bằng chứng khảo sát](evidence/survey-summary.md) · [Bảng impact](evidence/impact-table.md) · [Nguồn gốc mock](evidence/mock-case-provenance.md) · [Prototype](codebase/README.md) · [Golden set](eval/golden-set.json) · [Kết quả CP3](eval/cp3-results.md)
+Tài liệu liên quan: [Canvas CP1](canvas.md) · [Bằng chứng khảo sát](evidence/survey-summary.md) · [Log mining](evidence/mining-summary.md) · [Bảng impact](evidence/impact-table.md) · [Nguồn gốc mock](evidence/mock-case-provenance.md) · [Prototype](codebase/README.md) · [Golden set](eval/golden-set.json) · [Kết quả CP3](eval/cp3-results.md)
 
 ## §1. User & Job
 
@@ -54,7 +54,11 @@ Khảo sát ẩn danh có **n = 22**:
 | “Em chạy tới bước 3 thì bị lỗi như này ạ.” | Phụ thuộc attachment bị thiếu | `q-209` |
 | “Có thể tra XP bằng Discord ID hoặc xem lịch sử bằng lệnh /rank.” | Tin nhắn bot bị nhận nhầm là câu hỏi | `q-210` |
 
-**Bằng chứng còn thiếu:** chưa có ≥5 quote nguyên văn từ quan sát người ngoài nhóm. Nhóm sẽ chỉ bổ sung quote sau validation thật trong [`validation/cp5-ui-test-log.md`](validation/cp5-ui-test-log.md), không tự tạo phản hồi.
+**Giới hạn của Evidence A:** repo chỉ có số tổng hợp khảo sát, chưa có log từng câu trả lời nguyên văn nên không tự nhận đạt chuẩn A. Nhóm dùng Evidence B bên dưới làm bằng chứng chấm R1. Quote quan sát sản phẩm là bằng chứng validation riêng và chỉ được bổ sung sau buổi thử thật trong [`validation/cp5-ui-test-log.md`](validation/cp5-ui-test-log.md).
+
+### Evidence B — mining kiểm lại được
+
+Script [`evidence/analyze_messages.py`](evidence/analyze_messages.py) đếm trên file nguồn cục bộ mà không xuất raw chat. Kết quả: 1.092 message, 264 candidate question theo heuristic công khai, 209 candidate có direct reply, 27 message chứa tổng 29 attachment. [`evidence/mining-summary.md`](evidence/mining-summary.md) lưu phương pháp, lệnh chạy lại và 6 trích dẫn nguyên văn một câu đã ẩn danh. File CSV không nằm trong repo.
 
 ## §2. Impact & quyết định chọn
 
@@ -150,22 +154,27 @@ Nội dung tin nhắn luôn được coi là dữ liệu không đáng tin cậy
 
 ## §5. Kiểu lỗi — 4 lớp chỗ khó + kịch bản
 
+Taxonomy dùng xuyên suốt spec và golden set:
+
+- **① Failure/không có căn cứ:** có reply nhưng không giải quyết, thiếu grounding hoặc bằng chứng mâu thuẫn.
+- **② Low-confidence/mơ hồ:** intent, ngữ cảnh hoặc attachment không đủ để kết luận chắc chắn.
+- **③ Ngoài phạm vi/thẩm quyền:** input không phải yêu cầu hỗ trợ hoặc đòi quyết định mà hệ thống không có quyền đưa ra.
+- **④ Case đặc thù domain:** cần nối đúng intent, luồng và quy tắc nghiệp vụ Discord/XP/ticket/Zoom.
+
 | Lớp chỗ khó | Kịch bản/failure mode | Rủi ro | Expected behavior | Case kiểm thử |
 |---|---|---|---|---|
-| 1. Input/data | Câu hỏi mơ hồ | AI đoán intent | `uncertain` | cp3-011 |
-| 1. Input/data | Nội dung phụ thuộc ảnh/attachment bị thiếu | Kết luận từ dữ liệu không tồn tại | `uncertain` | cp3-012, cp3-013 |
-| 1. Input/data | Tin nhắn bot/system bị nhận là yêu cầu mới | Tạo việc giả cho TA | `uncertain`/bỏ qua | cp3-014 |
-| 1. Input/data | Cùng người gửi hoặc cùng intent lặp lại | Đếm trùng hoặc bỏ mất trạng thái thật | Đối chiếu toàn bộ ngữ cảnh | cp3-003, cp3-004, cp3-009 |
-| 2. Retrieval/source | Đáp án nằm ở luồng khác | False `unresolved` | `resolved` kèm nguồn | cp3-001, cp3-002, cp3-006 |
-| 2. Retrieval/source | Không có grounding cho thông tin chính thức | Bịa deadline/chính sách | `unresolved` hoặc `uncertain`; không `resolved` | cp3-008 |
-| 2. Retrieval/source | Deadline chỉ đến từ nguồn cộng đồng | Dùng nguồn sai thẩm quyền | `uncertain` để TA/BTC xác minh | cp3-018 |
-| 2. Retrieval/source | Hai câu trả lời mâu thuẫn | Chọn nhầm một đáp án | `uncertain` | cp3-017 |
-| 3. Model/decision | Có phản hồi nhưng sai intent | False `resolved` | `unresolved` | cp3-005, cp3-010, cp3-020 |
-| 3. Model/decision | Câu trả lời chỉ giải quyết một phần | False `resolved` | `unresolved` | cp3-015 |
-| 3. Model/decision | Model trả `resolved` với confidence dưới ngưỡng | Tự động hóa quá mức | Policy ép về `uncertain` | unit test `test_low_confidence_requires_review` |
-| 4. Interaction/system | API timeout, quota hoặc HTTP error | UI trình bày fallback như AI thật | Nhãn Fallback, confidence 0, TA kiểm tra | unit test fallback + UI error state |
-| 4. Interaction/system | TA không đồng ý với AI | Mất quyền kiểm soát | Override, audit trail, hoàn tác | UI smoke test |
-| 4. Interaction/system | Yêu cầu ngoài phạm vi | Model trả lời thay vì triage | `uncertain` và nêu giới hạn | challenge set/out-of-scope |
+| ① Failure/no-grounding | Có phản hồi nhưng sai intent | False `resolved` | `unresolved` | cp3-005, cp3-020 |
+| ① Failure/no-grounding | Câu trả lời chỉ giải quyết một phần | Bỏ sót nửa còn lại | `unresolved` | cp3-015, cp3-016 |
+| ① Failure/no-grounding | Không có grounding hoặc hai nguồn mâu thuẫn | Bịa/chọn nhầm thông tin | `unresolved` hoặc `uncertain`; không `resolved` | cp3-008, cp3-017 |
+| ② Low-confidence/mơ hồ | Câu hỏi đứng riêng, thiếu intent | AI tự suy đoán | `uncertain` | cp3-011 |
+| ② Low-confidence/mơ hồ | Nội dung phụ thuộc attachment bị thiếu | Kết luận từ dữ liệu không tồn tại | `uncertain` | cp3-012, cp3-013 |
+| ② Low-confidence/mơ hồ | Câu hỏi lặp/repeated sender nhưng chưa có đáp án | Nhầm số lần hỏi với đã xử lý | Đối chiếu ngữ cảnh; giữ `unresolved` | cp3-003, cp3-004, cp3-009 |
+| ③ Ngoài phạm vi/thẩm quyền | Tin nhắn bot/system bị nhận là yêu cầu mới | Tạo việc giả cho TA | `uncertain`/bỏ qua | cp3-014 |
+| ③ Ngoài phạm vi/thẩm quyền | Deadline chỉ đến từ học viên khác | Dùng nguồn sai thẩm quyền | `uncertain` để TA/BTC xác minh | cp3-018 |
+| ④ Domain-specific | Đáp án nằm ở luồng khác | False `unresolved` | `resolved` kèm nguồn | cp3-001, cp3-002, cp3-006 |
+| ④ Domain-specific | Wording XP/rank hoặc ticket khác nhau | Bỏ lỡ intent tương đương | Nối đúng intent và nguồn | cp3-007, cp3-019 |
+| ④ Domain-specific | Zoom/attendance cần quy trình khắc phục, không chỉ quy định chung | False `resolved` | `unresolved` nếu hậu quả chưa được xử lý | cp3-010, cp3-020 |
+| Cross-cutting | Model trả `resolved` dưới ngưỡng hoặc API lỗi | Tự động hóa quá mức | Ép `uncertain`; gắn nhãn Fallback | unit tests policy/fallback |
 
 ## §6. Bốn đường đi của trải nghiệm
 
@@ -209,7 +218,7 @@ Deadline, điểm số, quy chế và thông báo chỉ được `resolved` khi 
 
 ### Golden set
 
-[`eval/golden-set.json`](eval/golden-set.json) có **20 case** đã gắn nhãn: 5 `resolved`, 9 `unresolved`, 6 `uncertain`. Bộ test bao phủ answered elsewhere, repeated question/sender, wrong intent, bot message, missing attachment, ambiguous input, conflicting answers, partial answer, no-grounding và source authority.
+[`eval/golden-set.json`](eval/golden-set.json) có **20 case** đã gắn nhãn: 5 `resolved`, 9 `unresolved`, 6 `uncertain`. Metadata chứng minh coverage: ① 6 case, ② 7 case, ③ 2 case, ④ 5 case; 10 case thường, 7 case khó, 3 case hiếm; 15 case có nguồn từ pattern/chatlog thật đã ẩn danh và 5 case tổng hợp để thử policy ở biên. Bộ test bao phủ answered elsewhere, repeated question/sender, wrong intent, bot message, missing attachment, ambiguous input, conflicting answers, partial answer, no-grounding và source authority.
 
 ### Quality bar — đã khóa tại CP4, không thay đổi sau 08:22 ngày 18/09/2026
 
