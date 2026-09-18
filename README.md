@@ -141,6 +141,8 @@ Sau 21:00 hôm đó **không sửa chuẩn "đạt" được nữa**.
 
 ### CP5 · Slide + video dự phòng
 
+**Trạng thái đội: 🟡 Đang hoàn tất** — đã có [`demo-slides.pdf`](demo-slides.pdf), [deck HTML chỉnh sửa được](docs/demo-slides.html), [kịch bản video](docs/cp5-demo-script.md) và [checklist dry run](docs/cp5-dry-run.md). Còn phải quay/upload video dự phòng, điền kết quả dry run và kiểm tra link public trước khi nộp.
+
 **Để làm gì:** đảm bảo buổi pitch chạy được **dù mạng hỏng hay máy chết**. Đây cũng là hạn nộp cuối — sau mốc này không nộp thêm gì.
 
 **Nộp:**

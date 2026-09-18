@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Discord · AI20k Khoá 4 (mô phỏng)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:'Inter','Segoe UI',sans-serif;background:#313338;color:#dbdee1}
+    /* Layout */
+    .app{display:flex;height:100vh}
+    .sidebar{width:72px;background:#1e1f22;display:flex;flex-direction:column;align-items:center;padding:12px 0;gap:8px;flex-shrink:0}
+    .sidebar .server{width:48px;height:48px;border-radius:16px;background:#5865f2;display:grid;place-items:center;color:white;font-weight:700;font-size:18px;cursor:pointer;transition:border-radius .2s}
+    .sidebar .server:hover{border-radius:12px}
+    .sidebar .sep{width:32px;height:2px;background:#35363c;border-radius:1px}
+    .channels{width:240px;background:#2b2d31;display:flex;flex-direction:column;flex-shrink:0}
+    .channels .header{padding:12px 16px;font-size:15px;font-weight:700;color:#f2f3f5;border-bottom:1px solid #1e1f22;display:flex;align-items:center;gap:8px}
+    .channels .header .hash{color:#5865f2}
+    .ch-list{padding:8px;overflow-y:auto;flex:1}
+    .ch-item{padding:8px 12px;border-radius:4px;cursor:pointer;font-size:14px;color:#949ba4;display:flex;align-items:center;gap:8px;transition:background .15s,color .15s}
+    .ch-item:hover,.ch-item.active{background:#35373c;color:#f2f3f5}
+    .ch-item .hash{font-size:18px;color:#5865f2;font-weight:700}
+    .ch-item .badge{margin-left:auto;background:#f23f43;color:white;font-size:11px;font-weight:700;padding:1px 6px;border-radius:8px}
+    .ch-cat{padding:18px 8px 4px;font-size:11px;font-weight:700;color:#949ba4;text-transform:uppercase;letter-spacing:.04em}
+    /* Main chat */
+    .chat{flex:1;display:flex;flex-direction:column;background:#313338}
+    .chat-header{padding:12px 16px;border-bottom:1px solid #1e1f22;display:flex;align-items:center;gap:10px;font-weight:600;font-size:15px;color:#f2f3f5}
+    .chat-header .hash{color:#80848e;font-size:22px}
+    .chat-body{flex:1;overflow-y:auto;padding:16px 16px 8px;scroll-behavior:smooth}
+    .chat-input{padding:0 16px 24px}
+    .chat-input .box{background:#383a40;border-radius:8px;padding:12px 16px;color:#949ba4;font-size:14px;cursor:text}
+    /* Messages */
+    .msg-group{margin-bottom:20px;scroll-margin-top:80px}
+    .msg-group.highlight{background:#3a3524;border-left:3px solid #f0b84b;padding:8px 12px;border-radius:4px;animation:flash 2s ease}
+    @keyframes flash{0%,100%{background:#3a3524}50%{background:#4a4520}}
+    .msg{display:flex;gap:16px;padding:2px 0}
+    .msg.continued{padding-left:56px}
+    .avatar{width:40px;height:40px;border-radius:50%;flex-shrink:0;display:grid;place-items:center;font-weight:700;font-size:14px;color:white}
+    .avatar.hv{background:#5865f2}
+    .avatar.bot{background:#57f287}
+    .avatar.ta{background:#f0b84b;color:#1e1f22}
+    .avatar.mod{background:#eb459e}
+    .msg-content{flex:1;min-width:0}
+    .msg-meta{display:flex;align-items:baseline;gap:8px}
+    .msg-name{font-weight:600;font-size:15px}
+    .msg-name.hv{color:#5865f2}
+    .msg-name.bot{color:#57f287}
+    .msg-name.ta{color:#f0b84b}
+    .msg-bot-tag{background:#5865f2;color:white;font-size:10px;font-weight:700;padding:1px 5px;border-radius:3px;vertical-align:middle}
+    .msg-time{font-size:11px;color:#949ba4}
+    .msg-text{font-size:15px;line-height:1.45;color:#dbdee1;margin-top:2px;word-wrap:break-word}
+    .msg-text .mention{background:rgba(88,101,242,.3);color:#c9cdfb;padding:0 2px;border-radius:3px}
+    .msg-attachment{margin-top:6px;padding:8px 12px;background:#2b2d31;border:1px solid #1e1f22;border-radius:4px;font-size:13px;color:#949ba4;font-style:italic}
+    .divider{display:flex;align-items:center;margin:16px 0;gap:8px}
+    .divider hr{flex:1;border:none;border-top:1px solid #3f4147}
+    .divider span{font-size:11px;font-weight:700;color:#949ba4}
+    /* Reply box */
+    .reply-box{margin-top:12px;background:#383a40;border-radius:8px;padding:12px 16px;display:none;align-items:center;gap:8px}
+    .reply-box.show{display:flex}
+    .reply-box input{flex:1;background:none;border:none;color:#dbdee1;font-size:14px;outline:none;font-family:inherit}
+    .reply-box button{background:#5865f2;color:white;border:none;padding:8px 16px;border-radius:4px;font-weight:600;font-size:13px;cursor:pointer}
+    .reply-box button:hover{background:#4752c4}
+    /* Toast */
+    .toast-msg{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#248046;color:white;padding:12px 24px;border-radius:8px;font-weight:600;font-size:14px;display:none;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.4)}
+    .toast-msg.show{display:block;animation:slideUp .3s ease}
+    @keyframes slideUp{from{opacity:0;transform:translateX(-50%) translateY(20px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+    /* Buddy badge */
+    .buddy-link{position:fixed;top:12px;right:16px;background:#5865f2;color:white;text-decoration:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:13px;z-index:90;display:flex;align-items:center;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:background .15s}
+    .buddy-link:hover{background:#4752c4}
+    .buddy-link .dot{width:8px;height:8px;border-radius:50%;background:#57f287}
+    .buddy-tag{margin-left:auto;font-size:11px;color:#c9cdfb;text-decoration:none;font-weight:600;background:rgba(88,101,242,.25);padding:2px 8px;border-radius:4px;transition:background .15s,color .15s}
+    .buddy-tag:hover{background:#5865f2;color:white}
+    /* Banner */
+    .banner{padding:12px 16px;background:#2b2d31;border-bottom:1px solid #1e1f22;font-size:12px;color:#949ba4;text-align:center}
+    .banner strong{color:#f0b84b}
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <div class="server" style="background:#5865f2">A</div>
+    <div class="sep"></div>
+    <div class="server" style="background:#313338;border:2px dashed #3f4147;font-size:24px;color:#57f287">+</div>
+  </div>
+
+  <!-- Channels -->
+  <div class="channels">
+    <div class="header"><span class="hash">#</span> AI20k · Khoá 4</div>
+    <div class="ch-list">
+      <div class="ch-cat">Thông báo</div>
+      <div class="ch-item" onclick="scrollTo('announcements')"><span class="hash">#</span> thông-báo</div>
+      <div class="ch-cat">Hỗ trợ</div>
+      <div class="ch-item active" onclick="scrollTo('ho-tro')"><span class="hash">#</span> hỗ-trợ-chung <span class="badge">6</span></div>
+      <div class="ch-item" onclick="scrollTo('ho-tro-ky-thuat')"><span class="hash">#</span> hỗ-trợ-kỹ-thuật <span class="badge">3</span></div>
+      <div class="ch-cat">Thảo luận</div>
+      <div class="ch-item" onclick="scrollTo('thao-luan')"><span class="hash">#</span> thảo-luận-chung</div>
+      <div class="ch-cat">Nhóm</div>
+      <div class="ch-item"><span class="hash">#</span> team-alpha</div>
+      <div class="ch-item"><span class="hash">#</span> team-beta</div>
+    </div>
+  </div>
+
+  <!-- Chat main -->
+  <div class="chat">
+    <div class="chat-header"><span class="hash">#</span> hỗ-trợ-chung</div>
+    <div class="banner">⚠️ Đây là <strong>giao diện mô phỏng Discord</strong> dùng cho demo Buddy. Tên và nội dung đã được ẩn danh.</div>
+
+    <div class="chat-body" id="chat-body">
+
+      <div class="divider"><hr><span>13 Tháng 9, 2026</span><hr></div>
+
+      <!-- q-201 -->
+      <div class="msg-group" id="q-201">
+        <div class="msg">
+          <div class="avatar hv">A</div>
+          <div class="msg-content">
+            <div class="msg-meta"><span class="msg-name hv">Học viên-A</span><span class="msg-time">13/09 · 14:23</span></div>
+            <div class="msg-text">Xem XP ở đâu? 🤔</div>
+          </div>
+        </div>
+        <div class="reply-box" id="reply-q-201">
+          <input type="text" placeholder="Trả lời Học viên-A...">
+          <button onclick="sendReply('q-201')">Gửi</button>
+        </div>
+      </div>
+
+      <!-- q-202 -->
+      <div class="msg-group" id="q-202">
+        <div class="msg">
+          <div class="avatar hv">C</div>
+          <div class="msg-content">
+            <div class="msg-meta"><span class="msg-name hv">Học viên-C</span><span class="msg-time">13/09 · 15:01</span></div>
+            <div class="msg-text">Hạn nộp daily stand-up là khi nào?</div>
+          </div>
+        </div>
+        <div class="msg continued">
+          <div class="msg-content">
+            <div class="msg-text" style="color:#57f287"><span class="msg-bot-tag">BOT</span> Khung giờ nộp hàng ngày là 0h–10h; nộp muộn vẫn ghi nhận nhưng không cộng XP.</div>
+          </div>
+        </div>
+        <div class="reply-box" id="reply-q-202">
+          <input type="text" placeholder="Trả lời Học viên-C...">
+          <button onclick="sendReply('q-202')">Gửi</button>
+        </div>
+      </div>
+
+      <!-- q-206 UNRESOLVED -->
+      <div class="msg-group" id="q-206">
+        <div class="msg">
+          <div class="avatar hv">H</div>
+          <div class="msg-content">
+            <div class="msg-meta"><span class="msg-name hv">Học viên-H</span><span class="msg-time">13/09 · 16:42</span><a class="buddy-tag" href="index.html#q-206" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
+            <div class="msg-text"><strong>Cách nộp daily stand-up như thế nào?</strong></div>
+          </div>
+        </div>
+        <div class="msg continued">
+          <div class="msg-content">
+            <div class="msg-text" style="color:#57f287"><span class="msg-bot-tag">BOT</span> Khung giờ nộp là 0h–10h; nộp muộn không được cộng XP.</div>
+            <div class="msg-text" style="color:#f23f43;font-size:13px;margin-top:4px">⚠️ Trả lời sai intent — hỏi "cách nộp" nhưng chỉ nhận được "khung giờ"</div>
+          </div>
+        </div>
+        <div class="reply-box" id="reply-q-206">
+          <input type="text" placeholder="Trả lời Học viên-H...">
+          <button onclick="sendReply('q-206')">Gửi</button>
+        </div>
+      </div>
+
+      <!-- q-207 UNRESOLVED -->
+      <div class="msg-group" id="q-207">
+        <div class="msg">
+          <div class="avatar hv">I</div>
+          <div class="msg-content">
+            <div class="msg-meta"><span class="msg-name hv">Học viên-I</span><span class="msg-time">13/09 · 17:15</span><a class="buddy-tag" href="index.html#q-207" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
+            <div class="msg-text"><strong>Hạn nộp Lab02 là khi nào?</strong></div>
+          </div>
+        </div>
+        <div class="msg continued">
+          <div class="msg-content">
+            <div class="msg-text" style="color:#57f287"><span class="msg-bot-tag">BOT</span> Mình chưa có ngày giờ cụ thể; hãy kiểm tra kênh thông báo, Phoenix hoặc Vlearn.</div>
+            <div class="msg-text" style="color:#f0b84b;font-size:13px;margin-top:4px">⚠️ Không có nguồn deadline — cần TA/BTC xác nhận</div>
+          </div>
+        </div>
+        <div class="reply-box" id="reply-q-207">
+          <input type="text" placeholder="Trả lời Học viên-I...">
+          <button onclick="sendReply('q-207')">Gửi</button>
+        </div>
+      </div>
+
+      <div class="divider"><hr><span>14 Tháng 9, 2026</span><hr></div>
+
+      <!-- q-208 UNRESOLVED -->
+      <div class="msg-group" id="q-208">
+        <div class="msg">
+          <div class="avatar hv">J</div>
+          <div class="msg-content">
+            <div class="msg-meta"><span class="msg-name hv">Học viên-J</span><span class="msg-time">14/09 · 08:30</span><a class="buddy-tag" href="index.html#q-208" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
+            <div class="msg-text"><strong>Em đặt sai tên khi vào Zoom nên không được ghi nhận. Em cần xử lý thế nào?</strong></div>
+          </div>
+        </div>
+        <div class="msg continued">
+          <div class="msg-content">
+            <div class="msg-text" style="color:#57f287"><span class="msg-bot-tag">BOT</span> Hãy đăng nhập đúng email và đặt tên đúng cú pháp để được điểm danh tự động.</div>
+            <div class="msg-text" style="color:#f23f43;font-size:13px;margin-top:4px">⚠️ Chỉ nêu cách phòng tránh, chưa hướng dẫn khắc phục lượt đã mất</div>
+          </div>
+        </div>
+        <div class="reply-box" id="reply-q-208">
+          <input type="text" placeholder="Trả lời Học viên-J...">
+          <button onclick="sendReply('q-208')">Gửi</button>
+        </div>
+      </div>
+
+      <!-- q-209 UNCERTAIN -->
+      <div class="msg-group" id="q-209">
+        <div class="msg">
+          <div class="avatar hv">K</div>
+          <div class="msg-content">
+            <div class="msg-meta"><span class="msg-name hv">Học viên-K</span><span class="msg-time">14/09 · 09:12</span><a class="buddy-tag" href="index.html#q-209" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
+            <div class="msg-text"><strong>Em chạy tới bước 3 thì bị lỗi như này ạ.</strong></div>
+            <div class="msg-attachment">📎 screenshot_1.png · 📎 screenshot_2.png (nội dung không có trong data pack)</div>
+          </div>
+        </div>
+        <div class="reply-box" id="reply-q-209">
+          <input type="text" placeholder="Trả lời Học viên-K...">
+          <button onclick="sendReply('q-209')">Gửi</button>
+        </div>
+      </div>
+
+      <!-- q-212 UNRESOLVED -->
+      <div class="msg-group" id="q-212">
+        <div class="msg">
+          <div class="avatar hv">M</div>
+          <div class="msg-content">
+            <div class="msg-meta"><span class="msg-name hv">Học viên-M</span><span class="msg-time">14/09 · 10:45</span><a class="buddy-tag" href="index.html#q-212" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
+            <div class="msg-text"><strong>Em tham gia workshop đầy đủ nhưng chưa thấy được cộng XP, cần làm gì?</strong></div>
+          </div>
+        </div>
+        <div class="msg continued">
+          <div class="msg-content">
+            <div class="msg-text">Cần đặt đúng tên Zoom và có tương tác trong workshop. — <em style="color:#949ba4">Người tham gia</em></div>
+            <div class="msg-text" style="color:#f23f43;font-size:13px;margin-top:4px">⚠️ Chưa kiểm tra lượt XP cụ thể — nguồn cộng đồng</div>
+          </div>
+        </div>
+        <div class="reply-box" id="reply-q-212">
+          <input type="text" placeholder="Trả lời Học viên-M...">
+          <button onclick="sendReply('q-212')">Gửi</button>
+        </div>
+      </div>
+
+      <!-- q-213 UNRESOLVED -->
+      <div class="msg-group" id="q-213">
+        <div class="msg">
+          <div class="avatar hv">N</div>
+          <div class="msg-content">
+            <div class="msg-meta"><span class="msg-name hv">Học viên-N</span><span class="msg-time">14/09 · 11:20</span><a class="buddy-tag" href="index.html#q-213" target="_blank" title="Xem phân tích trong Buddy Dashboard">🤖 Buddy phân tích</a></div>
+            <div class="msg-text"><strong>Em đã quét QR nhưng không thấy lịch sử điểm danh trên ứng dụng.</strong></div>
+          </div>
+        </div>
+        <div class="msg continued">
+          <div class="msg-content">
+            <div class="msg-text">Bạn cho biết lớp và buổi học để bên mình kiểm tra thêm nhé. — <em style="color:#949ba4">Người hỗ trợ</em></div>
+          </div>
+        </div>
+        <div class="reply-box" id="reply-q-213">
+          <input type="text" placeholder="Trả lời Học viên-N...">
+          <button onclick="sendReply('q-213')">Gửi</button>
+        </div>
+      </div>
+
+      <!-- Padding bottom -->
+      <div style="height:80px"></div>
+    </div>
+
+    <div class="chat-input">
+      <div class="box">💬 Nhắn tin vào #hỗ-trợ-chung</div>
+    </div>
+  </div>
+</div>
+
+<!-- Buddy link -->
+<a class="buddy-link" href="index.html" title="Quay lại Buddy Dashboard"><span class="dot"></span> Buddy Dashboard</a>
+
+<!-- Toast -->
+<div class="toast-msg" id="toast"></div>
+
+<script>
+// Highlight message from hash
+function highlightFromHash() {
+  const id = location.hash.replace('#', '');
+  if (!id) return;
+  const el = document.getElementById(id);
+  if (!el) return;
+  document.querySelectorAll('.msg-group.highlight').forEach(g => g.classList.remove('highlight'));
+  el.classList.add('highlight');
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  // Show reply box
+  const reply = document.getElementById('reply-' + id);
+  if (reply) reply.classList.add('show');
+}
+
+window.addEventListener('hashchange', highlightFromHash);
+window.addEventListener('load', () => {
+  setTimeout(highlightFromHash, 300);
+});
+
+function scrollTo(section) {
+  const el = document.getElementById(section);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+function sendReply(id) {
+  const box = document.querySelector('#reply-' + id + ' input');
+  const text = box.value.trim();
+  if (!text) return;
+  
+  const group = document.getElementById(id);
+  const msgDiv = document.createElement('div');
+  msgDiv.className = 'msg';
+  msgDiv.innerHTML = `
+    <div class="avatar ta">TA</div>
+    <div class="msg-content">
+      <div class="msg-meta"><span class="msg-name ta">TA (bạn)</span><span class="msg-time">Vừa xong</span></div>
+      <div class="msg-text">${text}</div>
+    </div>
+  `;
+  group.insertBefore(msgDiv, document.getElementById('reply-' + id));
+  box.value = '';
+  
+  // Toast
+  const toast = document.getElementById('toast');
+  toast.textContent = '✅ Đã phản hồi — quay lại Buddy để cập nhật trạng thái';
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
